@@ -1,151 +1,175 @@
+Imports System.Data
+
 Partial Class Teacher_ViewResults
     Inherits System.Web.UI.Page
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If Session("Role")?.ToString() <> "Teacher" Then Response.Redirect("~/Login.aspx") : Return
-        If Not IsPostBack Then
-            LoadQuizList()
-            ' Pre-select from querystring
-            Dim qid = Request.QueryString("quizid")
-            If Not String.IsNullOrEmpty(qid) Then
-                Dim item = ddlQuiz.Items.FindByValue(qid)
-                If item IsNot Nothing Then
-                    item.Selected = True
-                    LoadResults(CInt(qid))
-                End If
-            End If
-        End If
+        AuthHelper.RequireRole(Me, "Teacher", "Admin") ' Allow teachers to view results
+        If Not IsPostBack Then LoadQuizList()
     End Sub
 
     Private Sub LoadQuizList()
-        Dim dt = DBHelper.GetDataTable(
-            "SELECT QuizID, QuizTitle FROM Quiz WHERE CreatedBy=@tid ORDER BY CreatedAt DESC",
-            DBHelper.Param("@tid", CInt(Session("UserID"))))
-        ddlQuiz.Items.Clear()
-        ddlQuiz.Items.Add(New System.Web.UI.WebControls.ListItem("-- Select a Quiz --", ""))
-        For Each row As System.Data.DataRow In dt.Rows
-            ddlQuiz.Items.Add(New System.Web.UI.WebControls.ListItem(row("QuizTitle").ToString(), row("QuizID").ToString()))
-        Next
-    End Sub
-
-    Protected Sub ddlQuiz_Changed(sender As Object, e As EventArgs)
-        If ddlQuiz.SelectedValue = "" Then
-            pnlResults.Visible   = False
-            pnlSelectMsg.Visible = True
-            Return
+        Dim role = Session("Role")?.ToString()
+        Dim dt As DataTable
+        
+        If role = "Admin" Then
+             dt = DBHelper.GetDataTable("SELECT QuizID, QuizTitle FROM Quiz ORDER BY CreatedAt DESC")
+        Else
+             dt = DBHelper.GetDataTable(
+                 "SELECT QuizID, QuizTitle FROM Quiz WHERE CreatedBy=@id ORDER BY CreatedAt DESC",
+                 DBHelper.Param("@id", CInt(Session("UserID"))))
         End If
-        LoadResults(CInt(ddlQuiz.SelectedValue))
+
+        ddlQuiz.DataSource     = dt
+        ddlQuiz.DataTextField  = "QuizTitle"
+        ddlQuiz.DataValueField = "QuizID"
+        ddlQuiz.DataBind()
+
+        ddlQuiz.Items.Insert(0, New System.Web.UI.WebControls.ListItem("-- Select a Quiz --", ""))
     End Sub
 
-    Private Sub LoadResults(quizID As Integer)
-        Dim dt = DBHelper.GetDataTable("
-            SELECT u.FullName, r.ObtainedMarks, r.TotalMarks, r.Percentage, r.AttemptDate
+    Protected Sub btnView_Click(sender As Object, e As EventArgs)
+        If String.IsNullOrEmpty(ddlQuiz.SelectedValue) Then Return
+
+        Dim quizID = CInt(ddlQuiz.SelectedValue)
+
+        ' Fetch Results
+        Dim resDt = DBHelper.GetDataTable("
+            SELECT r.ObtainedMarks, r.TotalMarks, r.Percentage, r.AttemptDate,
+                   u.FullName AS StudentName
             FROM Results r
             JOIN Users u ON r.StudentID = u.UserID
             WHERE r.QuizID = @qid
             ORDER BY r.Percentage DESC",
             DBHelper.Param("@qid", quizID))
 
-        If dt.Rows.Count = 0 Then
-            pnlResults.Visible   = False
-            pnlSelectMsg.Visible = True
-            litChartScript.Text  = ""
+        If resDt.Rows.Count = 0 Then
+            pnlNoData.Visible = True
+            pnlResults.Visible = False
             Return
         End If
 
-        pnlResults.Visible   = True
-        pnlSelectMsg.Visible = False
+        pnlNoData.Visible  = False
+        pnlResults.Visible = True
 
-        ' Stats
-        Dim total As Integer = dt.Rows.Count
-        Dim avg   As Double  = 0
-        Dim maxP  As Double  = 0
-        Dim minP  As Double  = 100
-
-        For Each row As System.Data.DataRow In dt.Rows
-            Dim p = Convert.ToDouble(row("Percentage"))
-            avg  += p
-            If p > maxP Then maxP = p
-            If p < minP Then minP = p
-        Next
-        avg = Math.Round(avg / total, 1)
-
-        litTotal.Text = total.ToString()
-        litAvg.Text   = avg.ToString("0.#")
-        litMax.Text   = maxP.ToString("0.#")
-        litMin.Text   = minP.ToString("0.#")
-
-        gvResults.DataSource = dt
+        gvResults.DataSource = resDt
         gvResults.DataBind()
 
-        ' Build chart data: bar = per-student scores, pie = grade buckets
-        Dim labels   As New System.Text.StringBuilder()
-        Dim scores   As New System.Text.StringBuilder()
-        Dim gradeAP As Integer = 0, gradeA As Integer = 0, gradeB As Integer = 0
-        Dim gradeC As Integer = 0, gradeF As Integer = 0
+        ' Calculate KPIs
+        Dim totalStudents As Integer = resDt.Rows.Count
+        Dim sumPct        As Double  = 0
+        Dim highest       As Double  = -1
+        Dim lowest        As Double  = 101
 
-        For Each row As System.Data.DataRow In dt.Rows
-            Dim name  = row("FullName").ToString().Split(" "c)(0)   ' first name
-            Dim score = Convert.ToDouble(row("Percentage"))
-            If labels.Length > 0 Then labels.Append(",")
-            labels.Append($"""{name}""")
-            If scores.Length > 0 Then scores.Append(",")
-            scores.Append(score.ToString("0.#"))
+        Dim grades(4) As Integer ' A+, A, B, C, F
+        Dim labelsJson As String = ""
+        Dim scoresJson As String = ""
 
-            If score >= 90 Then gradeAP += 1
-            ElseIf score >= 80 Then gradeA += 1
-            ElseIf score >= 70 Then gradeB += 1
-            ElseIf score >= 60 Then gradeC += 1
-            Else gradeF += 1
+        For i As Integer = 0 To totalStudents - 1
+            Dim row = resDt.Rows(i)
+            Dim pct = Convert.ToDouble(row("Percentage"))
+            Dim sName = row("StudentName").ToString()
+
+            sumPct += pct
+            If pct > highest Then highest = pct
+            If pct < lowest  Then lowest  = pct
+
+            If pct >= 90  Then grades(0) += 1
+            ElseIf pct >= 80 Then grades(1) += 1
+            ElseIf pct >= 70 Then grades(2) += 1
+            ElseIf pct >= 60 Then grades(3) += 1
+            Else grades(4) += 1
             End If
+
+            labelsJson &= $"'{sName.Replace("'", "\'")}',"
+            scoresJson &= $"{pct.ToString("0.##")},"
         Next
 
-        litChartScript.Text = $"<script>
-(function(){{
-  const barCtx = document.getElementById('barChart').getContext('2d');
-  new Chart(barCtx, {{
-    type:'bar',
-    data:{{
-      labels:[{labels}],
-      datasets:[{{
-        label:'Score %',
-        data:[{scores}],
-        backgroundColor:'rgba(108,99,255,0.6)',
-        borderColor:'rgba(108,99,255,1)',
-        borderWidth:1,
-        borderRadius:6
-      }}]
-    }},
-    options:{{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{{ legend:{{display:false}}, tooltip:{{callbacks:{{label:function(c){{return c.parsed.y+'%'}}}}}} }},
-      scales:{{
-        y:{{ min:0, max:100, ticks:{{color:'#9090b8',callback:function(v){{return v+'%'}}}}, grid:{{color:'rgba(255,255,255,0.06)'}} }},
-        x:{{ ticks:{{color:'#9090b8'}}, grid:{{display:false}} }}
-      }}
-    }}
-  }});
+        labelsJson = labelsJson.TrimEnd(","c)
+        scoresJson = scoresJson.TrimEnd(","c)
 
-  const pieCtx = document.getElementById('pieChart').getContext('2d');
-  new Chart(pieCtx, {{
-    type:'pie',
-    data:{{
-      labels:['A+ (≥90%)','A (80-89%)','B (70-79%)','C (60-69%)','F (<60%)'],
-      datasets:[{{
-        data:[{gradeAP},{gradeA},{gradeB},{gradeC},{gradeF}],
-        backgroundColor:['#56ab2f','#a8e063','#5ee7df','#f7971e','#ff416c'],
-        borderColor:'#0a0e27',
-        borderWidth:2
-      }}]
-    }},
-    options:{{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{{
-        legend:{{ position:'bottom', labels:{{color:'#9090b8',padding:12,font:{{size:11}}}} }},
-        tooltip:{{callbacks:{{label:function(c){{return c.label+': '+c.parsed+' student(s)'}}}}}}
-      }}
-    }}
-  }});
+        Dim avg = sumPct / totalStudents
+        litTotalStudents.Text = totalStudents.ToString()
+        litAvgScore.Text      = avg.ToString("0.##") & "%"
+        litHighest.Text       = highest.ToString("0.##") & "%"
+        litLowest.Text        = lowest.ToString("0.##") & "%"
+
+        ' Overall Correct vs Incorrect
+        Dim ansDt = DBHelper.GetDataTable("
+            SELECT 
+                SUM(CASE WHEN Marks > 0 THEN 1 ELSE 0 END) AS CorrectCount,
+                SUM(CASE WHEN Marks <= 0 THEN 1 ELSE 0 END) AS WrongCount
+            FROM Answers 
+            WHERE QuizID = @qid", DBHelper.Param("@qid", quizID))
+
+        Dim totalCorrect = 0
+        Dim totalWrong = 0
+        If ansDt.Rows.Count > 0 Then
+            totalCorrect = CInt(If(ansDt.Rows(0)("CorrectCount") Is DBNull.Value, 0, ansDt.Rows(0)("CorrectCount")))
+            totalWrong = CInt(If(ansDt.Rows(0)("WrongCount") Is DBNull.Value, 0, ansDt.Rows(0)("WrongCount")))
+        End If
+
+        ' Build JS Charts
+        litChartJS.Text = $"<script>
+(function() {{
+    const ctxBar = document.getElementById('scoreBarChart').getContext('2d');
+    new Chart(ctxBar, {{
+        type: 'bar',
+        data: {{
+            labels: [{labelsJson}],
+            datasets: [{{
+                label: 'Student Score (%)',
+                data: [{scoresJson}],
+                backgroundColor: 'rgba(164,113,248,0.8)',
+                borderColor: 'rgba(164,113,248,1)',
+                borderWidth: 1,
+                borderRadius: 4
+            }}]
+        }},
+        options: {{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {{ legend: {{ display: false }} }},
+            scales: {{
+                y: {{ beginAtZero: true, max: 100, ticks: {{ color: '#9090b8' }}, grid: {{ color: 'rgba(255,255,255,0.05)' }} }},
+                x: {{ ticks: {{ color: '#9090b8' }}, grid: {{ display: false }} }}
+            }}
+        }}
+    }});
+
+    const ctxGrade = document.getElementById('gradePieChart').getContext('2d');
+    new Chart(ctxGrade, {{
+        type: 'pie',
+        data: {{
+            labels: ['A+ (90-100)','A (80-89)','B (70-79)','C (60-69)','F (<60)'],
+            datasets: [{{
+                data: [{grades(0)}, {grades(1)}, {grades(2)}, {grades(3)}, {grades(4)}],
+                backgroundColor: ['#56ab2f','#8dc26f','#ffc107','#fd7e14','#ff416c'],
+                borderColor: '#0a0e27', borderWidth: 2
+            }}]
+        }},
+        options: {{
+            responsive: true, maintainAspectRatio: false,
+            plugins: {{ legend: {{ position: 'bottom', labels: {{ color: '#9090b8' }} }} }}
+        }}
+    }});
+
+    const ctxCorrect = document.getElementById('correctPieChart').getContext('2d');
+    new Chart(ctxCorrect, {{
+        type: 'pie',
+        data: {{
+            labels: ['Correct Answers', 'Incorrect / Skipped'],
+            datasets: [{{
+                data: [{totalCorrect}, {totalWrong}],
+                backgroundColor: ['#56ab2f', '#ff416c'],
+                borderColor: '#0a0e27', borderWidth: 2
+            }}]
+        }},
+        options: {{
+            responsive: true, maintainAspectRatio: false,
+            plugins: {{ legend: {{ position: 'bottom', labels: {{ color: '#9090b8' }} }} }}
+        }}
+    }});
 }})();
 </script>"
     End Sub

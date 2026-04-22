@@ -1,6 +1,6 @@
 <%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewResults.aspx.vb" Inherits="Teacher_ViewResults" MasterPageFile="~/MasterPage.master" %>
 
-<asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">View Results</asp:Content>
+<asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Quiz Results</asp:Content>
 
 <asp:Content ID="ctHead" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -9,86 +9,101 @@
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
 <div class="page-header">
-    <h1>📊 Quiz Results</h1>
-    <p>View detailed results and score distribution for each quiz.</p>
+    <h1>Quiz Results</h1>
+    <p>Select a quiz to view analytics, score charts, and student performance.</p>
 </div>
 
-<!-- Quiz Selector -->
-<div class="form-panel mb-6" style="padding:16px 24px;">
-    <div class="flex-center gap-2">
-        <label style="font-weight:600;white-space:nowrap;">Select Quiz:</label>
-        <asp:DropDownList ID="ddlQuiz" runat="server" CssClass="form-control"
-            AutoPostBack="true" OnSelectedIndexChanged="ddlQuiz_Changed" />
+<!-- Select Quiz -->
+<div class="form-panel mb-6">
+    <div style="display:flex;gap:12px;align-items:flex-end;max-width:500px;">
+        <div class="form-group" style="flex:1;">
+            <label>Select Quiz</label>
+            <asp:DropDownList ID="ddlQuiz" runat="server" CssClass="form-control" />
+        </div>
+        <div class="form-group">
+            <asp:Button ID="btnView" runat="server" Text="View Analytics"
+                CssClass="btn btn-primary" OnClick="btnView_Click" />
+        </div>
     </div>
 </div>
 
+<asp:Panel ID="pnlNoData" runat="server" Visible="false" CssClass="alert alert-info">
+    No attempts have been recorded for this quiz yet.
+</asp:Panel>
+
+<!-- Analytics View -->
 <asp:Panel ID="pnlResults" runat="server" Visible="false">
 
-    <!-- Summary Stats -->
+    <!-- KPI Stats -->
     <div class="stats-grid mb-6">
         <div class="stat-card">
-            <div class="stat-icon purple">🎓</div>
+            <div class="stat-icon purple">Q</div>
             <div>
-                <div class="stat-value"><asp:Literal ID="litTotal" runat="server" /></div>
-                <div class="stat-label">Attempts</div>
+                <div class="stat-value"><asp:Literal ID="litTotalStudents" runat="server">0</asp:Literal></div>
+                <div class="stat-label">Total Attempts</div>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon green">📈</div>
+            <div class="stat-icon green">S</div>
             <div>
-                <div class="stat-value"><asp:Literal ID="litAvg" runat="server" />%</div>
+                <div class="stat-value"><asp:Literal ID="litAvgScore" runat="server">0%</asp:Literal></div>
                 <div class="stat-label">Average Score</div>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon cyan">🏆</div>
+            <div class="stat-icon cyan">H</div>
             <div>
-                <div class="stat-value"><asp:Literal ID="litMax" runat="server" />%</div>
+                <div class="stat-value"><asp:Literal ID="litHighest" runat="server">0%</asp:Literal></div>
                 <div class="stat-label">Highest Score</div>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon red">📉</div>
+            <div class="stat-icon red">L</div>
             <div>
-                <div class="stat-value"><asp:Literal ID="litMin" runat="server" />%</div>
+                <div class="stat-value"><asp:Literal ID="litLowest" runat="server">0%</asp:Literal></div>
                 <div class="stat-label">Lowest Score</div>
             </div>
         </div>
     </div>
 
     <!-- Charts -->
-    <div class="charts-grid mb-6">
-        <div class="chart-card">
-            <h3>📊 Score Distribution (Bar)</h3>
+    <div class="grid-2 mb-6">
+        <div class="chart-card flex-col">
+            <h3>Correct vs Incorrect (Overall)</h3>
             <div class="chart-canvas-wrap">
-                <canvas id="barChart"></canvas>
+                <canvas id="correctPieChart"></canvas>
             </div>
         </div>
-        <div class="chart-card">
-            <h3>🥧 Grade Breakdown (Pie)</h3>
+        <div class="chart-card flex-col">
+            <h3>Grade Breakdown</h3>
             <div class="chart-canvas-wrap">
-                <canvas id="pieChart"></canvas>
+                <canvas id="gradePieChart"></canvas>
             </div>
         </div>
     </div>
+    
+    <div class="chart-card mb-6">
+        <h3>Score Distribution (Bar)</h3>
+        <div class="chart-canvas-wrap" style="height:320px;">
+            <canvas id="scoreBarChart"></canvas>
+        </div>
+    </div>
 
-    <!-- Results Table -->
+    <!-- Individual Results Table -->
     <div class="card">
         <div class="card-header">
-            <h3>🗒️ Individual Results</h3>
-            <span class="text-muted" style="font-size:13px;">Sorted by score descending</span>
+            <h3>Individual Results</h3>
         </div>
         <div class="table-wrapper">
             <asp:GridView ID="gvResults" runat="server"
                 AutoGenerateColumns="false"
                 CssClass="w-100"
-                GridLines="None"
-                EmptyDataText="No students have attempted this quiz yet.">
+                GridLines="None">
                 <Columns>
-                    <asp:BoundField DataField="FullName"      HeaderText="Student" />
-                    <asp:BoundField DataField="ObtainedMarks" HeaderText="Obtained" DataFormatString="{0:0.#}" />
-                    <asp:BoundField DataField="TotalMarks"    HeaderText="Total" />
-                    <asp:TemplateField HeaderText="Percentage">
+                    <asp:BoundField DataField="StudentName" HeaderText="Student" />
+                    <asp:BoundField DataField="ObtainedMarks" HeaderText="Marks Earned" DataFormatString="{0:0.##}" />
+                    <asp:BoundField DataField="TotalMarks" HeaderText="Total Marks" />
+                    <asp:TemplateField HeaderText="Score">
                         <ItemTemplate>
                             <strong><%# String.Format("{0:0.##}%", Eval("Percentage")) %></strong>
                         </ItemTemplate>
@@ -96,31 +111,27 @@
                     <asp:TemplateField HeaderText="Grade">
                         <ItemTemplate>
                             <%
-                                Dim pct As Double = Convert.ToDouble(Eval("Percentage"))
-                                Dim grade As String, cls As String
-                                If pct >= 90 Then grade = "A+" : cls = "grade-A"
-                                ElseIf pct >= 80 Then grade = "A" : cls = "grade-A"
-                                ElseIf pct >= 70 Then grade = "B" : cls = "grade-B"
-                                ElseIf pct >= 60 Then grade = "C" : cls = "grade-C"
-                                Else grade = "F" : cls = "grade-F"
+                                Dim p As Double = Convert.ToDouble(Eval("Percentage"))
+                                Dim g As String, gc As String
+                                If p >= 90  Then g = "A+" : gc = "grade-A"
+                                ElseIf p >= 80 Then g = "A"  : gc = "grade-A"
+                                ElseIf p >= 70 Then g = "B"  : gc = "grade-B"
+                                ElseIf p >= 60 Then g = "C"  : gc = "grade-C"
+                                Else g = "F" : gc = "grade-F"
                                 End If
                             %>
-                            <span class="fw-700 <%=cls%>"><%=grade%></span>
+                            <span class="fw-700 <%=gc%>"><%=g%></span>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:BoundField DataField="AttemptDate" HeaderText="Attempted On" DataFormatString="{0:dd-MMM-yyyy HH:mm}" />
+                    <asp:BoundField DataField="AttemptDate" HeaderText="Date Attempted" DataFormatString="{0:dd-MMM-yyyy hh:mm tt}" />
                 </Columns>
             </asp:GridView>
         </div>
     </div>
 
-</asp:Panel>
+    <!-- JavaScript to render charts injected from code-behind -->
+    <asp:Literal ID="litChartJS" runat="server" />
 
-<asp:Panel ID="pnlSelectMsg" runat="server" CssClass="alert alert-info">
-    ℹ️ Select a quiz above to view results.
 </asp:Panel>
-
-<!-- Chart Init -->
-<asp:Literal ID="litChartScript" runat="server" />
 
 </asp:Content>
