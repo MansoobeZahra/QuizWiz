@@ -15,7 +15,7 @@
         <div class="login-card">
             <!-- Logo -->
             <div class="login-logo">
-                <img src="Assets/logo vertical.png" alt="QuizWiz Logo" style="max-height:240px; width:auto; margin-bottom:20px;" />
+                <img src="Assets/logo vertical.png" alt="QuizWiz Logo" style="max-height:240px; width:auto; margin-bottom:20px; height: 138px;" />
                 <p style="color:var(--text-sec); font-size:14px;">Online Quiz Preparation &amp; Conduction</p>
             </div>
 
@@ -23,7 +23,7 @@
 
             <!-- Error message -->
             <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-danger">
-                ️ <asp:Literal ID="litError" runat="server" />
+                <asp:Literal ID="litError" runat="server" />
             </asp:Panel>
 
             <!-- Username -->
@@ -46,7 +46,7 @@
             </div>
 
             <!-- Login Button -->
-            <asp:Button ID="btnLogin" runat="server" Text="Sign In →"
+            <asp:Button ID="btnLogin" runat="server" Text="Sign In"
                 CssClass="btn btn-primary btn-full btn-lg"
                 OnClick="btnLogin_Click" />
 

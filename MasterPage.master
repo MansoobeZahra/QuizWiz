@@ -29,10 +29,10 @@
             <asp:Panel ID="pnlAdminNav" runat="server" Visible="false">
                 <div class="nav-section">Administration</div>
                 <a href="<%=ResolveUrl("~/Admin/Dashboard.aspx")%>" class="nav-link <%=Active("~/Admin/Dashboard.aspx")%>">
-                    <span class="icon">H</span> Dashboard
+                     Dashboard
                 </a>
                 <a href="<%=ResolveUrl("~/Admin/ManageUsers.aspx")%>" class="nav-link <%=Active("~/Admin/ManageUsers.aspx")%>">
-                    <span class="icon">U</span> Manage Users
+                     Manage Users
                 </a>
             </asp:Panel>
 

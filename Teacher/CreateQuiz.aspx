@@ -77,7 +77,7 @@
             </div>
 
             <div style="text-align:right;">
-                <asp:Button ID="btnStep1Next" runat="server" Text="Save Settings & Next ➔" CssClass="btn btn-primary" OnClick="btnStep1Next_Click" />
+                <asp:Button ID="btnStep1Next" runat="server" Text="Save Settings and Next" CssClass="btn btn-primary" OnClick="btnStep1Next_Click" />
             </div>
         </div>
     </asp:View>
@@ -195,7 +195,7 @@
                                 <div style="padding:12px; border-bottom:1px solid #eaeaea; position:relative;">
                                     <div style="font-size:13px; font-weight:600; margin-bottom:4px;"><%# Eval("QuestionStatement") %></div>
                                     <div style="font-size:11px; color:#999;"><%# Eval("QuestionType") %> | <%# Eval("DifficultyLevel") %></div>
-                                    <asp:LinkButton runat="server" CommandName="Remove" CommandArgument='<%# Eval("QuizQuestionID") %>' style="position:absolute; right:10px; top:10px; color:#ff416c; text-decoration:none;">✖</asp:LinkButton>
+                                    <asp:LinkButton runat="server" CommandName="Remove" CommandArgument='<%# Eval("QuizQuestionID") %>' style="position:absolute; right:10px; top:10px; color:#ff416c; text-decoration:none;">Remove</asp:LinkButton>
                                 </div>
                             </ItemTemplate>
                         </asp:Repeater>
@@ -204,8 +204,8 @@
                         </asp:Panel>
                     </div>
                     <div style="padding:16px; border-top:1px solid #eaeaea; display:flex; justify-content:space-between;">
-                        <asp:Button ID="btnStep2Prev" runat="server" Text="← Back" CssClass="btn btn-outline" OnClick="btnStep2Prev_Click" />
-                        <asp:Button ID="btnStep2Next" runat="server" Text="Next ➔" CssClass="btn btn-primary" OnClick="btnStep2Next_Click" />
+                        <asp:Button ID="btnStep2Prev" runat="server" Text="Back" CssClass="btn btn-outline" OnClick="btnStep2Prev_Click" />
+                        <asp:Button ID="btnStep2Next" runat="server" Text="Next" CssClass="btn btn-primary" OnClick="btnStep2Next_Click" />
                     </div>
                 </div>
             </div>
@@ -215,7 +215,7 @@
     <!-- ==================== STEP 3 ==================== -->
     <asp:View ID="vStep3" runat="server">
         <div class="form-panel" style="text-align:center; padding:40px 20px;">
-            <div style="font-size:48px; margin-bottom:20px;">✅</div>
+            <div style="font-size:24px; margin-bottom:20px; font-weight:bold; color:var(--primary);">Success</div>
             <h2>Quiz is ready!</h2>
             <p style="font-size:16px; color:#666; max-width:500px; margin:0 auto 30px auto;">
                 You have successfully configured <strong><asp:Literal ID="litFinalTitle" runat="server" /></strong> 
@@ -223,11 +223,11 @@
             </p>
 
             <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-                <asp:Button ID="btnStep3Prev" runat="server" Text="← Back to Questions" CssClass="btn btn-outline" OnClick="btnStep3Prev_Click" />
+                <asp:Button ID="btnStep3Prev" runat="server" Text="Back to Questions" CssClass="btn btn-outline" OnClick="btnStep3Prev_Click" />
                 
                 <asp:Button ID="btnTestQuiz" runat="server" Text="Test Quiz (Student POV)" CssClass="btn btn-purple" OnClick="btnTestQuiz_Click" />
                 
-                <asp:Button ID="btnPublish" runat="server" Text="🚀 Publish to Students" CssClass="btn btn-success" OnClick="btnPublish_Click" />
+                <asp:Button ID="btnPublish" runat="server" Text="Publish to Students" CssClass="btn btn-success" OnClick="btnPublish_Click" />
             </div>
             
             <p style="margin-top:20px; font-size:13px; color:#999;">If you leave this page, the quiz will remain safely saved as a Draft.</p>

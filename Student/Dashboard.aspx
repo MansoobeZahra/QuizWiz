@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Student_Dashboard" MasterPageFile="~/MasterPage.master" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Student_Dashboard" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Student Dashboard</asp:Content>
 
@@ -70,7 +70,7 @@
         <a href="MyResults.aspx" class="btn btn-outline btn-sm"> My Results</a>
     </div>
     <asp:Panel ID="pnlNoQuiz" runat="server" Visible="false" CssClass="alert alert-info">
-        ℹ️ No quizzes are published yet. Check back soon!
+        No quizzes are published yet. Check back soon!
     </asp:Panel>
     <div class="table-wrapper">
         <asp:GridView ID="gvQuizzes" runat="server"
