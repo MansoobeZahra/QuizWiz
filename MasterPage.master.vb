@@ -1,3 +1,4 @@
+Imports System
 Imports System.Web.UI
 
 Partial Class MasterPage

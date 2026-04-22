@@ -10,6 +10,7 @@
     <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
 </head>
 <body>
+<form id="form1" runat="server">
 <div class="layout">
 
     <aside class="sidebar">
@@ -100,5 +101,6 @@
     </div>
 
 </div>
+</form>
 </body>
 </html>
