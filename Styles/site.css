@@ -8,10 +8,10 @@
 :root {
     --bg:           #FFFFFF;
     --bg2:          #f4f7fa;
-    --card:         #f8fafc;
-    --card-hover:   #f8fafc; /* same as card, no hover */
-    --border:       transparent;
-    --border-hover: transparent;
+    --card:         #f8fafc; /* section background */
+    --card-hover:   #f1f5f9;
+    --border:       transparent; /* remove borders */
+    --border-hover: #2596be;
 
     --primary:      #2596be;
     --secondary:    #efa973;
@@ -23,9 +23,9 @@
     --green:        #10b981;
     --red:          #ef4444;
 
-    --grad-purple: #2596be; /* no gradients */
-    --grad-orange: #efa973;
-    --grad-bg:     #FFFFFF;
+    --grad-purple: linear-gradient(135deg,#2596be 0%,#4cb6db 100%);
+    --grad-orange: linear-gradient(135deg,#efa973 0%,#f3c29b 100%);
+    --grad-bg:     linear-gradient(135deg,#FFFFFF 0%,#f8fafc 100%);
 
     --text:        #000000;
     --text-sec:    #475569;
@@ -33,11 +33,11 @@
 
     --sidebar-w:   240px;
     --header-h:    64px;
-    --radius:      0; /* sharp corners */
-    --radius-sm:   0;
-    --shadow:      none;
+    --radius:      14px;
+    --radius-sm:   8px;
+    --shadow:      none; /* remove all shadows */
     --shadow-card: none;
-    --trans:       none; /* no transitions */
+    --trans:       all 0.3s cubic-bezier(.4,0,.2,1);
 }
 
 /* ---------- Reset ---------- */
@@ -56,30 +56,49 @@ body {
 /* =========================================================
    LOGIN PAGE
    ========================================================= */
-/* =========================================================
-   LOGIN PAGE
-   ========================================================= */
 .login-wrapper {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background: var(--bg2);
+    background: var(--grad-bg);
 }
 
 .login-card {
-    background: #FFFFFF;
-    border: 1px solid #e2e8f0;
-    border-radius: 0; /* sharp corners */
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
     padding: 48px 40px;
     width: 100%;
     max-width: 440px;
+    box-shadow: var(--shadow);
+    animation: fadeSlideUp .6s ease both;
 }
 
 .login-logo {
     text-align: center;
     margin-bottom: 32px;
+}
+.login-logo .logo-icon {
+    width: 64px; height: 64px;
+    background: var(--grad-purple);
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 24px rgba(108,99,255,.4);
+}
+.login-logo h1 {
+    font-size: 28px;
+    font-weight: 800;
+    background: var(--grad-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 .login-logo p { color: var(--text-sec); font-size: 14px; margin-top: 4px; }
 
@@ -88,7 +107,6 @@ body {
     font-weight: 700;
     margin-bottom: 24px;
     color: var(--text);
-    text-align: center;
 }
 
 /* ---------- Form Controls ---------- */
@@ -146,11 +164,27 @@ textarea { resize: vertical; min-height: 100px; }
     text-decoration: none;
     white-space: nowrap;
 }
-.btn-primary { background: var(--primary); color: #fff; }
-.btn-success { background: var(--green); color: #fff; }
-.btn-danger  { background: var(--red); color: #fff; }
-.btn-warning { background: var(--orange); color: #000; }
-.btn-outline { background: transparent; border: 1px solid var(--text-sec); color: var(--text-sec); }
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+.btn:active { transform: translateY(0); }
+
+.btn-primary { background: var(--grad-purple); color: #fff; }
+.btn-primary:hover { box-shadow: 0 8px 24px rgba(108,99,255,.5); }
+
+.btn-success { background: var(--grad-green); color: #fff; }
+.btn-success:hover { box-shadow: 0 8px 24px rgba(86,171,47,.4); }
+
+.btn-danger  { background: var(--grad-red); color: #fff; }
+.btn-danger:hover  { box-shadow: 0 8px 24px rgba(255,65,108,.4); }
+
+.btn-warning { background: var(--grad-orange); color: #1a1a1a; }
+.btn-warning:hover { box-shadow: 0 8px 24px rgba(247,151,30,.4); }
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-sec);
+}
+.btn-outline:hover { border-color: var(--purple); color: var(--purple); }
 
 .btn-sm { padding: 7px 14px; font-size: 12px; }
 .btn-lg { padding: 16px 32px; font-size: 16px; }
@@ -183,7 +217,8 @@ textarea { resize: vertical; min-height: 100px; }
 /* ----- Sidebar ----- */
 .sidebar {
     width: var(--sidebar-w);
-    background: var(--primary);
+    background: var(--bg);
+    border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -191,11 +226,12 @@ textarea { resize: vertical; min-height: 100px; }
     height: 100vh;
     z-index: 100;
     overflow-y: auto;
+    transition: var(--trans);
 }
 
 .sidebar-logo {
     padding: 32px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid var(--border);
     text-align: center;
 }
 .sidebar-logo .logo-img {
@@ -207,59 +243,74 @@ textarea { resize: vertical; min-height: 100px; }
 
 .sidebar-user {
     padding: 16px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    color: #FFFFFF;
+    border-bottom: 1px solid var(--border);
 }
 .sidebar-user .user-name { font-size: 14px; font-weight: 600; }
 .sidebar-user .user-role {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
+    letter-spacing: .8px;
     text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 20px;
     display: inline-block;
     margin-top: 4px;
-    color: var(--secondary);
 }
+.role-admin   { background: rgba(247,151,30,.2); color: var(--yellow); }
+.role-teacher { background: rgba(108,99,255,.2); color: var(--purple-light); }
+.role-student { background: rgba(86,171,47,.2); color: var(--green-light); }
 
-.sidebar-nav { padding: 16px 0; flex: 1; }
+.sidebar-nav { padding: 16px 12px; flex: 1; }
 .nav-section {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    padding: 0 20px;
-    margin: 16px 0 8px;
+    color: var(--text-muted);
+    padding: 0 8px;
+    margin: 12px 0 6px;
 }
 .nav-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 20px;
-    color: rgba(255,255,255,0.8);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--text-sec);
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
+    transition: var(--trans);
+    margin-bottom: 3px;
+}
+.nav-link:hover {
+    background: var(--card-hover);
+    color: var(--text);
 }
 .nav-link.active {
-    background: rgba(255,255,255,0.1);
-    color: #FFFFFF;
-    border-left: 4px solid var(--secondary);
+    background: rgba(108,99,255,.15);
+    color: var(--purple-light);
+    border-left: 3px solid var(--purple);
 }
+.nav-link .icon { font-size: 16px; width: 20px; text-align: center; }
 
 .sidebar-footer {
-    padding: 16px 0;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 16px 12px;
+    border-top: 1px solid var(--border);
 }
 .sidebar-footer a {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 20px;
-    color: #FFFFFF;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--red);
     text-decoration: none;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
+    transition: var(--trans);
 }
+.sidebar-footer a:hover { background: rgba(255,65,108,.1); }
 
 /* ----- Main Content ----- */
 .main-content {
@@ -364,11 +415,11 @@ textarea { resize: vertical; min-height: 100px; }
     font-size: 22px;
     flex-shrink: 0;
 }
-.stat-icon.purple { background: var(--bg2); color: var(--primary); }
-.stat-icon.green  { background: var(--bg2); color: var(--green); }
-.stat-icon.orange { background: var(--bg2); color: var(--orange); }
-.stat-icon.red    { background: var(--bg2); color: var(--red); }
-.stat-icon.cyan   { background: var(--bg2); color: var(--purple-light); }
+.stat-icon.purple { background: rgba(37, 150, 190, 0.1); color: var(--primary); }
+.stat-icon.green  { background: rgba(16, 185, 129, 0.1); color: var(--green); }
+.stat-icon.orange { background: rgba(239, 169, 115, 0.1); color: var(--orange); }
+.stat-icon.red    { background: rgba(239, 68, 68, 0.1); color: var(--red); }
+.stat-icon.cyan   { background: rgba(76, 182, 219, 0.1); color: var(--purple-light); }
 .stat-value { font-size: 28px; font-weight: 800; line-height: 1; }
 .stat-label { font-size: 12px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
 
