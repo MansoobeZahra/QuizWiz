@@ -51,7 +51,7 @@
 <asp:Panel ID="pnlPreview" runat="server" Visible="false">
 
     <div class="preview-banner">
-        PREVIEW MODE — No answers are saved. This is for teacher review only.
+        PREVIEW MODE | No answers are saved. This is for teacher review only.
     </div>
 
     <div class="quiz-container">

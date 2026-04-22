@@ -25,7 +25,7 @@
     </div>
     <div class="stat-card cyan">
         <div>
-            <div class="stat-value"><asp:Literal ID="litAvgScore" runat="server">—</asp:Literal></div>
+            <div class="stat-value"><asp:Literal ID="litAvgScore" runat="server">-</asp:Literal></div>
             <div class="stat-label">My Avg Score</div>
         </div>
     </div>

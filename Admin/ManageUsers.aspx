@@ -54,7 +54,7 @@
             <div class="form-group">
                 <label>Subject</label>
                 <asp:DropDownList ID="ddlSubject" runat="server" CssClass="form-control">
-                    <asp:ListItem Value="">— None —</asp:ListItem>
+                    <asp:ListItem Value="">None</asp:ListItem>
                 </asp:DropDownList>
             </div>
         </asp:Panel>
@@ -112,7 +112,7 @@
                         </span>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:BoundField DataField="SubjectName" HeaderText="Subject" NullDisplayText="—" />
+                <asp:BoundField DataField="SubjectName" HeaderText="Subject" NullDisplayText="-" />
                 <asp:TemplateField HeaderText="Status">
                     <ItemTemplate>
                         <span class='badge <%# If(CBool(Eval("IsActive")), "badge-green", "badge-red") %>'>

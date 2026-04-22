@@ -6,7 +6,7 @@
 
 <div class="page-header">
     <h1>Teacher Dashboard</h1>
-    <p>Welcome back, <strong><%= Session("FullName") %></strong> — manage your questions and quizzes below.</p>
+    <p>Welcome back, <strong><%= Session("FullName") %></strong> | manage your questions and quizzes below.</p>
 </div>
 
 <!-- Stats Row -->

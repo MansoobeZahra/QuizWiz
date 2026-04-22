@@ -6,7 +6,7 @@
 
 <div class="page-header">
     <h1> Admin Dashboard</h1>
-    <p>System overview — manage users, monitor quizzes and results.</p>
+    <p>System overview | manage users, monitor quizzes and results.</p>
 </div>
 
 <!-- Stats -->
