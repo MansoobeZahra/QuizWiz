@@ -14,18 +14,18 @@
     --border-hover: #2596be;
 
     --primary:      #2596be;
-    --secondary:    #efa973;
+    --secondary:    #e3a871;
     --black:        #000000;
     
     --purple:       #2596be; 
     --purple-light: #4cb6db;
-    --orange:       #efa973;
+    --orange:       #e3a871;
     --green:        #10b981;
     --red:          #ef4444;
 
     --grad-purple: linear-gradient(135deg,#2596be 0%,#4cb6db 100%);
-    --grad-orange: linear-gradient(135deg,#efa973 0%,#f3c29b 100%);
-    --grad-bg:     linear-gradient(135deg,#FFFFFF 0%,#f8fafc 100%);
+    --grad-orange: linear-gradient(135deg,#e3a871 0%,#f3c29b 100%);
+    --grad-bg:     linear-gradient(135deg,#FFFFFF 0%,#f4f7fa 100%);
 
     --text:        #000000;
     --text-sec:    #475569;
@@ -37,7 +37,7 @@
     --radius-sm:   8px;
     --shadow:      none; /* remove all shadows */
     --shadow-card: none;
-    --trans:       all 0.3s cubic-bezier(.4,0,.2,1);
+    --trans:       all 0.2s ease-in-out;
 }
 
 /* ---------- Reset ---------- */
