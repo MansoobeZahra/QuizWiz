@@ -49,7 +49,7 @@
 <div class="card mb-6">
     <div class="card-header">
         <h3> Question-by-Question Review</h3>
-        <span class="text-muted" style="font-size:12px;">Answer locked on Next click — no changes allowed</span>
+        <span class="text-muted" style="font-size:12px;">Answer locked on Next click | no changes allowed</span>
     </div>
     <div class="table-wrapper">
         <asp:GridView ID="gvDetail" runat="server"

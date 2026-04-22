@@ -31,11 +31,11 @@ Public Class AuthHelper
 
         For Each r As String In allowedRoles
             If String.Equals(r, role, StringComparison.OrdinalIgnoreCase) Then
-                Return  ' Authorised — do nothing
+                Return  ' Authorised | do nothing
             End If
         Next
 
-        ' Not authorised — redirect to own dashboard
+        ' Not authorised | redirect to own dashboard
         RedirectHome(page, role)
     End Sub
 
