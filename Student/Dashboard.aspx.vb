@@ -16,7 +16,14 @@ Partial Class Student_Dashboard
     Private Sub LoadStats()
         Dim uid = CInt(Session("UserID"))
         
-        Dim totalQz = CInt(If(DBHelper.ExecuteScalar("SELECT COUNT(*) FROM Quiz WHERE IsPublished=1"), 0))
+        ' Get Student's SubjectID
+        Dim studentSub = DBHelper.ExecuteScalar("SELECT SubjectID FROM Users WHERE UserID=@u", DBHelper.Param("@u", uid))
+        Dim subFilter As String = ""
+        If studentSub IsNot Nothing AndAlso studentSub IsNot DBNull.Value Then
+            subFilter = " AND SubjectID = " & studentSub.ToString()
+        End If
+
+        Dim totalQz = CInt(If(DBHelper.ExecuteScalar("SELECT COUNT(*) FROM Quiz WHERE IsPublished=1" & subFilter), 0))
         litAvailable.Text = totalQz.ToString()
             
         Dim attempts = CInt(If(DBHelper.ExecuteScalar( _
@@ -55,15 +62,22 @@ Partial Class Student_Dashboard
     End Sub
 
     Private Sub LoadQuizzes()
-        Dim dt = DBHelper.GetDataTable( _
-            "SELECT q.QuizID, q.QuizTitle, q.AllowedTime, q.TotalQuestions, s.SubjectName, q.Remarks, " & _
-            "       CASE WHEN EXISTS(SELECT 1 FROM Results r WHERE r.StudentID=@s AND r.QuizID=q.QuizID) " & _
-            "       THEN 1 ELSE 0 END AS AlreadyAttempted " & _
-            "FROM Quiz q " & _
-            "JOIN Subjects s ON q.SubjectID = s.SubjectID " & _
-            "WHERE q.IsPublished=1 " & _
-            "ORDER BY q.CreatedAt DESC", _
-            DBHelper.Param("@s", CInt(Session("UserID"))))
+        ' Get Student's SubjectID
+        Dim studentSub = DBHelper.ExecuteScalar("SELECT SubjectID FROM Users WHERE UserID=@u", DBHelper.Param("@u", CInt(Session("UserID"))))
+        Dim sql = "SELECT q.QuizID, q.QuizTitle, q.AllowedTime, q.TotalQuestions, s.SubjectName, q.Remarks, " & _
+                  "       CASE WHEN EXISTS(SELECT 1 FROM Results r WHERE r.StudentID=@s AND r.QuizID=q.QuizID) " & _
+                  "       THEN 1 ELSE 0 END AS AlreadyAttempted " & _
+                  "FROM Quiz q " & _
+                  "JOIN Subjects s ON q.SubjectID = s.SubjectID " & _
+                  "WHERE q.IsPublished=1 "
+        
+        If studentSub IsNot Nothing AndAlso studentSub IsNot DBNull.Value Then
+            sql &= " AND q.SubjectID = " & studentSub.ToString()
+        End If
+
+        sql &= " ORDER BY q.CreatedAt DESC"
+
+        Dim dt = DBHelper.GetDataTable(sql, DBHelper.Param("@s", CInt(Session("UserID"))))
             
         If dt.Rows.Count = 0 Then
             pnlNoQuiz.Visible = True

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ManageUsers.aspx.vb" Inherits="Admin_ManageUsers" MasterPageFile="~/MasterPage.master" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ManageUsers.aspx.vb" Inherits="Admin_ManageUsers" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Manage Users</asp:Content>
 
@@ -52,7 +52,7 @@
     <div class="form-row mb-4">
         <asp:Panel ID="pnlSubject" runat="server">
             <div class="form-group">
-                <label>Subject (Teachers only)</label>
+                <label>Subject</label>
                 <asp:DropDownList ID="ddlSubject" runat="server" CssClass="form-control">
                     <asp:ListItem Value="">— None —</asp:ListItem>
                 </asp:DropDownList>

@@ -34,7 +34,13 @@ Partial Class MasterPage
     Public Function Active(virtualPath As String) As String
         Dim resolved As String = ResolveUrl(virtualPath).ToLower().TrimEnd("/"c)
         Dim current  As String = Request.AppRelativeCurrentExecutionFilePath.ToLower().TrimStart("~"c).TrimEnd("/"c)
-        Dim resolvedClean As String = resolved.Replace(Request.ApplicationPath.ToLower().TrimEnd("/"c), "").TrimEnd("/"c)
+        
+        Dim appPath As String = Request.ApplicationPath.ToLower().TrimEnd("/"c)
+        Dim resolvedClean As String = resolved
+        If appPath.Length > 0 AndAlso resolved.StartsWith(appPath) Then
+            resolvedClean = resolved.Substring(appPath.Length).TrimEnd("/"c)
+        End If
+        
         If resolvedClean = current OrElse ("/" & current.TrimStart("/"c)) = resolvedClean Then Return "active"
         Return ""
     End Function

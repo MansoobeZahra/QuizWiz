@@ -57,7 +57,7 @@ Partial Class Admin_ManageUsers
     End Sub
 
     Protected Sub ddlRole_Changed(sender As Object, e As EventArgs)
-        pnlSubject.Visible = (ddlRole.SelectedValue = "Teacher")
+        pnlSubject.Visible = (ddlRole.SelectedValue = "Teacher" OrElse ddlRole.SelectedValue = "Student")
     End Sub
 
     Protected Sub ddlFilter_Changed(sender As Object, e As EventArgs)
@@ -89,7 +89,7 @@ Partial Class Admin_ManageUsers
 
             Dim roleItem = ddlRole.Items.FindByValue(row("Role").ToString())
             If roleItem IsNot Nothing Then roleItem.Selected = True
-            pnlSubject.Visible = (row("Role").ToString() = "Teacher")
+            pnlSubject.Visible = (row("Role").ToString() = "Teacher" OrElse row("Role").ToString() = "Student")
 
             If row("SubjectID") IsNot DBNull.Value Then
                 Dim si = ddlSubject.Items.FindByValue(row("SubjectID").ToString())
@@ -119,7 +119,7 @@ Partial Class Admin_ManageUsers
             ShowMsg("Password is required for new users.", "danger") : Return
         End If
 
-        If role = "Teacher" AndAlso ddlSubject.SelectedValue <> "" Then
+        If (role = "Teacher" OrElse role = "Student") AndAlso ddlSubject.SelectedValue <> "" Then
             subID = CInt(ddlSubject.SelectedValue)
         End If
 
