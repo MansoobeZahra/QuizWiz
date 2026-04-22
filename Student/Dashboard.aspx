@@ -11,29 +11,25 @@
 
 <!-- Stats -->
 <div class="stats-grid mb-6">
-    <div class="stat-card anim-1">
-        <div class="stat-icon purple"></div>
+    <div class="stat-card purple">
         <div>
             <div class="stat-value"><asp:Literal ID="litAvailable" runat="server">0</asp:Literal></div>
             <div class="stat-label">Available Quizzes</div>
         </div>
     </div>
-    <div class="stat-card anim-2">
-        <div class="stat-icon green"></div>
+    <div class="stat-card green">
         <div>
             <div class="stat-value"><asp:Literal ID="litAttempted" runat="server">0</asp:Literal></div>
             <div class="stat-label">Completed</div>
         </div>
     </div>
-    <div class="stat-card anim-3">
-        <div class="stat-icon cyan"></div>
+    <div class="stat-card cyan">
         <div>
             <div class="stat-value"><asp:Literal ID="litAvgScore" runat="server">—</asp:Literal></div>
             <div class="stat-label">My Avg Score</div>
         </div>
     </div>
-    <div class="stat-card anim-4">
-        <div class="stat-icon orange"></div>
+    <div class="stat-card orange">
         <div>
             <div class="stat-value"><asp:Literal ID="litNotifs" runat="server">0</asp:Literal></div>
             <div class="stat-label">Notifications</div>

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Admin_Dashboard" MasterPageFile="~/MasterPage.master" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Admin_Dashboard" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Admin Dashboard</asp:Content>
 
@@ -11,42 +11,36 @@
 
 <!-- Stats -->
 <div class="stats-grid mb-6">
-    <div class="stat-card anim-1">
-        <div class="stat-icon purple"></div>
+    <div class="stat-card purple">
         <div>
             <div class="stat-value"><asp:Literal ID="litUsers" runat="server" /></div>
             <div class="stat-label">Total Users</div>
         </div>
     </div>
-    <div class="stat-card anim-2">
-        <div class="stat-icon cyan"></div>
+    <div class="stat-card cyan">
         <div>
             <div class="stat-value"><asp:Literal ID="litTeachers" runat="server" /></div>
             <div class="stat-label">Teachers</div>
         </div>
     </div>
-    <div class="stat-card anim-3">
-        <div class="stat-icon green"></div>
+    <div class="stat-card green">
         <div>
             <div class="stat-value"><asp:Literal ID="litStudents" runat="server" /></div>
             <div class="stat-label">Students</div>
         </div>
     </div>
-    <div class="stat-card anim-4">
-        <div class="stat-icon orange"></div>
+    <div class="stat-card orange">
         <div>
             <div class="stat-value"><asp:Literal ID="litQuizzes" runat="server" /></div>
             <div class="stat-label">Total Quizzes</div>
         </div>
     </div>
-    <div class="stat-card anim-1">
-        <div class="stat-icon red"></div>
+    <div class="stat-card red">
         <div>
             <div class="stat-value"><asp:Literal ID="litQuestions" runat="server" /></div>
             <div class="stat-label">Questions</div>
         </div>
     </div>
-    <div class="stat-card anim-2">
         <div class="stat-icon purple"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litAttempts" runat="server" /></div>
