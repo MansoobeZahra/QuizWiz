@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Login.aspx.vb" Inherits="Login" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Login.aspx.vb" Inherits="Login" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +15,8 @@
         <div class="login-card">
             <!-- Logo -->
             <div class="login-logo">
-                <div class="logo-icon"></div>
-                <h1>QuizWiz</h1>
-                <p>Online Quiz Preparation &amp; Conduction</p>
+                <img src="Assets/logo vertical.png" alt="QuizWiz Logo" style="max-height:240px; width:auto; margin-bottom:20px;" />
+                <p style="color:var(--text-sec); font-size:14px;">Online Quiz Preparation &amp; Conduction</p>
             </div>
 
             <h2>Sign In</h2>

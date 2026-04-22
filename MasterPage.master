@@ -15,10 +15,7 @@
 
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <div class="logo-row">
-                <div class="logo-icon">Q</div>
-                <h2>QuizWiz</h2>
-            </div>
+            <img src="<%= ResolveUrl("~/Assets/logo horizontal.png") %>" alt="QuizWiz" class="logo-img" />
         </div>
 
         <div class="sidebar-user">
