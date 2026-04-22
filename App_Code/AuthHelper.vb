@@ -20,7 +20,9 @@ Public Class AuthHelper
             Return
         End If
 
-        role = page.Session("Role")?.ToString()
+        If page.Session("Role") IsNot Nothing Then
+            role = page.Session("Role").ToString()
+        End If
 
         If String.IsNullOrEmpty(role) Then
             page.Response.Redirect("~/Login.aspx")
@@ -39,7 +41,8 @@ Public Class AuthHelper
 
     ''' <summary>Sends the user to their role's home dashboard.</summary>
     Public Shared Sub RedirectHome(page As Page, role As String)
-        Select Case role?.ToLower()
+        If role Is Nothing Then role = ""
+        Select Case role.ToLower()
             Case "admin"   : page.Response.Redirect("~/Admin/Dashboard.aspx")
             Case "teacher" : page.Response.Redirect("~/Teacher/Dashboard.aspx")
             Case "student" : page.Response.Redirect("~/Student/Dashboard.aspx")
@@ -49,7 +52,8 @@ Public Class AuthHelper
 
     ''' <summary>Returns True if the session user holds any of the supplied roles.</summary>
     Public Shared Function HasRole(page As Page, ParamArray roles As String()) As Boolean
-        Dim current = page.Session("Role")?.ToString()
+        Dim current As String = ""
+        If page.Session("Role") IsNot Nothing Then current = page.Session("Role").ToString()
         For Each r As String In roles
             If String.Equals(r, current, StringComparison.OrdinalIgnoreCase) Then Return True
         Next
