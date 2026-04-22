@@ -8,6 +8,7 @@ Partial Class MasterPage
             If Session("Role") IsNot Nothing Then Return Session("Role").ToString()
             Return ""
         End Get
+        
     End Property
 
     Public ReadOnly Property SessionFullName As String
