@@ -26,9 +26,9 @@ Partial Class Teacher_CreateQuiz
 
     Private Sub LoadQuestions()
         Dim sid = ddlSubject.SelectedValue
-        Dim dt  = DBHelper.GetDataTable(
-            "SELECT QuestionID, QuestionStatement, DifficultyLevel, CorrectOption, CorrectOptions, QuestionType
-             FROM QuestionsTable WHERE SubjectID=@s AND CreatedBy=@t ORDER BY CreatedAt DESC",
+        Dim dt  = DBHelper.GetDataTable( _
+            "SELECT QuestionID, QuestionStatement, DifficultyLevel, CorrectOption, CorrectOptions, QuestionType " & _
+            "FROM QuestionsTable WHERE SubjectID=@s AND CreatedBy=@t ORDER BY CreatedAt DESC",
             DBHelper.Param("@s", CInt(sid)),
             DBHelper.Param("@t", CInt(Session("UserID"))))
         pnlNoQ.Visible = (dt.Rows.Count = 0)
@@ -59,7 +59,7 @@ Partial Class Teacher_CreateQuiz
 
         Dim qids = selectedQ.Split(","c)
         If qids.Length < totalQ Then
-            ShowError($"You selected {qids.Length} question(s) but set Total = {totalQ}. Select at least {totalQ} or lower the total.") : Return
+            ShowError(String.Format("You selected {0} question(s) but set Total = {1}. Select at least {1} or lower the total.", qids.Length, totalQ)) : Return
         End If
 
         Dim negMarking = chkNegMarking.Checked
@@ -77,24 +77,24 @@ Partial Class Teacher_CreateQuiz
         End If
 
         Try
-            Dim quizID As Integer = CInt(DBHelper.ExecuteScalar("
-                INSERT INTO Quiz (QuizTitle,SubjectID,StartTime,AllowedTime,TotalQuestions,
-                                  RandomizeQ,ShuffleOptions,Remarks,ReviewAnswer,IsPublished,CreatedBy,
-                                  NegativeMarking,NegativeMarks)
-                VALUES (@t,@s,@st,@at,@tq,@rq,@so,@rem,@rev,@pub,@by,@nm,@nmv);
-                SELECT SCOPE_IDENTITY();",
-                DBHelper.Param("@t",   txtTitle.Text.Trim()),
-                DBHelper.Param("@s",   CInt(ddlSubject.SelectedValue)),
-                DBHelper.Param("@st",  startTime),
-                DBHelper.Param("@at",  allowedTime),
-                DBHelper.Param("@tq",  totalQ),
-                DBHelper.Param("@rq",  chkRandomize.Checked),
-                DBHelper.Param("@so",  chkShuffle.Checked),
-                DBHelper.Param("@rem", If(String.IsNullOrWhiteSpace(txtRemarks.Text), CObj(DBNull.Value), CObj(txtRemarks.Text.Trim()))),
-                DBHelper.Param("@rev", chkReview.Checked),
-                DBHelper.Param("@pub", publish),
-                DBHelper.Param("@by",  CInt(Session("UserID"))),
-                DBHelper.Param("@nm",  negMarking),
+            Dim quizID As Integer = CInt(DBHelper.ExecuteScalar( _
+                "INSERT INTO Quiz (QuizTitle,SubjectID,StartTime,AllowedTime,TotalQuestions, " & _
+                "                  RandomizeQ,ShuffleOptions,Remarks,ReviewAnswer,IsPublished,CreatedBy, " & _
+                "                  NegativeMarking,NegativeMarks) " & _
+                "VALUES (@t,@s,@st,@at,@tq,@rq,@so,@rem,@rev,@pub,@by,@nm,@nmv); " & _
+                "SELECT SCOPE_IDENTITY();", _
+                DBHelper.Param("@t",   txtTitle.Text.Trim()), _
+                DBHelper.Param("@s",   CInt(ddlSubject.SelectedValue)), _
+                DBHelper.Param("@st",  startTime), _
+                DBHelper.Param("@at",  allowedTime), _
+                DBHelper.Param("@tq",  totalQ), _
+                DBHelper.Param("@rq",  chkRandomize.Checked), _
+                DBHelper.Param("@so",  chkShuffle.Checked), _
+                DBHelper.Param("@rem", If(String.IsNullOrWhiteSpace(txtRemarks.Text), CObj(DBNull.Value), CObj(txtRemarks.Text.Trim()))), _
+                DBHelper.Param("@rev", chkReview.Checked), _
+                DBHelper.Param("@pub", publish), _
+                DBHelper.Param("@by",  CInt(Session("UserID"))), _
+                DBHelper.Param("@nm",  negMarking), _
                 DBHelper.Param("@nmv", negMarks)))
 
             Dim order As Integer = 1
@@ -110,18 +110,18 @@ Partial Class Teacher_CreateQuiz
             If publish Then
                 Dim students = DBHelper.GetDataTable("SELECT UserID FROM Users WHERE Role='Student' AND IsActive=1")
                 For Each row As System.Data.DataRow In students.Rows
-                    DBHelper.ExecuteNonQuery(
-                        "INSERT INTO Notifications(ToUserID,FromUserID,Message) VALUES(@to,@from,@msg)",
-                        DBHelper.Param("@to", CInt(row("UserID"))),
-                        DBHelper.Param("@from", CInt(Session("UserID"))),
-                        DBHelper.Param("@msg", $"New quiz available: ""{txtTitle.Text.Trim()}"". Open your dashboard to attempt it."))
+                    DBHelper.ExecuteNonQuery( _
+                        "INSERT INTO Notifications(ToUserID,FromUserID,Message) VALUES(@to,@from,@msg)", _
+                        DBHelper.Param("@to", CInt(row("UserID"))), _
+                        DBHelper.Param("@from", CInt(Session("UserID"))), _
+                        DBHelper.Param("@msg", String.Format("New quiz available: ""{0}"". Open your dashboard to attempt it.", txtTitle.Text.Trim())))
                 Next
             End If
 
             pnlSuccess.Visible = True
             litSuccess.Text = If(publish,
-                $"Quiz ""{txtTitle.Text.Trim()}"" published. Students have been notified. <a href='Dashboard.aspx' style='color:inherit;font-weight:700;'>Back to Dashboard</a>",
-                $"Quiz saved as draft. <a href='Dashboard.aspx' style='color:inherit;font-weight:700;'>Back to Dashboard</a>")
+                String.Format("Quiz ""{0}"" published. Students have been notified. <a href='Dashboard.aspx' style='color:inherit;font-weight:700;'>Back to Dashboard</a>", txtTitle.Text.Trim()),
+                "Quiz saved as draft. <a href='Dashboard.aspx' style='color:inherit;font-weight:700;'>Back to Dashboard</a>")
 
             txtTitle.Text = "" : txtRemarks.Text = "" : hfSelected.Value = ""
             txtTime.Text = "30" : txtTotalQ.Text = "10"

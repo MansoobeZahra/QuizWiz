@@ -9,10 +9,11 @@ Partial Class Teacher_ViewResults
     End Sub
 
     Private Sub LoadQuizList()
-        Dim role = Session("Role")?.ToString()
-        Dim dt As DataTable
+        Dim roleStr As String = ""
+        If Session("Role") IsNot Nothing Then roleStr = Session("Role").ToString()
         
-        If role = "Admin" Then
+        Dim dt As DataTable
+        If roleStr = "Admin" Then
              dt = DBHelper.GetDataTable("SELECT QuizID, QuizTitle FROM Quiz ORDER BY CreatedAt DESC")
         Else
              dt = DBHelper.GetDataTable(
@@ -34,13 +35,13 @@ Partial Class Teacher_ViewResults
         Dim quizID = CInt(ddlQuiz.SelectedValue)
 
         ' Fetch Results
-        Dim resDt = DBHelper.GetDataTable("
-            SELECT r.ObtainedMarks, r.TotalMarks, r.Percentage, r.AttemptDate,
-                   u.FullName AS StudentName
-            FROM Results r
-            JOIN Users u ON r.StudentID = u.UserID
-            WHERE r.QuizID = @qid
-            ORDER BY r.Percentage DESC",
+        Dim resDt = DBHelper.GetDataTable( _
+            "SELECT r.ObtainedMarks, r.TotalMarks, r.Percentage, r.AttemptDate, " & _
+            "       u.FullName AS StudentName " & _
+            "FROM Results r " & _
+            "JOIN Users u ON r.StudentID = u.UserID " & _
+            "WHERE r.QuizID = @qid " & _
+            "ORDER BY r.Percentage DESC",
             DBHelper.Param("@qid", quizID))
 
         If resDt.Rows.Count = 0 Then
@@ -74,15 +75,20 @@ Partial Class Teacher_ViewResults
             If pct > highest Then highest = pct
             If pct < lowest  Then lowest  = pct
 
-            If pct >= 90  Then grades(0) += 1
-            ElseIf pct >= 80 Then grades(1) += 1
-            ElseIf pct >= 70 Then grades(2) += 1
-            ElseIf pct >= 60 Then grades(3) += 1
-            Else grades(4) += 1
+            If pct >= 90  Then
+                grades(0) += 1
+            ElseIf pct >= 80 Then
+                grades(1) += 1
+            ElseIf pct >= 70 Then
+                grades(2) += 1
+            ElseIf pct >= 60 Then
+                grades(3) += 1
+            Else
+                grades(4) += 1
             End If
 
-            labelsJson &= $"'{sName.Replace("'", "\'")}',"
-            scoresJson &= $"{pct.ToString("0.##")},"
+            labelsJson &= "'" & sName.Replace("'", "\'") & "',"
+            scoresJson &= pct.ToString("0.##") & ","
         Next
 
         labelsJson = labelsJson.TrimEnd(","c)
@@ -95,12 +101,12 @@ Partial Class Teacher_ViewResults
         litLowest.Text        = lowest.ToString("0.##") & "%"
 
         ' Overall Correct vs Incorrect
-        Dim ansDt = DBHelper.GetDataTable("
-            SELECT 
-                SUM(CASE WHEN Marks > 0 THEN 1 ELSE 0 END) AS CorrectCount,
-                SUM(CASE WHEN Marks <= 0 THEN 1 ELSE 0 END) AS WrongCount
-            FROM Answers 
-            WHERE QuizID = @qid", DBHelper.Param("@qid", quizID))
+        Dim ansDt = DBHelper.GetDataTable( _
+            "SELECT " & _
+            "    SUM(CASE WHEN Marks > 0 THEN 1 ELSE 0 END) AS CorrectCount, " & _
+            "    SUM(CASE WHEN Marks <= 0 THEN 1 ELSE 0 END) AS WrongCount " & _
+            "FROM Answers " & _
+            "WHERE QuizID = @qid", DBHelper.Param("@qid", quizID))
 
         Dim totalCorrect = 0
         Dim totalWrong = 0
@@ -109,69 +115,72 @@ Partial Class Teacher_ViewResults
             totalWrong = CInt(If(ansDt.Rows(0)("WrongCount") Is DBNull.Value, 0, ansDt.Rows(0)("WrongCount")))
         End If
 
-        ' Build JS Charts
-        litChartJS.Text = $"<script>
-(function() {{
-    const ctxBar = document.getElementById('scoreBarChart').getContext('2d');
-    new Chart(ctxBar, {{
-        type: 'bar',
-        data: {{
-            labels: [{labelsJson}],
-            datasets: [{{
-                label: 'Student Score (%)',
-                data: [{scoresJson}],
-                backgroundColor: 'rgba(164,113,248,0.8)',
-                borderColor: 'rgba(164,113,248,1)',
-                borderWidth: 1,
-                borderRadius: 4
-            }}]
-        }},
-        options: {{
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {{ legend: {{ display: false }} }},
-            scales: {{
-                y: {{ beginAtZero: true, max: 100, ticks: {{ color: '#9090b8' }}, grid: {{ color: 'rgba(255,255,255,0.05)' }} }},
-                x: {{ ticks: {{ color: '#9090b8' }}, grid: {{ display: false }} }}
-            }}
-        }}
-    }});
+        ' Build JS Charts manually (No String Interpolation or Multiline strings)
+        Dim sb As New System.Text.StringBuilder()
+        sb.AppendLine("<script>")
+        sb.AppendLine("(function() {")
+        sb.AppendLine("    const ctxBar = document.getElementById('scoreBarChart').getContext('2d');")
+        sb.AppendLine("    new Chart(ctxBar, {")
+        sb.AppendLine("        type: 'bar',")
+        sb.AppendLine("        data: {")
+        sb.AppendLine("            labels: [" & labelsJson & "],")
+        sb.AppendLine("            datasets: [{")
+        sb.AppendLine("                label: 'Student Score (%)',")
+        sb.AppendLine("                data: [" & scoresJson & "],")
+        sb.AppendLine("                backgroundColor: 'rgba(164,113,248,0.8)',")
+        sb.AppendLine("                borderColor: 'rgba(164,113,248,1)',")
+        sb.AppendLine("                borderWidth: 1,")
+        sb.AppendLine("                borderRadius: 4")
+        sb.AppendLine("            }]")
+        sb.AppendLine("        },")
+        sb.AppendLine("        options: {")
+        sb.AppendLine("            responsive: true,")
+        sb.AppendLine("            maintainAspectRatio: false,")
+        sb.AppendLine("            plugins: { legend: { display: false } },")
+        sb.AppendLine("            scales: {")
+        sb.AppendLine("                y: { beginAtZero: true, max: 100, ticks: { color: '#9090b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },")
+        sb.AppendLine("                x: { ticks: { color: '#9090b8' }, grid: { display: false } }")
+        sb.AppendLine("            }")
+        sb.AppendLine("        }")
+        sb.AppendLine("    });")
 
-    const ctxGrade = document.getElementById('gradePieChart').getContext('2d');
-    new Chart(ctxGrade, {{
-        type: 'pie',
-        data: {{
-            labels: ['A+ (90-100)','A (80-89)','B (70-79)','C (60-69)','F (<60)'],
-            datasets: [{{
-                data: [{grades(0)}, {grades(1)}, {grades(2)}, {grades(3)}, {grades(4)}],
-                backgroundColor: ['#56ab2f','#8dc26f','#ffc107','#fd7e14','#ff416c'],
-                borderColor: '#0a0e27', borderWidth: 2
-            }}]
-        }},
-        options: {{
-            responsive: true, maintainAspectRatio: false,
-            plugins: {{ legend: {{ position: 'bottom', labels: {{ color: '#9090b8' }} }} }}
-        }}
-    }});
+        sb.AppendLine("    const ctxGrade = document.getElementById('gradePieChart').getContext('2d');")
+        sb.AppendLine("    new Chart(ctxGrade, {")
+        sb.AppendLine("        type: 'pie',")
+        sb.AppendLine("        data: {")
+        sb.AppendLine("            labels: ['A+ (90-100)','A (80-89)','B (70-79)','C (60-69)','F (<60)'],")
+        sb.AppendLine("            datasets: [{")
+        sb.AppendLine("                data: [" & grades(0) & ", " & grades(1) & ", " & grades(2) & ", " & grades(3) & ", " & grades(4) & "],")
+        sb.AppendLine("                backgroundColor: ['#56ab2f','#8dc26f','#ffc107','#fd7e14','#ff416c'],")
+        sb.AppendLine("                borderColor: '#0a0e27', borderWidth: 2")
+        sb.AppendLine("            }]")
+        sb.AppendLine("        },")
+        sb.AppendLine("        options: {")
+        sb.AppendLine("            responsive: true, maintainAspectRatio: false,")
+        sb.AppendLine("            plugins: { legend: { position: 'bottom', labels: { color: '#9090b8' } } }")
+        sb.AppendLine("        }")
+        sb.AppendLine("    });")
 
-    const ctxCorrect = document.getElementById('correctPieChart').getContext('2d');
-    new Chart(ctxCorrect, {{
-        type: 'pie',
-        data: {{
-            labels: ['Correct Answers', 'Incorrect / Skipped'],
-            datasets: [{{
-                data: [{totalCorrect}, {totalWrong}],
-                backgroundColor: ['#56ab2f', '#ff416c'],
-                borderColor: '#0a0e27', borderWidth: 2
-            }}]
-        }},
-        options: {{
-            responsive: true, maintainAspectRatio: false,
-            plugins: {{ legend: {{ position: 'bottom', labels: {{ color: '#9090b8' }} }} }}
-        }}
-    }});
-}})();
-</script>"
+        sb.AppendLine("    const ctxCorrect = document.getElementById('correctPieChart').getContext('2d');")
+        sb.AppendLine("    new Chart(ctxCorrect, {")
+        sb.AppendLine("        type: 'pie',")
+        sb.AppendLine("        data: {")
+        sb.AppendLine("            labels: ['Correct Answers', 'Incorrect / Skipped'],")
+        sb.AppendLine("            datasets: [{")
+        sb.AppendLine("                data: [" & totalCorrect & ", " & totalWrong & "],")
+        sb.AppendLine("                backgroundColor: ['#56ab2f', '#ff416c'],")
+        sb.AppendLine("                borderColor: '#0a0e27', borderWidth: 2")
+        sb.AppendLine("            }]")
+        sb.AppendLine("        },")
+        sb.AppendLine("        options: {")
+        sb.AppendLine("            responsive: true, maintainAspectRatio: false,")
+        sb.AppendLine("            plugins: { legend: { position: 'bottom', labels: { color: '#9090b8' } } }")
+        sb.AppendLine("        }")
+        sb.AppendLine("    });")
+        sb.AppendLine("})();")
+        sb.AppendLine("</script>")
+
+        litChartJS.Text = sb.ToString()
     End Sub
 
 End Class

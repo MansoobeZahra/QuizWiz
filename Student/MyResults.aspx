@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="MyResults.aspx.vb" Inherits="Student_MyResults" MasterPageFile="~/MasterPage.master" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="MyResults.aspx.vb" Inherits="Student_MyResults" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">My Results</asp:Content>
 
@@ -72,10 +72,10 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Your Answer">
                     <ItemTemplate>
-                        <% Dim sa As String = If(Eval("StudentAns") Is DBNull.Value, "—", Eval("StudentAns").ToString())
-                           Dim ca As String = Eval("CorrectAns").ToString()
-                           If sa = "—" Then %>
-                            <span class="badge badge-grey">— Skipped</span>
+                        <% Dim sa As String = If(Eval("StudentAns") Is DBNull.Value, "-", Eval("StudentAns").ToString()) %>
+                        <% Dim ca As String = Eval("CorrectAns").ToString() %>
+                        <% If sa = "-" Then %>
+                            <span class="badge badge-grey">- Skipped</span>
                         <% ElseIf sa = ca Then %>
                             <span class="badge badge-green"> <%=sa%></span>
                         <% Else %>
@@ -124,11 +124,16 @@
                         <%
                             Dim p2 As Double = Convert.ToDouble(Eval("Percentage"))
                             Dim g As String, gc As String
-                            If p2 >= 90  Then g = "A+" : gc = "grade-A"
-                            ElseIf p2 >= 80 Then g = "A"  : gc = "grade-A"
-                            ElseIf p2 >= 70 Then g = "B"  : gc = "grade-B"
-                            ElseIf p2 >= 60 Then g = "C"  : gc = "grade-C"
-                            Else g = "F" : gc = "grade-F"
+                            If p2 >= 90  Then
+                                g = "A+" : gc = "grade-A"
+                            ElseIf p2 >= 80 Then
+                                g = "A"  : gc = "grade-A"
+                            ElseIf p2 >= 70 Then
+                                g = "B"  : gc = "grade-B"
+                            ElseIf p2 >= 60 Then
+                                g = "C"  : gc = "grade-C"
+                            Else
+                                g = "F" : gc = "grade-F"
                             End If
                         %>
                         <span class="fw-700 <%=gc%>"><%=g%></span>

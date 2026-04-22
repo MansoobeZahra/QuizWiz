@@ -63,36 +63,37 @@ Partial Class Teacher_TestQuiz
         Dim shuffleOpts = CBool(quizDt.Rows(0)("ShuffleOptions"))
         Session(SK_Title) = quizDt.Rows(0)("QuizTitle").ToString()
 
-        Dim qDt = DBHelper.GetDataTable("
-            SELECT qt.QuestionID, qt.QuestionStatement,
-                   qt.OptionA, qt.OptionB, qt.OptionC, qt.OptionD,
-                   qt.CorrectOption, qt.CorrectOptions, qt.DifficultyLevel,
-                   qt.ImagePath, qt.QuestionType, s.SubjectName
-            FROM QuizQuestions qq
-            JOIN QuestionsTable qt ON qq.QuestionID = qt.QuestionID
-            JOIN Subjects s        ON qt.SubjectID  = s.SubjectID
-            WHERE qq.QuizID = @qid ORDER BY qq.DisplayOrder",
+        Dim qDt = DBHelper.GetDataTable( _
+            "SELECT qt.QuestionID, qt.QuestionStatement, " & _
+            "       qt.OptionA, qt.OptionB, qt.OptionC, qt.OptionD, " & _
+            "       qt.CorrectOption, qt.CorrectOptions, qt.DifficultyLevel, " & _
+            "       qt.ImagePath, qt.QuestionType, s.SubjectName " & _
+            "FROM QuizQuestions qq " & _
+            "JOIN QuestionsTable qt ON qq.QuestionID = qt.QuestionID " & _
+            "JOIN Subjects s        ON qt.SubjectID  = s.SubjectID " & _
+            "WHERE qq.QuizID = @qid ORDER BY qq.DisplayOrder",
             DBHelper.Param("@qid", quizID))
 
         Dim qList As New List(Of PreviewQuestion)
         For Each row As DataRow In qDt.Rows
             Dim letters() As String = {"A", "B", "C", "D"}
             If shuffleOpts Then ShuffleArray(letters)
-            qList.Add(New PreviewQuestion With {
-                .QuestionID     = CInt(row("QuestionID")),
-                .Statement      = row("QuestionStatement").ToString(),
-                .OptionA        = row("OptionA").ToString(),
-                .OptionB        = row("OptionB").ToString(),
-                .OptionC        = row("OptionC").ToString(),
-                .OptionD        = row("OptionD").ToString(),
-                .CorrectOption  = If(row("CorrectOption") Is DBNull.Value, "", row("CorrectOption").ToString()),
-                .CorrectOptions = If(row("CorrectOptions") Is DBNull.Value, "", row("CorrectOptions").ToString()),
-                .DifficultyLevel = row("DifficultyLevel").ToString(),
-                .SubjectName    = row("SubjectName").ToString(),
-                .ImagePath      = If(row("ImagePath") Is DBNull.Value, "", row("ImagePath").ToString()),
-                .QuestionType   = row("QuestionType").ToString(),
-                .ShuffleOrder   = letters
-            })
+            
+            Dim q As New PreviewQuestion()
+            q.QuestionID     = CInt(row("QuestionID"))
+            q.Statement      = row("QuestionStatement").ToString()
+            q.OptionA        = row("OptionA").ToString()
+            q.OptionB        = row("OptionB").ToString()
+            q.OptionC        = row("OptionC").ToString()
+            q.OptionD        = row("OptionD").ToString()
+            q.CorrectOption  = If(row("CorrectOption") Is DBNull.Value, "", row("CorrectOption").ToString())
+            q.CorrectOptions = If(row("CorrectOptions") Is DBNull.Value, "", row("CorrectOptions").ToString())
+            q.DifficultyLevel = row("DifficultyLevel").ToString()
+            q.SubjectName    = row("SubjectName").ToString()
+            q.ImagePath      = If(row("ImagePath") Is DBNull.Value, "", row("ImagePath").ToString())
+            q.QuestionType   = row("QuestionType").ToString()
+            q.ShuffleOrder   = letters
+            qList.Add(q)
         Next
 
         Session(SK_QList)  = qList
@@ -151,7 +152,7 @@ Partial Class Teacher_TestQuiz
             Dim labels() As String = {"1", "2", "3", "4"}
             For i As Integer = 0 To 3
                 Dim letter = qq.ShuffleOrder(i)
-                Dim text   As String
+                Dim text   As String = ""
                 Select Case letter
                     Case "A" : text = qq.OptionA
                     Case "B" : text = qq.OptionB

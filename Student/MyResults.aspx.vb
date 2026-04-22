@@ -2,7 +2,10 @@ Partial Class Student_MyResults
     Inherits System.Web.UI.Page
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If Session("Role")?.ToString() <> "Student" Then Response.Redirect("~/Login.aspx") : Return
+        Dim roleStr As String = ""
+        If Session("Role") IsNot Nothing Then roleStr = Session("Role").ToString()
+        If roleStr <> "Student" Then Response.Redirect("~/Login.aspx") : Return
+
         If Not IsPostBack Then
             Dim sid   = CInt(Session("UserID"))
             Dim qidStr = Request.QueryString("quizid")
@@ -20,11 +23,11 @@ Partial Class Student_MyResults
 
     Private Sub LoadSingleResult(sid As Integer, quizID As Integer)
         ' Get result row
-        Dim dt = DBHelper.GetDataTable("
-            SELECT r.ObtainedMarks, r.TotalMarks, r.Percentage, q.QuizTitle
-            FROM Results r
-            JOIN Quiz q ON r.QuizID = q.QuizID
-            WHERE r.StudentID=@s AND r.QuizID=@q",
+        Dim dt = DBHelper.GetDataTable( _
+            "SELECT r.ObtainedMarks, r.TotalMarks, r.Percentage, q.QuizTitle " & _
+            "FROM Results r " & _
+            "JOIN Quiz q ON r.QuizID = q.QuizID " & _
+            "WHERE r.StudentID=@s AND r.QuizID=@q", _
             DBHelper.Param("@s", sid), DBHelper.Param("@q", quizID))
 
         If dt.Rows.Count = 0 Then Return
@@ -35,11 +38,16 @@ Partial Class Student_MyResults
         Dim total    = CInt(row("TotalMarks"))
 
         Dim grade As String, gradeCls As String
-        If pct >= 90  Then grade = "A+" : gradeCls = "grade-A"
-        ElseIf pct >= 80 Then grade = "A"  : gradeCls = "grade-A"
-        ElseIf pct >= 70 Then grade = "B"  : gradeCls = "grade-B"
-        ElseIf pct >= 60 Then grade = "C"  : gradeCls = "grade-C"
-        Else grade = "F" : gradeCls = "grade-F"
+        If pct >= 90  Then
+            grade = "A+" : gradeCls = "grade-A"
+        ElseIf pct >= 80 Then
+            grade = "A"  : gradeCls = "grade-A"
+        ElseIf pct >= 70 Then
+            grade = "B"  : gradeCls = "grade-B"
+        ElseIf pct >= 60 Then
+            grade = "C"  : gradeCls = "grade-C"
+        Else
+            grade = "F" : gradeCls = "grade-F"
         End If
 
         litPct.Text      = pct.ToString("0.#") & "%"
@@ -51,13 +59,13 @@ Partial Class Student_MyResults
         pnlHero.Visible  = True
 
         ' Per-question detail
-        Dim detailDt = DBHelper.GetDataTable("
-            SELECT a.QNo, qt.QuestionStatement, qt.DifficultyLevel,
-                   a.CorrectAns, a.StudentAns, a.Marks
-            FROM Answers a
-            JOIN QuestionsTable qt ON a.QuestionID = qt.QuestionID
-            WHERE a.StudentID=@s AND a.QuizID=@q
-            ORDER BY a.QNo",
+        Dim detailDt = DBHelper.GetDataTable( _
+            "SELECT a.QNo, qt.QuestionStatement, qt.DifficultyLevel, " & _
+            "       a.CorrectAns, a.StudentAns, a.Marks " & _
+            "FROM Answers a " & _
+            "JOIN QuestionsTable qt ON a.QuestionID = qt.QuestionID " & _
+            "WHERE a.StudentID=@s AND a.QuizID=@q " & _
+            "ORDER BY a.QNo", _
             DBHelper.Param("@s", sid), DBHelper.Param("@q", quizID))
 
         gvDetail.DataSource = detailDt
@@ -95,60 +103,62 @@ Partial Class Student_MyResults
             End Select
         Next
 
-        litChartScript.Text = $"<script>
-(function(){{
-  var pieCtx = document.getElementById('myPieChart').getContext('2d');
-  new Chart(pieCtx,{{
-    type:'pie',
-    data:{{
-      labels:['Correct','Wrong','Skipped'],
-      datasets:[{{
-        data:[{correct},{wrong},{skipped}],
-        backgroundColor:['#56ab2f','#ff416c','#f7971e'],
-        borderColor:'#0a0e27', borderWidth:2
-      }}]
-    }},
-    options:{{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{{
-        legend:{{position:'bottom',labels:{{color:'#9090b8',padding:12,font:{{size:11}}}}}},
-        tooltip:{{callbacks:{{label:function(c){{return c.label+': '+c.parsed+' question(s)'}}}}}}
-      }}
-    }}
-  }});
+        Dim sb As New System.Text.StringBuilder()
+        sb.AppendLine("<script>")
+        sb.AppendLine("(function(){")
+        sb.AppendLine("  var pieCtx = document.getElementById('myPieChart').getContext('2d');")
+        sb.AppendLine("  new Chart(pieCtx,{")
+        sb.AppendLine("    type:'pie',")
+        sb.AppendLine("    data:{")
+        sb.AppendLine("      labels:['Correct','Wrong','Skipped'],")
+        sb.AppendLine("      datasets:[{")
+        sb.AppendLine("        data:[" & correct & "," & wrong & "," & skipped & "],")
+        sb.AppendLine("        backgroundColor:['#56ab2f','#ff416c','#f7971e'],")
+        sb.AppendLine("        borderColor:'#0a0e27', borderWidth:2")
+        sb.AppendLine("      }]")
+        sb.AppendLine("    },")
+        sb.AppendLine("    options:{")
+        sb.AppendLine("      responsive:true, maintainAspectRatio:false,")
+        sb.AppendLine("      plugins:{")
+        sb.AppendLine("        legend:{position:'bottom',labels:{color:'#9090b8',padding:12,font:{size:11}}},")
+        sb.AppendLine("        tooltip:{callbacks:{label:function(c){return c.label+': '+c.parsed+' question(s)'}}}")
+        sb.AppendLine("      }")
+        sb.AppendLine("    }")
+        sb.AppendLine("  });")
 
-  var diffCtx = document.getElementById('diffChart').getContext('2d');
-  new Chart(diffCtx,{{
-    type:'bar',
-    data:{{
-      labels:['Easy','Medium','Hard','Expert'],
-      datasets:[
-        {{label:'Correct',data:[{easyC},{medC},{hardC},{expC}],backgroundColor:'rgba(86,171,47,0.7)',borderRadius:4}},
-        {{label:'Wrong',  data:[{easyW},{medW},{hardW},{expW}],backgroundColor:'rgba(255,65,108,0.7)',borderRadius:4}}
-      ]
-    }},
-    options:{{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{{ legend:{{labels:{{color:'#9090b8'}}}} }},
-      scales:{{
-        x:{{ticks:{{color:'#9090b8'}},grid:{{display:false}},stacked:false}},
-        y:{{ticks:{{color:'#9090b8',stepSize:1}},grid:{{color:'rgba(255,255,255,0.06)'}},min:0}}
-      }}
-    }}
-  }});
-}})();
-</script>"
+        sb.AppendLine("  var diffCtx = document.getElementById('diffChart').getContext('2d');")
+        sb.AppendLine("  new Chart(diffCtx,{")
+        sb.AppendLine("    type:'bar',")
+        sb.AppendLine("    data:{")
+        sb.AppendLine("      labels:['Easy','Medium','Hard','Expert'],")
+        sb.AppendLine("      datasets:[")
+        sb.AppendLine("        {label:'Correct',data:[" & easyC & "," & medC & "," & hardC & "," & expC & "],backgroundColor:'rgba(86,171,47,0.7)',borderRadius:4},")
+        sb.AppendLine("        {label:'Wrong',  data:[" & easyW & "," & medW & "," & hardW & "," & expW & "],backgroundColor:'rgba(255,65,108,0.7)',borderRadius:4}")
+        sb.AppendLine("      ]")
+        sb.AppendLine("    },")
+        sb.AppendLine("    options:{")
+        sb.AppendLine("      responsive:true, maintainAspectRatio:false,")
+        sb.AppendLine("      plugins:{ legend:{labels:{color:'#9090b8'}} },")
+        sb.AppendLine("      scales:{")
+        sb.AppendLine("        x:{ticks:{color:'#9090b8'},grid:{display:false},stacked:false},")
+        sb.AppendLine("        y:{ticks:{color:'#9090b8',stepSize:1},grid:{color:'rgba(255,255,255,0.06)'},min:0}")
+        sb.AppendLine("      }")
+        sb.AppendLine("    }")
+        sb.AppendLine("  });")
+        sb.AppendLine("})();")
+        sb.AppendLine("</script>")
+        litChartScript.Text = sb.ToString()
     End Sub
 
     Private Sub LoadAllResults(sid As Integer)
-        Dim dt = DBHelper.GetDataTable("
-            SELECT r.ResultID, q.QuizTitle, s.SubjectName,
-                   r.ObtainedMarks, r.TotalMarks, r.Percentage, r.AttemptDate
-            FROM Results r
-            JOIN Quiz q     ON r.QuizID    = q.QuizID
-            JOIN Subjects s ON q.SubjectID = s.SubjectID
-            WHERE r.StudentID=@sid
-            ORDER BY r.AttemptDate DESC",
+        Dim dt = DBHelper.GetDataTable( _
+            "SELECT r.ResultID, q.QuizTitle, s.SubjectName, " & _
+            "       r.ObtainedMarks, r.TotalMarks, r.Percentage, r.AttemptDate " & _
+            "FROM Results r " & _
+            "JOIN Quiz q     ON r.QuizID    = q.QuizID " & _
+            "JOIN Subjects s ON q.SubjectID = s.SubjectID " & _
+            "WHERE r.StudentID=@sid " & _
+            "ORDER BY r.AttemptDate DESC", _
             DBHelper.Param("@sid", sid))
         gvAllResults.DataSource = dt
         gvAllResults.DataBind()

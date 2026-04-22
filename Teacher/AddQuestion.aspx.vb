@@ -39,20 +39,25 @@ Partial Class Teacher_AddQuestion
         Dim correctOption  As String = "A"  ' fallback for Radio
 
         If qType = "Radio" Then
-            If String.IsNullOrWhiteSpace(txtA.Text) OrElse String.IsNullOrWhiteSpace(txtB.Text) OrElse
+            If String.IsNullOrWhiteSpace(txtA.Text) OrElse String.IsNullOrWhiteSpace(txtB.Text) OrElse _
                String.IsNullOrWhiteSpace(txtC.Text) OrElse String.IsNullOrWhiteSpace(txtD.Text) Then
                 ShowError("All four options are required for Single Choice.") : Return
             End If
-            If rbA.Checked Then correctOption = "A"
-            ElseIf rbB.Checked Then correctOption = "B"
-            ElseIf rbC.Checked Then correctOption = "C"
-            ElseIf rbD.Checked Then correctOption = "D"
-            Else ShowError("Select the correct option.") : Return
+            If rbA.Checked Then
+                correctOption = "A"
+            ElseIf rbB.Checked Then
+                correctOption = "B"
+            ElseIf rbC.Checked Then
+                correctOption = "C"
+            ElseIf rbD.Checked Then
+                correctOption = "D"
+            Else
+                ShowError("Select the correct option.") : Return
             End If
             correctOptions = correctOption
 
         ElseIf qType = "Checkbox" Then
-            If String.IsNullOrWhiteSpace(txtA.Text) OrElse String.IsNullOrWhiteSpace(txtB.Text) OrElse
+            If String.IsNullOrWhiteSpace(txtA.Text) OrElse String.IsNullOrWhiteSpace(txtB.Text) OrElse _
                String.IsNullOrWhiteSpace(txtC.Text) OrElse String.IsNullOrWhiteSpace(txtD.Text) Then
                 ShowError("All four options are required for Multiple Choice.") : Return
             End If
@@ -96,22 +101,22 @@ Partial Class Teacher_AddQuestion
         Dim optD = If(qType = "Paragraph", "N/A", txtD.Text.Trim())
 
         Try
-            DBHelper.ExecuteNonQuery("
-                INSERT INTO QuestionsTable
-                    (SubjectID,QuestionStatement,OptionA,OptionB,OptionC,OptionD,
-                     CorrectOption,DifficultyLevel,ImagePath,CreatedBy,QuestionType,CorrectOptions)
-                VALUES (@sid,@stmt,@a,@b,@c,@d,@co,@diff,@img,@by,@qt,@cops)",
-                DBHelper.Param("@sid",  CInt(ddlSubject.SelectedValue)),
-                DBHelper.Param("@stmt", txtStatement.Text.Trim()),
-                DBHelper.Param("@a",    optA),
-                DBHelper.Param("@b",    optB),
-                DBHelper.Param("@c",    optC),
-                DBHelper.Param("@d",    optD),
-                DBHelper.Param("@co",   correctOption),
-                DBHelper.Param("@diff", ddlDifficulty.SelectedValue),
-                DBHelper.Param("@img",  If(imagePath Is Nothing, CObj(DBNull.Value), CObj(imagePath))),
-                DBHelper.Param("@by",   CInt(Session("UserID"))),
-                DBHelper.Param("@qt",   qType),
+            DBHelper.ExecuteNonQuery( _
+                "INSERT INTO QuestionsTable " & _
+                "    (SubjectID,QuestionStatement,OptionA,OptionB,OptionC,OptionD, " & _
+                "     CorrectOption,DifficultyLevel,ImagePath,CreatedBy,QuestionType,CorrectOptions) " & _
+                "VALUES (@sid,@stmt,@a,@b,@c,@d,@co,@diff,@img,@by,@qt,@cops)", _
+                DBHelper.Param("@sid",  CInt(ddlSubject.SelectedValue)), _
+                DBHelper.Param("@stmt", txtStatement.Text.Trim()), _
+                DBHelper.Param("@a",    optA), _
+                DBHelper.Param("@b",    optB), _
+                DBHelper.Param("@c",    optC), _
+                DBHelper.Param("@d",    optD), _
+                DBHelper.Param("@co",   correctOption), _
+                DBHelper.Param("@diff", ddlDifficulty.SelectedValue), _
+                DBHelper.Param("@img",  If(imagePath Is Nothing, CObj(DBNull.Value), CObj(imagePath))), _
+                DBHelper.Param("@by",   CInt(Session("UserID"))), _
+                DBHelper.Param("@qt",   qType), _
                 DBHelper.Param("@cops", correctOptions))
 
             ' Reset form

@@ -15,9 +15,12 @@ Partial Class Admin_ManageUsers
     Private Sub LoadSubjects()
         Dim dt = DBHelper.GetDataTable("SELECT SubjectID, SubjectName FROM Subjects ORDER BY SubjectName")
         ddlSubject.Items.Clear()
-        ddlSubject.Items.Add(New System.Web.UI.WebControls.ListItem("— None —", ""))
+        ddlSubject.Items.Add(New System.Web.UI.WebControls.ListItem("- None -", ""))
         For Each row As System.Data.DataRow In dt.Rows
-            ddlSubject.Items.Add(New System.Web.UI.WebControls.ListItem(row("SubjectName").ToString(), row("SubjectID").ToString()))
+            Dim txt As String = row("SubjectName").ToString()
+            Dim val As String = row("SubjectID").ToString()
+            Dim item As New System.Web.UI.WebControls.ListItem(txt, val)
+            ddlSubject.Items.Add(item)
         Next
     End Sub
 
@@ -123,15 +126,15 @@ Partial Class Admin_ManageUsers
         Try
             If editID = 0 Then
                 ' Insert
-                Dim dupCheck = DBHelper.Exists(
+                Dim dupCheck = DBHelper.Exists( _
                     "SELECT COUNT(*) FROM Users WHERE Username=@u", DBHelper.Param("@u", uname))
                 If dupCheck Then ShowMsg("Username already exists.", "danger") : Return
 
                 DBHelper.ExecuteNonQuery( _
                     "INSERT INTO Users (FullName,Username,Password,Role,SubjectID,IsActive) " & _
-                    "VALUES (@n,@u,@p,@r,@s,@a)",
-                    DBHelper.Param("@n", name), DBHelper.Param("@u", uname),
-                    DBHelper.Param("@p", pwd),  DBHelper.Param("@r", role),
+                    "VALUES (@n,@u,@p,@r,@s,@a)", _
+                    DBHelper.Param("@n", name), DBHelper.Param("@u", uname), _
+                    DBHelper.Param("@p", pwd),  DBHelper.Param("@r", role), _
                     DBHelper.Param("@s", subID), DBHelper.Param("@a", active))
                 ShowMsg("User created successfully!", "success")
             Else
