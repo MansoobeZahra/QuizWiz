@@ -201,8 +201,7 @@ textarea { resize: vertical; min-height: 100px; }
 /* ----- Sidebar ----- */
 .sidebar {
     width: var(--sidebar-w);
-    background: var(--bg);
-    border-right: 1px solid var(--border);
+    background: var(--primary);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -210,12 +209,11 @@ textarea { resize: vertical; min-height: 100px; }
     height: 100vh;
     z-index: 100;
     overflow-y: auto;
-    transition: var(--trans);
 }
 
 .sidebar-logo {
     padding: 32px 20px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
     text-align: center;
 }
 .sidebar-logo .logo-img {
@@ -227,74 +225,59 @@ textarea { resize: vertical; min-height: 100px; }
 
 .sidebar-user {
     padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: #FFFFFF;
 }
 .sidebar-user .user-name { font-size: 14px; font-weight: 600; }
 .sidebar-user .user-role {
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .8px;
+    font-weight: 700;
     text-transform: uppercase;
-    padding: 2px 10px;
-    border-radius: 20px;
     display: inline-block;
     margin-top: 4px;
+    color: var(--secondary);
 }
-.role-admin   { background: rgba(247,151,30,.2); color: var(--yellow); }
-.role-teacher { background: rgba(108,99,255,.2); color: var(--purple-light); }
-.role-student { background: rgba(86,171,47,.2); color: var(--green-light); }
 
-.sidebar-nav { padding: 16px 12px; flex: 1; }
+.sidebar-nav { padding: 16px 0; flex: 1; }
 .nav-section {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: var(--text-muted);
-    padding: 0 8px;
-    margin: 12px 0 6px;
+    color: rgba(255,255,255,0.5);
+    padding: 0 20px;
+    margin: 16px 0 8px;
 }
 .nav-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    color: var(--text-sec);
+    padding: 12px 20px;
+    color: rgba(255,255,255,0.8);
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    transition: var(--trans);
-    margin-bottom: 3px;
-}
-.nav-link:hover {
-    background: var(--card-hover);
-    color: var(--text);
 }
 .nav-link.active {
-    background: rgba(108,99,255,.15);
-    color: var(--purple-light);
-    border-left: 3px solid var(--purple);
+    background: rgba(255,255,255,0.1);
+    color: #FFFFFF;
+    border-left: 4px solid var(--secondary);
 }
-.nav-link .icon { font-size: 16px; width: 20px; text-align: center; }
 
 .sidebar-footer {
-    padding: 16px 12px;
-    border-top: 1px solid var(--border);
+    padding: 16px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 .sidebar-footer a {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    color: var(--red);
+    padding: 12px 20px;
+    color: #FFFFFF;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
-    transition: var(--trans);
+    font-weight: 600;
 }
-.sidebar-footer a:hover { background: rgba(255,65,108,.1); }
 
 /* ----- Main Content ----- */
 .main-content {
