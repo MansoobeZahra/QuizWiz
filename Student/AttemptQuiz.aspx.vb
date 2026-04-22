@@ -1,25 +1,29 @@
 Imports System.Data
+Imports System.Linq
 
 Partial Class Student_AttemptQuiz
     Inherits System.Web.UI.Page
 
-    ' Session keys
     Private Const SK_QUIZID   As String = "AQ_QuizID"
-    Private Const SK_QList    As String = "AQ_Questions"    ' List(Of QuizQuestion)
+    Private Const SK_QList    As String = "AQ_Questions"
     Private Const SK_CurrIdx  As String = "AQ_CurrentIdx"
+    Private Const SK_Total    As String = "AQ_Total"
     Private Const SK_Start    As String = "AQ_StartTime"
     Private Const SK_Allowed  As String = "AQ_AllowedMins"
-    Private Const SK_Shuffle  As String = "AQ_ShuffleOpts"
+    Private Const SK_NegMark  As String = "AQ_NegMarking"
+    Private Const SK_NegVal   As String = "AQ_NegMarks"
 
     Structure QuizQuestion
-        Dim QuestionID   As Integer
-        Dim Statement    As String
+        Dim QuestionID    As Integer
+        Dim Statement     As String
         Dim OptionA, OptionB, OptionC, OptionD As String
-        Dim CorrectOption As String
+        Dim CorrectOption  As String
+        Dim CorrectOptions As String   ' authoritative: letter(s) or paragraph text
         Dim DifficultyLevel As String
-        Dim SubjectName  As String
-        Dim ImagePath    As String
-        Dim ShuffleOrder As String()  ' Array of {"A","B","C","D"} in display order
+        Dim SubjectName    As String
+        Dim ImagePath      As String
+        Dim QuestionType   As String   ' Radio | Checkbox | Paragraph
+        Dim ShuffleOrder   As String() ' e.g. {"C","A","D","B"}
     End Structure
 
     Private ReadOnly Property StudentID As Integer
@@ -29,96 +33,82 @@ Partial Class Student_AttemptQuiz
     End Property
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If Session("Role")?.ToString() <> "Student" Then Response.Redirect("~/Login.aspx") : Return
-
+        AuthHelper.RequireRole(Me, "Student")
         If Not IsPostBack Then
             Dim qidStr = Request.QueryString("quizid")
             If String.IsNullOrEmpty(qidStr) Then Response.Redirect("~/Student/Dashboard.aspx") : Return
-            Dim quizID As Integer = CInt(qidStr)
-            InitQuiz(quizID)
+            InitQuiz(CInt(qidStr))
         Else
-            If Session(SK_QList) IsNot Nothing Then
-                ShowCurrentQuestion()
-            End If
+            If Session(SK_QList) IsNot Nothing Then ShowCurrentQuestion()
         End If
     End Sub
 
     Private Sub InitQuiz(quizID As Integer)
-        ' Check already attempted
-        Dim alreadyDone = DBHelper.Exists(
+        ' Already attempted?
+        If DBHelper.Exists(
             "SELECT COUNT(*) FROM Results WHERE StudentID=@s AND QuizID=@q",
-            DBHelper.Param("@s", StudentID), DBHelper.Param("@q", quizID))
-
-        If alreadyDone Then
-            pnlAlreadyDone.Visible = True
-            pnlQuiz.Visible        = False
-            Return
+            DBHelper.Param("@s", StudentID), DBHelper.Param("@q", quizID)) Then
+            pnlAlreadyDone.Visible = True : pnlQuiz.Visible = False : Return
         End If
 
-        ' Load quiz settings
         Dim quizDt = DBHelper.GetDataTable(
-            "SELECT q.QuizTitle, q.AllowedTime, q.TotalQuestions, q.RandomizeQ, q.ShuffleOptions
-             FROM Quiz q WHERE q.QuizID=@id AND q.IsPublished=1",
+            "SELECT QuizTitle,AllowedTime,TotalQuestions,RandomizeQ,ShuffleOptions,
+                    NegativeMarking,NegativeMarks
+             FROM Quiz WHERE QuizID=@id AND IsPublished=1",
             DBHelper.Param("@id", quizID))
-
         If quizDt.Rows.Count = 0 Then Response.Redirect("~/Student/Dashboard.aspx") : Return
 
-        Dim quizRow   = quizDt.Rows(0)
-        Dim randomizeQ  = CBool(quizRow("RandomizeQ"))
-        Dim shuffleOpts = CBool(quizRow("ShuffleOptions"))
-        Dim totalQ      = CInt(quizRow("TotalQuestions"))
-        Dim allowedMins = CInt(quizRow("AllowedTime"))
+        Dim qr          = quizDt.Rows(0)
+        Dim randomizeQ  = CBool(qr("RandomizeQ"))
+        Dim shuffleOpts = CBool(qr("ShuffleOptions"))
+        Dim totalQ      = CInt(qr("TotalQuestions"))
+        Dim allowedMins = CInt(qr("AllowedTime"))
+        Dim negMarking  = CBool(qr("NegativeMarking"))
+        Dim negMarks    = CDec(qr("NegativeMarks"))
 
-        ' Load questions linked to quiz
         Dim qDt = DBHelper.GetDataTable("
             SELECT qt.QuestionID, qt.QuestionStatement,
                    qt.OptionA, qt.OptionB, qt.OptionC, qt.OptionD,
-                   qt.CorrectOption, qt.DifficultyLevel, qt.ImagePath,
-                   s.SubjectName
+                   qt.CorrectOption, qt.CorrectOptions, qt.DifficultyLevel,
+                   qt.ImagePath, qt.QuestionType, s.SubjectName
             FROM QuizQuestions qq
             JOIN QuestionsTable qt ON qq.QuestionID = qt.QuestionID
             JOIN Subjects s        ON qt.SubjectID  = s.SubjectID
-            WHERE qq.QuizID = @qid
-            ORDER BY qq.DisplayOrder",
+            WHERE qq.QuizID = @qid ORDER BY qq.DisplayOrder",
             DBHelper.Param("@qid", quizID))
 
-        ' Build list and optionally randomize
         Dim qList As New List(Of QuizQuestion)
         For Each row As DataRow In qDt.Rows
-            Dim qq As New QuizQuestion With {
-                .QuestionID    = CInt(row("QuestionID")),
-                .Statement     = row("QuestionStatement").ToString(),
-                .OptionA       = row("OptionA").ToString(),
-                .OptionB       = row("OptionB").ToString(),
-                .OptionC       = row("OptionC").ToString(),
-                .OptionD       = row("OptionD").ToString(),
-                .CorrectOption = row("CorrectOption").ToString(),
-                .DifficultyLevel = row("DifficultyLevel").ToString(),
-                .SubjectName   = row("SubjectName").ToString(),
-                .ImagePath     = If(row("ImagePath") Is DBNull.Value, "", row("ImagePath").ToString())
-            }
-            ' Build shuffle order
             Dim letters() As String = {"A", "B", "C", "D"}
             If shuffleOpts Then ShuffleArray(letters)
-            qq.ShuffleOrder = letters
-            qList.Add(qq)
+            qList.Add(New QuizQuestion With {
+                .QuestionID     = CInt(row("QuestionID")),
+                .Statement      = row("QuestionStatement").ToString(),
+                .OptionA        = row("OptionA").ToString(),
+                .OptionB        = row("OptionB").ToString(),
+                .OptionC        = row("OptionC").ToString(),
+                .OptionD        = row("OptionD").ToString(),
+                .CorrectOption  = If(row("CorrectOption") Is DBNull.Value, "", row("CorrectOption").ToString()),
+                .CorrectOptions = If(row("CorrectOptions") Is DBNull.Value, "", row("CorrectOptions").ToString()),
+                .DifficultyLevel = row("DifficultyLevel").ToString(),
+                .SubjectName    = row("SubjectName").ToString(),
+                .ImagePath      = If(row("ImagePath") Is DBNull.Value, "", row("ImagePath").ToString()),
+                .QuestionType   = row("QuestionType").ToString(),
+                .ShuffleOrder   = letters
+            })
         Next
 
         If randomizeQ Then ShuffleList(qList)
-
-        ' Take only totalQ questions
         If qList.Count > totalQ Then qList = qList.Take(totalQ).ToList()
 
-        ' Store in Session
         Session(SK_QUIZID)  = quizID
         Session(SK_QList)   = qList
         Session(SK_CurrIdx) = 0
+        Session(SK_Total)   = qList.Count
         Session(SK_Start)   = DateTime.Now
         Session(SK_Allowed) = allowedMins
-        Session(SK_Shuffle) = shuffleOpts
-
-        litQuizTitle.Text = quizRow("QuizTitle").ToString()
-        litQTotal.Text    = qList.Count.ToString()
+        Session(SK_NegMark) = negMarking
+        Session(SK_NegVal)  = negMarks
 
         pnlQuiz.Visible = True
         ShowCurrentQuestion()
@@ -127,33 +117,36 @@ Partial Class Student_AttemptQuiz
     Private Sub ShowCurrentQuestion()
         Dim qList   = CType(Session(SK_QList), List(Of QuizQuestion))
         Dim currIdx = CInt(Session(SK_CurrIdx))
+        If currIdx >= qList.Count Then FinaliseQuiz() : Return
 
-        If currIdx >= qList.Count Then
-            FinaliseQuiz() : Return
-        End If
-
-        Dim qq = qList(currIdx)
-        Dim qNum = currIdx + 1
+        Dim qq          = qList(currIdx)
+        Dim qNum        = currIdx + 1
+        Dim negMarking  = CBool(Session(SK_NegMark))
+        Dim negMarks    = CDec(Session(SK_NegVal))
 
         ' Timer
-        Dim startTime   = CDate(Session(SK_Start))
-        Dim allowedMins = CInt(Session(SK_Allowed))
-        Dim elapsed     = CInt((DateTime.Now - startTime).TotalSeconds)
-        Dim secsLeft    = Math.Max(0, allowedMins * 60 - elapsed)
-        hfTimeLeft.Value  = secsLeft.ToString()
+        Dim elapsed  = CInt((DateTime.Now - CDate(Session(SK_Start))).TotalSeconds)
+        Dim secsLeft = Math.Max(0, CInt(Session(SK_Allowed)) * 60 - elapsed)
+        If secsLeft = 0 Then FinaliseQuiz() : Return
+        hfTimeLeft.Value = secsLeft.ToString()
 
-        ' Fill UI
-        litQuizTitle.Text  = DBHelper.ExecuteScalar(
-            "SELECT QuizTitle FROM Quiz WHERE QuizID=@id",
+        ' Quiz title
+        litQuizTitle.Text  = DBHelper.ExecuteScalar("SELECT QuizTitle FROM Quiz WHERE QuizID=@id",
             DBHelper.Param("@id", CInt(Session(SK_QUIZID)))).ToString()
         litQNum.Text       = qNum.ToString()
-        litQNumBadge.Text  = qNum.ToString()
+        litQBadge.Text     = qNum.ToString()
         litQTotal.Text     = qList.Count.ToString()
         litQuestion.Text   = qq.Statement
         litDiffLabel.Text  = qq.DifficultyLevel
         litDiffClass.Text  = qq.DifficultyLevel.ToLower()
         litSubject.Text    = qq.SubjectName
+        litQTypeLabel.Text = qq.QuestionType
         hfQIndex.Value     = currIdx.ToString()
+        hfQuestionType.Value = qq.QuestionType
+
+        ' Negative marking badge
+        pnlNegBadge.Visible = negMarking
+        If negMarking Then litNegVal.Text = negMarks.ToString("0.##")
 
         ' Image
         If Not String.IsNullOrEmpty(qq.ImagePath) Then
@@ -164,9 +157,38 @@ Partial Class Student_AttemptQuiz
             pnlImage.Visible = False
         End If
 
-        ' Build options list respecting shuffle order
-        Dim opts = New List(Of Object)
+        ' Show correct question-type panel
+        Dim isRadio    = (qq.QuestionType = "Radio")
+        Dim isCheckbox = (qq.QuestionType = "Checkbox")
+        Dim isPara     = (qq.QuestionType = "Paragraph")
+
+        pnlRadio.Visible     = isRadio
+        pnlCheckbox.Visible  = isCheckbox
+        pnlParagraph.Visible = isPara
+        pnlMultiHint.Visible = isCheckbox
+
+        Dim opts = BuildOptionsList(qq)
+
+        If isRadio Then
+            rptOptions.DataSource = opts
+            rptOptions.DataBind()
+        ElseIf isCheckbox Then
+            rptCheckboxOpts.DataSource = opts
+            rptCheckboxOpts.DataBind()
+        End If
+
+        ' Nav
+        Dim isLast = (currIdx = qList.Count - 1)
+        btnNext.Visible   = Not isLast
+        btnSubmit.Visible = isLast
+
+        pnlQuiz.Visible = True
+        hfAnswer.Value  = ""
+    End Sub
+
+    Private Function BuildOptionsList(qq As QuizQuestion) As List(Of Object)
         Dim labels() As String = {"1", "2", "3", "4"}
+        Dim result    As New List(Of Object)
         For i As Integer = 0 To 3
             Dim letter = qq.ShuffleOrder(i)
             Dim text   As String
@@ -174,37 +196,18 @@ Partial Class Student_AttemptQuiz
                 Case "A" : text = qq.OptionA
                 Case "B" : text = qq.OptionB
                 Case "C" : text = qq.OptionC
-                Case Else : text = qq.OptionD
+                Case Else: text = qq.OptionD
             End Select
-            opts.Add(New With {
-                .Letter       = letter,
-                .DisplayLabel = labels(i),
-                .Text         = text
-            })
+            result.Add(New With {.Letter = letter, .DisplayLabel = labels(i), .Text = text})
         Next
-        rptOptions.DataSource = opts
-        rptOptions.DataBind()
-
-        ' Show Next or Submit
-        Dim isLast = (currIdx = qList.Count - 1)
-        btnNext.Visible   = Not isLast
-        btnSubmit.Visible = isLast
-
-        pnlQuiz.Visible = True
-    End Sub
+        Return result
+    End Function
 
     Protected Sub btnNext_Click(sender As Object, e As EventArgs)
         SaveCurrentAnswer()
         Dim currIdx = CInt(Session(SK_CurrIdx))
-
-        ' Check time
-        Dim startTime   = CDate(Session(SK_Start))
-        Dim allowedMins = CInt(Session(SK_Allowed))
-        Dim secsLeft    = CInt((DateTime.Now - startTime).TotalSeconds)
-        If secsLeft >= allowedMins * 60 Then
-            FinaliseQuiz() : Return
-        End If
-
+        Dim elapsed = CInt((DateTime.Now - CDate(Session(SK_Start))).TotalSeconds)
+        If elapsed >= CInt(Session(SK_Allowed)) * 60 Then FinaliseQuiz() : Return
         Session(SK_CurrIdx) = currIdx + 1
         ShowCurrentQuestion()
     End Sub
@@ -220,19 +223,18 @@ Partial Class Student_AttemptQuiz
         Dim qList      = CType(Session(SK_QList), List(Of QuizQuestion))
         If currIdx >= qList.Count Then Return
 
-        Dim qq      = qList(currIdx)
-        Dim quizID  = CInt(Session(SK_QUIZID))
-        Dim sid     = StudentID
-        Dim qNum    = currIdx + 1
+        Dim qq       = qList(currIdx)
+        Dim quizID   = CInt(Session(SK_QUIZID))
+        Dim sid      = StudentID
+        Dim qNum     = currIdx + 1
+        Dim negMark  = CBool(Session(SK_NegMark))
+        Dim negMarks = CDec(Session(SK_NegVal))
 
-        ' Check not already saved (prevent double-save on F5)
-        Dim exists = DBHelper.Exists(
+        If DBHelper.Exists(
             "SELECT COUNT(*) FROM Answers WHERE StudentID=@s AND QuizID=@q AND QNo=@n",
-            DBHelper.Param("@s", sid), DBHelper.Param("@q", quizID), DBHelper.Param("@n", qNum))
-        If exists Then Return
+            DBHelper.Param("@s", sid), DBHelper.Param("@q", quizID), DBHelper.Param("@n", qNum)) Then Return
 
-        Dim isCorrect As Boolean = (studentAns <> "" AndAlso studentAns = qq.CorrectOption)
-        Dim marks     As Decimal = If(isCorrect, 1D, 0D)
+        Dim marks = CalculateMarks(qq, studentAns, negMark, negMarks)
 
         DBHelper.ExecuteNonQuery("
             INSERT INTO Answers (StudentID,QuizID,QuestionID,QNo,CorrectAns,StudentAns,Marks)
@@ -241,62 +243,80 @@ Partial Class Student_AttemptQuiz
             DBHelper.Param("@qid",  quizID),
             DBHelper.Param("@qqid", qq.QuestionID),
             DBHelper.Param("@qno",  qNum),
-            DBHelper.Param("@ca",   qq.CorrectOption),
+            DBHelper.Param("@ca",   qq.CorrectOptions),
             DBHelper.Param("@sa",   If(studentAns = "", CObj(DBNull.Value), CObj(studentAns))),
             DBHelper.Param("@m",    marks))
 
-        ' Reset hidden field
         hfAnswer.Value = ""
     End Sub
+
+    Private Function CalculateMarks(qq As QuizQuestion, studentAns As String, negMarking As Boolean, negMarks As Decimal) As Decimal
+        If qq.QuestionType = "Paragraph" Then
+            If studentAns <> "" AndAlso
+               String.Compare(studentAns.Trim(), qq.CorrectOptions.Trim(), StringComparison.OrdinalIgnoreCase) = 0 Then
+                Return 1D
+            End If
+            Return 0D   ' No negative marking for paragraph
+
+        ElseIf qq.QuestionType = "Checkbox" Then
+            If studentAns = "" Then Return 0D
+            Dim correctSet  = qq.CorrectOptions.Split(","c).Select(Function(x) x.Trim()).OrderBy(Function(x) x)
+            Dim studentSet  = studentAns.Split(","c).Select(Function(x) x.Trim()).OrderBy(Function(x) x)
+            Dim correctJoin = String.Join(",", correctSet)
+            Dim studentJoin = String.Join(",", studentSet)
+            If correctJoin = studentJoin Then Return 1D
+            ' Check if any wrong option selected
+            Dim correctList = qq.CorrectOptions.Split(","c).Select(Function(x) x.Trim()).ToList()
+            Dim anyWrong    = studentAns.Split(","c).Any(Function(s) Not correctList.Contains(s.Trim()))
+            If anyWrong AndAlso negMarking Then Return -negMarks
+            Return 0D
+
+        Else  ' Radio
+            If studentAns = "" Then Return 0D
+            If studentAns = qq.CorrectOptions Then Return 1D
+            If negMarking Then Return -negMarks
+            Return 0D
+        End If
+    End Function
 
     Private Sub FinaliseQuiz()
         Dim qList  = CType(Session(SK_QList), List(Of QuizQuestion))
         Dim quizID = CInt(Session(SK_QUIZID))
         Dim sid    = StudentID
+        Dim totalQ = qList.Count
 
-        Dim totalQ    = qList.Count
-        Dim obtained  = CDec(DBHelper.ExecuteScalar(
+        Dim rawObtained = CDec(If(DBHelper.ExecuteScalar(
             "SELECT SUM(Marks) FROM Answers WHERE StudentID=@s AND QuizID=@q",
-            DBHelper.Param("@s", sid), DBHelper.Param("@q", quizID)))
-        Dim pct = Math.Round(obtained / totalQ * 100, 2)
+            DBHelper.Param("@s", sid), DBHelper.Param("@q", quizID)), 0))
+        ' Clamp to 0 minimum (total negative marks cannot go below 0)
+        Dim obtained = Math.Max(0D, rawObtained)
+        Dim pct      = Math.Round(obtained / totalQ * 100, 2)
 
-        ' Insert result if not already there
-        Dim resultExists = DBHelper.Exists(
+        If Not DBHelper.Exists(
             "SELECT COUNT(*) FROM Results WHERE StudentID=@s AND QuizID=@q",
-            DBHelper.Param("@s", sid), DBHelper.Param("@q", quizID))
-
-        If Not resultExists Then
+            DBHelper.Param("@s", sid), DBHelper.Param("@q", quizID)) Then
             DBHelper.ExecuteNonQuery("
                 INSERT INTO Results (StudentID,QuizID,TotalMarks,ObtainedMarks,Percentage)
                 VALUES (@sid,@qid,@tot,@obt,@pct)",
-                DBHelper.Param("@sid", sid),
-                DBHelper.Param("@qid", quizID),
-                DBHelper.Param("@tot", totalQ),
-                DBHelper.Param("@obt", obtained),
+                DBHelper.Param("@sid", sid), DBHelper.Param("@qid", quizID),
+                DBHelper.Param("@tot", totalQ), DBHelper.Param("@obt", obtained),
                 DBHelper.Param("@pct", pct))
         End If
 
-        ' Clear quiz session
-        Session.Remove(SK_QUIZID)
-        Session.Remove(SK_QList)
-        Session.Remove(SK_CurrIdx)
-        Session.Remove(SK_Start)
-        Session.Remove(SK_Allowed)
-        Session.Remove(SK_Shuffle)
+        Session.Remove(SK_QUIZID) : Session.Remove(SK_QList) : Session.Remove(SK_CurrIdx)
+        Session.Remove(SK_Total)  : Session.Remove(SK_Start) : Session.Remove(SK_Allowed)
+        Session.Remove(SK_NegMark): Session.Remove(SK_NegVal)
 
         Response.Redirect($"~/Student/MyResults.aspx?quizid={quizID}&done=1")
     End Sub
 
-    ' --- Helpers ---
     Private Shared rng As New Random()
-
     Private Sub ShuffleArray(arr As String())
         For i As Integer = arr.Length - 1 To 1 Step -1
             Dim j = rng.Next(0, i + 1)
             Dim tmp = arr(i) : arr(i) = arr(j) : arr(j) = tmp
         Next
     End Sub
-
     Private Sub ShuffleList(lst As List(Of QuizQuestion))
         For i As Integer = lst.Count - 1 To 1 Step -1
             Dim j = rng.Next(0, i + 1)
