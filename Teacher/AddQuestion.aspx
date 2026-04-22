@@ -64,7 +64,7 @@
             CssClass="form-control" placeholder="Type the question here..." />
     </div>
     <div class="form-group mb-4">
-        <label>Question Image (optional — JPG/PNG, max 2 MB)</label>
+        <label>Question Image (optional | JPG/PNG, max 2 MB)</label>
         <asp:FileUpload ID="fuImage" runat="server" CssClass="form-control" />
     </div>
 </div>
@@ -90,9 +90,9 @@
     </div>
 </div>
 
-<!-- Correct Answer — Single Choice (radio) -->
+<!-- Correct Answer | Single Choice (radio) -->
 <div class="form-panel" id="secCorrectRadio">
-    <h3>Correct Answer — Single Choice</h3>
+    <h3>Correct Answer | Single Choice</h3>
     <p class="text-muted mb-4">Select the ONE correct option.</p>
     <div style="display:grid;grid-template-columns:auto 1fr;align-items:center;gap:12px 16px;">
         <label class="check-item"><asp:RadioButton ID="rbA" runat="server" GroupName="Correct" /><span class="badge badge-purple">A</span></label>
@@ -106,9 +106,9 @@
     </div>
 </div>
 
-<!-- Correct Answer — Multiple Choice (checkboxes) -->
+<!-- Correct Answer | Multiple Choice (checkboxes) -->
 <div class="form-panel" id="secCorrectCheckbox" style="display:none;">
-    <h3>Correct Answers — Multiple Choice</h3>
+    <h3>Correct Answers | Multiple Choice</h3>
     <p class="text-muted mb-4">Tick ALL options that are correct. Students must select exactly these to get full marks.</p>
     <div class="check-group">
         <label class="check-item"><asp:CheckBox ID="cbCA" runat="server" />&nbsp;<span class="badge badge-purple">A</span></label>
@@ -118,9 +118,9 @@
     </div>
 </div>
 
-<!-- Correct Answer — Short Answer (paragraph) -->
+<!-- Correct Answer | Short Answer (paragraph) -->
 <div class="form-panel" id="secCorrectParagraph" style="display:none;">
-    <h3>Model Answer — Short Answer</h3>
+    <h3>Model Answer | Short Answer</h3>
     <p class="text-muted mb-4">Enter the expected answer. Student responses will be matched (case-insensitive).</p>
     <asp:TextBox ID="txtModelAnswer" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"
         placeholder="Expected answer text..." />
