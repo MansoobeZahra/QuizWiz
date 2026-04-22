@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Teacher_Dashboard" MasterPageFile="~/MasterPage.master" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Teacher_Dashboard" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Teacher Dashboard</asp:Content>
 
@@ -11,29 +11,25 @@
 
 <!-- Stats Row -->
 <div class="stats-grid">
-    <div class="stat-card anim-1">
-        <div class="stat-icon purple"></div>
+    <div class="stat-card purple">
         <div>
             <div class="stat-value"><asp:Literal ID="litTotalQ" runat="server">0</asp:Literal></div>
             <div class="stat-label">My Questions</div>
         </div>
     </div>
-    <div class="stat-card anim-2">
-        <div class="stat-icon cyan"></div>
+    <div class="stat-card cyan">
         <div>
             <div class="stat-value"><asp:Literal ID="litTotalQuiz" runat="server">0</asp:Literal></div>
             <div class="stat-label">My Quizzes</div>
         </div>
     </div>
-    <div class="stat-card anim-3">
-        <div class="stat-icon green"></div>
+    <div class="stat-card green">
         <div>
             <div class="stat-value"><asp:Literal ID="litPublished" runat="server">0</asp:Literal></div>
             <div class="stat-label">Published</div>
         </div>
     </div>
-    <div class="stat-card anim-4">
-        <div class="stat-icon orange"></div>
+    <div class="stat-card orange">
         <div>
             <div class="stat-value"><asp:Literal ID="litAttempts" runat="server">0</asp:Literal></div>
             <div class="stat-label">Total Attempts</div>
