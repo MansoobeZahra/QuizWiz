@@ -1,4 +1,4 @@
-Partial Class Admin_ManageUsers
+﻿Partial Class Admin_ManageUsers
     Inherits System.Web.UI.Page
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -37,7 +37,7 @@ Partial Class Admin_ManageUsers
 
     Protected Sub btnShowAdd_Click(sender As Object, e As EventArgs)
         hfEditID.Value    = "0"
-        litFormTitle.Text = "➕ Add New User"
+        litFormTitle.Text = " Add New User"
         txtFullName.Text  = "" : txtUsername.Text = "" : txtPassword.Text = ""
         ddlRole.SelectedIndex = 0 : chkActive.Checked = True
         ddlSubject.SelectedIndex = 0
@@ -74,7 +74,7 @@ Partial Class Admin_ManageUsers
             Dim row = dt.Rows(0)
 
             hfEditID.Value    = uid.ToString()
-            litFormTitle.Text = "✏️ Edit User"
+            litFormTitle.Text = "️ Edit User"
             txtFullName.Text  = row("FullName").ToString()
             txtUsername.Text  = row("Username").ToString()
             txtPassword.Text  = ""  ' Don't pre-fill password

@@ -1,4 +1,4 @@
-<%@ Page Language="VB" AutoEventWireup="false" CodeFile="MyResults.aspx.vb" Inherits="Student_MyResults" MasterPageFile="~/MasterPage.master" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="MyResults.aspx.vb" Inherits="Student_MyResults" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">My Results</asp:Content>
 
@@ -10,7 +10,7 @@
 
 <!-- Just-finished banner -->
 <asp:Panel ID="pnlJustDone" runat="server" Visible="false" CssClass="alert alert-success mb-4" style="font-size:16px;">
-    🎉 Quiz submitted! Here is your result below.
+     Quiz submitted! Here is your result below.
 </asp:Panel>
 
 <!-- Result Hero (shown for single quiz result) -->
@@ -32,13 +32,13 @@
 <!-- Charts -->
 <div class="charts-grid mb-6">
     <div class="chart-card">
-        <h3>🥧 Your Score Breakdown</h3>
+        <h3> Your Score Breakdown</h3>
         <div class="chart-canvas-wrap">
             <canvas id="myPieChart"></canvas>
         </div>
     </div>
     <div class="chart-card">
-        <h3>📊 Difficulty Breakdown</h3>
+        <h3> Difficulty Breakdown</h3>
         <div class="chart-canvas-wrap">
             <canvas id="diffChart"></canvas>
         </div>
@@ -48,7 +48,7 @@
 <!-- Per-question detail -->
 <div class="card mb-6">
     <div class="card-header">
-        <h3>📝 Question-by-Question Review</h3>
+        <h3> Question-by-Question Review</h3>
         <span class="text-muted" style="font-size:12px;">Answer locked on Next click — no changes allowed</span>
     </div>
     <div class="table-wrapper">
@@ -77,9 +77,9 @@
                            If sa = "—" Then %>
                             <span class="badge badge-grey">— Skipped</span>
                         <% ElseIf sa = ca Then %>
-                            <span class="badge badge-green">✔ <%=sa%></span>
+                            <span class="badge badge-green"> <%=sa%></span>
                         <% Else %>
-                            <span class="badge badge-red">✘ <%=sa%></span>
+                            <span class="badge badge-red"> <%=sa%></span>
                         <% End If %>
                     </ItemTemplate>
                 </asp:TemplateField>
@@ -102,7 +102,7 @@
 <!-- All Results History -->
 <div class="card">
     <div class="card-header">
-        <h3>🏆 All My Results</h3>
+        <h3> All My Results</h3>
         <a href="Dashboard.aspx" class="btn btn-outline btn-sm">← Dashboard</a>
     </div>
     <div class="table-wrapper">

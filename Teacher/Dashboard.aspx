@@ -1,4 +1,4 @@
-<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Teacher_Dashboard" MasterPageFile="~/MasterPage.master" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Teacher_Dashboard" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Teacher Dashboard</asp:Content>
 
@@ -12,28 +12,28 @@
 <!-- Stats Row -->
 <div class="stats-grid">
     <div class="stat-card anim-1">
-        <div class="stat-icon purple">📝</div>
+        <div class="stat-icon purple"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litTotalQ" runat="server">0</asp:Literal></div>
             <div class="stat-label">My Questions</div>
         </div>
     </div>
     <div class="stat-card anim-2">
-        <div class="stat-icon cyan">🎲</div>
+        <div class="stat-icon cyan"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litTotalQuiz" runat="server">0</asp:Literal></div>
             <div class="stat-label">My Quizzes</div>
         </div>
     </div>
     <div class="stat-card anim-3">
-        <div class="stat-icon green">✅</div>
+        <div class="stat-icon green"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litPublished" runat="server">0</asp:Literal></div>
             <div class="stat-label">Published</div>
         </div>
     </div>
     <div class="stat-card anim-4">
-        <div class="stat-icon orange">🎓</div>
+        <div class="stat-icon orange"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litAttempts" runat="server">0</asp:Literal></div>
             <div class="stat-label">Total Attempts</div>
@@ -44,12 +44,12 @@
 <!-- Quick Actions -->
 <div class="grid-2 mb-6">
     <a href="/Teacher/AddQuestion.aspx" class="card" style="text-decoration:none;cursor:pointer;display:block;">
-        <div style="font-size:36px;margin-bottom:12px;">➕</div>
+        <div style="font-size:36px;margin-bottom:12px;"></div>
         <div class="fw-700" style="font-size:16px;margin-bottom:6px;">Add New Question</div>
         <div class="text-muted">Add a question to your subject question bank</div>
     </a>
     <a href="/Teacher/CreateQuiz.aspx" class="card" style="text-decoration:none;cursor:pointer;display:block;">
-        <div style="font-size:36px;margin-bottom:12px;">🎲</div>
+        <div style="font-size:36px;margin-bottom:12px;"></div>
         <div class="fw-700" style="font-size:16px;margin-bottom:6px;">Create a Quiz</div>
         <div class="text-muted">Design and publish a new quiz for students</div>
     </a>
@@ -58,7 +58,7 @@
 <!-- Recent Quizzes -->
 <div class="card">
     <div class="card-header">
-        <h3>📋 My Recent Quizzes</h3>
+        <h3> My Recent Quizzes</h3>
         <a href="/Teacher/CreateQuiz.aspx" class="btn btn-primary btn-sm">+ New Quiz</a>
     </div>
     <div class="table-wrapper">

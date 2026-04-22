@@ -1,4 +1,4 @@
-<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Login.aspx.vb" Inherits="Login" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Login.aspx.vb" Inherits="Login" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +15,7 @@
         <div class="login-card">
             <!-- Logo -->
             <div class="login-logo">
-                <div class="logo-icon">🎯</div>
+                <div class="logo-icon"></div>
                 <h1>QuizWiz</h1>
                 <p>Online Quiz Preparation &amp; Conduction</p>
             </div>
@@ -24,7 +24,7 @@
 
             <!-- Error message -->
             <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-danger">
-                ⚠️ <asp:Literal ID="litError" runat="server" />
+                ️ <asp:Literal ID="litError" runat="server" />
             </asp:Panel>
 
             <!-- Username -->
@@ -55,12 +55,12 @@
             <div style="margin-top:24px;padding:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;">
                 <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;">Demo Accounts</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px;color:var(--text-sec);">
-                    <span>👑 admin / Admin@123</span>
-                    <span>📚 t_ali / Teacher@1</span>
-                    <span>📚 t_sara / Teacher@2</span>
-                    <span>🎓 s_usman / Student@1</span>
-                    <span>🎓 s_ayesha / Student@2</span>
-                    <span>🎓 s_bilal / Student@3</span>
+                    <span> admin / Admin@123</span>
+                    <span> t_ali / Teacher@1</span>
+                    <span> t_sara / Teacher@2</span>
+                    <span> s_usman / Student@1</span>
+                    <span> s_ayesha / Student@2</span>
+                    <span> s_bilal / Student@3</span>
                 </div>
             </div>
         </div>

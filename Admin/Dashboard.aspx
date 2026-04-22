@@ -1,53 +1,53 @@
-<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Admin_Dashboard" MasterPageFile="~/MasterPage.master" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Admin_Dashboard" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Admin Dashboard</asp:Content>
 
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
 <div class="page-header">
-    <h1>👑 Admin Dashboard</h1>
+    <h1> Admin Dashboard</h1>
     <p>System overview — manage users, monitor quizzes and results.</p>
 </div>
 
 <!-- Stats -->
 <div class="stats-grid mb-6">
     <div class="stat-card anim-1">
-        <div class="stat-icon purple">👥</div>
+        <div class="stat-icon purple"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litUsers" runat="server" /></div>
             <div class="stat-label">Total Users</div>
         </div>
     </div>
     <div class="stat-card anim-2">
-        <div class="stat-icon cyan">📚</div>
+        <div class="stat-icon cyan"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litTeachers" runat="server" /></div>
             <div class="stat-label">Teachers</div>
         </div>
     </div>
     <div class="stat-card anim-3">
-        <div class="stat-icon green">🎓</div>
+        <div class="stat-icon green"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litStudents" runat="server" /></div>
             <div class="stat-label">Students</div>
         </div>
     </div>
     <div class="stat-card anim-4">
-        <div class="stat-icon orange">🎲</div>
+        <div class="stat-icon orange"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litQuizzes" runat="server" /></div>
             <div class="stat-label">Total Quizzes</div>
         </div>
     </div>
     <div class="stat-card anim-1">
-        <div class="stat-icon red">📝</div>
+        <div class="stat-icon red"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litQuestions" runat="server" /></div>
             <div class="stat-label">Questions</div>
         </div>
     </div>
     <div class="stat-card anim-2">
-        <div class="stat-icon purple">📊</div>
+        <div class="stat-icon purple"></div>
         <div>
             <div class="stat-value"><asp:Literal ID="litAttempts" runat="server" /></div>
             <div class="stat-label">Attempts</div>
@@ -59,7 +59,7 @@
     <!-- Recent Quizzes -->
     <div class="card">
         <div class="card-header">
-            <h3>🎲 Recent Quizzes</h3>
+            <h3> Recent Quizzes</h3>
         </div>
         <div class="table-wrapper">
             <asp:GridView ID="gvQuizzes" runat="server"
@@ -86,7 +86,7 @@
     <!-- Recent Results -->
     <div class="card">
         <div class="card-header">
-            <h3>📊 Recent Results</h3>
+            <h3> Recent Results</h3>
         </div>
         <div class="table-wrapper">
             <asp:GridView ID="gvResults" runat="server"

@@ -1,4 +1,4 @@
-<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ManageUsers.aspx.vb" Inherits="Admin_ManageUsers" MasterPageFile="~/MasterPage.master" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ManageUsers.aspx.vb" Inherits="Admin_ManageUsers" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Manage Users</asp:Content>
 
@@ -6,10 +6,10 @@
 
 <div class="page-header flex-between">
     <div>
-        <h1>👥 Manage Users</h1>
+        <h1> Manage Users</h1>
         <p>Create, edit, activate or deactivate user accounts.</p>
     </div>
-    <asp:Button ID="btnShowAdd" runat="server" Text="➕ Add User"
+    <asp:Button ID="btnShowAdd" runat="server" Text=" Add User"
         CssClass="btn btn-primary" OnClick="btnShowAdd_Click" />
 </div>
 
@@ -70,9 +70,9 @@
     </div>
 
     <div class="flex gap-2">
-        <asp:Button ID="btnSaveUser" runat="server" Text="💾 Save User"
+        <asp:Button ID="btnSaveUser" runat="server" Text=" Save User"
             CssClass="btn btn-primary" OnClick="btnSaveUser_Click" />
-        <asp:Button ID="btnCancelForm" runat="server" Text="✖ Cancel"
+        <asp:Button ID="btnCancelForm" runat="server" Text=" Cancel"
             CssClass="btn btn-outline" OnClick="btnCancelForm_Click" CausesValidation="false" />
     </div>
 </asp:Panel>
@@ -125,7 +125,7 @@
                     <ItemTemplate>
                         <asp:LinkButton CommandName="EditUser" runat="server"
                             CommandArgument='<%# Eval("UserID") %>'
-                            CssClass="btn btn-outline btn-sm">✏️ Edit</asp:LinkButton>
+                            CssClass="btn btn-outline btn-sm">️ Edit</asp:LinkButton>
                         &nbsp;
                         <asp:LinkButton CommandName="ToggleActive" runat="server"
                             CommandArgument='<%# Eval("UserID") %>'
