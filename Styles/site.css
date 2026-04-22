@@ -33,11 +33,11 @@
 
     --sidebar-w:   240px;
     --header-h:    64px;
-    --radius:      14px;
-    --radius-sm:   8px;
-    --shadow:      none; /* remove all shadows */
+    --radius:      0px;
+    --radius-sm:   0px;
+    --shadow:      none;
     --shadow-card: none;
-    --trans:       all 0.3s cubic-bezier(.4,0,.2,1);
+    --trans:       none; /* No hover transitions */
 }
 
 /* ---------- Reset ---------- */
@@ -399,15 +399,12 @@ textarea { resize: vertical; min-height: 100px; }
 }
 .stat-card {
     background: var(--card);
-    border-radius: var(--radius);
-    padding: 20px;
+    padding: 24px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    transition: var(--trans);
-    animation: fadeSlideUp .5s ease both;
+    gap: 20px;
 }
-.stat-card:hover { transform: translateY(-3px); background: var(--card-hover); }
+.stat-card:hover { transform: none; background: var(--card); }
 .stat-icon {
     width: 52px; height: 52px;
     border-radius: 14px;
