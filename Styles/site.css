@@ -56,49 +56,30 @@ body {
 /* =========================================================
    LOGIN PAGE
    ========================================================= */
+/* =========================================================
+   LOGIN PAGE
+   ========================================================= */
 .login-wrapper {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background: var(--grad-bg);
+    background: var(--bg2);
 }
 
 .login-card {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
-    border-radius: 24px;
+    background: #FFFFFF;
+    border: 1px solid #e2e8f0;
+    border-radius: 0; /* sharp corners */
     padding: 48px 40px;
     width: 100%;
     max-width: 440px;
-    box-shadow: var(--shadow);
-    animation: fadeSlideUp .6s ease both;
 }
 
 .login-logo {
     text-align: center;
     margin-bottom: 32px;
-}
-.login-logo .logo-icon {
-    width: 64px; height: 64px;
-    background: var(--grad-purple);
-    border-radius: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    margin-bottom: 12px;
-    box-shadow: 0 8px 24px rgba(108,99,255,.4);
-}
-.login-logo h1 {
-    font-size: 28px;
-    font-weight: 800;
-    background: var(--grad-purple);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 .login-logo p { color: var(--text-sec); font-size: 14px; margin-top: 4px; }
 
@@ -107,6 +88,7 @@ body {
     font-weight: 700;
     margin-bottom: 24px;
     color: var(--text);
+    text-align: center;
 }
 
 /* ---------- Form Controls ---------- */
@@ -382,11 +364,11 @@ textarea { resize: vertical; min-height: 100px; }
     font-size: 22px;
     flex-shrink: 0;
 }
-.stat-icon.purple { background: rgba(37, 150, 190, 0.1); color: var(--primary); }
-.stat-icon.green  { background: rgba(16, 185, 129, 0.1); color: var(--green); }
-.stat-icon.orange { background: rgba(239, 169, 115, 0.1); color: var(--orange); }
-.stat-icon.red    { background: rgba(239, 68, 68, 0.1); color: var(--red); }
-.stat-icon.cyan   { background: rgba(76, 182, 219, 0.1); color: var(--purple-light); }
+.stat-icon.purple { background: var(--bg2); color: var(--primary); }
+.stat-icon.green  { background: var(--bg2); color: var(--green); }
+.stat-icon.orange { background: var(--bg2); color: var(--orange); }
+.stat-icon.red    { background: var(--bg2); color: var(--red); }
+.stat-icon.cyan   { background: var(--bg2); color: var(--purple-light); }
 .stat-value { font-size: 28px; font-weight: 800; line-height: 1; }
 .stat-label { font-size: 12px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
 
