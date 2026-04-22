@@ -4,19 +4,18 @@
 <head runat="server">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QuizWiz – Online Quiz System</title>
-    <meta name="description" content="QuizWiz – Role-based online quiz preparation and conduction system." />
+    <title>QuizWiz</title>
+    <meta name="description" content="QuizWiz online quiz preparation and conduction system." />
     <link rel="stylesheet" href="<%= ResolveUrl("~/Styles/site.css") %>" />
     <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
 </head>
 <body>
 <div class="layout">
 
-    <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar">
         <div class="sidebar-logo">
             <div class="logo-row">
-                <div class="logo-icon">🎯</div>
+                <div class="logo-icon">Q</div>
                 <h2>QuizWiz</h2>
             </div>
         </div>
@@ -27,57 +26,60 @@
         </div>
 
         <nav class="sidebar-nav">
-            <!-- ADMIN NAV -->
+
+            <!-- ADMIN -->
             <asp:Panel ID="pnlAdminNav" runat="server" Visible="false">
                 <div class="nav-section">Administration</div>
                 <a href="<%=ResolveUrl("~/Admin/Dashboard.aspx")%>" class="nav-link <%=Active("~/Admin/Dashboard.aspx")%>">
-                    <span class="icon">🏠</span> Dashboard
+                    <span class="icon">H</span> Dashboard
                 </a>
                 <a href="<%=ResolveUrl("~/Admin/ManageUsers.aspx")%>" class="nav-link <%=Active("~/Admin/ManageUsers.aspx")%>">
-                    <span class="icon">👥</span> Manage Users
+                    <span class="icon">U</span> Manage Users
                 </a>
             </asp:Panel>
 
-            <!-- TEACHER NAV -->
+            <!-- TEACHER -->
             <asp:Panel ID="pnlTeacherNav" runat="server" Visible="false">
-                <div class="nav-section">Teacher</div>
-                <a href="<%=ResolveUrl("~/Teacher/Dashboard.aspx")%>" class="nav-link <%=Active("~/Teacher/Dashboard.aspx")%>">
-                    <span class="icon">🏠</span> Dashboard
-                </a>
+                <div class="nav-section">Questions</div>
                 <a href="<%=ResolveUrl("~/Teacher/AddQuestion.aspx")%>" class="nav-link <%=Active("~/Teacher/AddQuestion.aspx")%>">
-                    <span class="icon">➕</span> Add Question
+                    Add Question
                 </a>
                 <a href="<%=ResolveUrl("~/Teacher/ManageQuestions.aspx")%>" class="nav-link <%=Active("~/Teacher/ManageQuestions.aspx")%>">
-                    <span class="icon">📋</span> Question Bank
+                    Question Bank
+                </a>
+                <div class="nav-section">Quizzes</div>
+                <a href="<%=ResolveUrl("~/Teacher/Dashboard.aspx")%>" class="nav-link <%=Active("~/Teacher/Dashboard.aspx")%>">
+                    Dashboard
                 </a>
                 <a href="<%=ResolveUrl("~/Teacher/CreateQuiz.aspx")%>" class="nav-link <%=Active("~/Teacher/CreateQuiz.aspx")%>">
-                    <span class="icon">🎲</span> Create Quiz
+                    Create Quiz
+                </a>
+                <a href="<%=ResolveUrl("~/Teacher/TestQuiz.aspx")%>" class="nav-link <%=Active("~/Teacher/TestQuiz.aspx")%>">
+                    Test / Preview Quiz
                 </a>
                 <a href="<%=ResolveUrl("~/Teacher/ViewResults.aspx")%>" class="nav-link <%=Active("~/Teacher/ViewResults.aspx")%>">
-                    <span class="icon">📊</span> View Results
+                    View Results
                 </a>
             </asp:Panel>
 
-            <!-- STUDENT NAV -->
+            <!-- STUDENT -->
             <asp:Panel ID="pnlStudentNav" runat="server" Visible="false">
                 <div class="nav-section">Student</div>
                 <a href="<%=ResolveUrl("~/Student/Dashboard.aspx")%>" class="nav-link <%=Active("~/Student/Dashboard.aspx")%>">
-                    <span class="icon">🏠</span> Dashboard
+                    Dashboard
                 </a>
                 <a href="<%=ResolveUrl("~/Student/MyResults.aspx")%>" class="nav-link <%=Active("~/Student/MyResults.aspx")%>">
-                    <span class="icon">🏆</span> My Results
+                    My Results
                 </a>
             </asp:Panel>
+
         </nav>
 
         <div class="sidebar-footer">
-            <a href="<%=ResolveUrl("~/Logout.aspx")%>">
-                <span>🚪</span> Logout
-            </a>
+            <a href="<%=ResolveUrl("~/Logout.aspx")%>">Logout</a>
         </div>
     </aside>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <div class="main-content">
         <div class="top-bar">
             <span class="page-title">
@@ -85,7 +87,9 @@
             </span>
             <div class="top-right">
                 <span style="font-size:13px;color:var(--text-sec);">
-                    Welcome, <strong><%=SessionFullName%></strong>
+                    Signed in as <strong><%=SessionFullName%></strong>
+                    &nbsp;|&nbsp;
+                    <span class="user-role <%=RoleCssClass%>" style="font-size:11px;"><%=SessionRole%></span>
                 </span>
             </div>
         </div>
