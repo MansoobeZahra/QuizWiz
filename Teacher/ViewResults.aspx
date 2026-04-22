@@ -36,29 +36,25 @@
 
     <!-- KPI Stats -->
     <div class="stats-grid mb-6">
-        <div class="stat-card">
-            <div class="stat-icon purple">Q</div>
+        <div class="stat-card purple">
             <div>
                 <div class="stat-value"><asp:Literal ID="litTotalStudents" runat="server">0</asp:Literal></div>
                 <div class="stat-label">Total Attempts</div>
             </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon green">S</div>
+        <div class="stat-card green">
             <div>
                 <div class="stat-value"><asp:Literal ID="litAvgScore" runat="server">0%</asp:Literal></div>
                 <div class="stat-label">Average Score</div>
             </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon cyan">H</div>
+        <div class="stat-card cyan">
             <div>
                 <div class="stat-value"><asp:Literal ID="litHighest" runat="server">0%</asp:Literal></div>
                 <div class="stat-label">Highest Score</div>
             </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon red">L</div>
+        <div class="stat-card red">
             <div>
                 <div class="stat-value"><asp:Literal ID="litLowest" runat="server">0%</asp:Literal></div>
                 <div class="stat-label">Lowest Score</div>

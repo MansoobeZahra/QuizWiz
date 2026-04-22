@@ -40,8 +40,7 @@
             <div class="stat-value"><asp:Literal ID="litQuestions" runat="server" /></div>
             <div class="stat-label">Questions</div>
         </div>
-    </div>
-        <div class="stat-icon purple"></div>
+    <div class="stat-card purple">
         <div>
             <div class="stat-value"><asp:Literal ID="litAttempts" runat="server" /></div>
             <div class="stat-label">Attempts</div>
