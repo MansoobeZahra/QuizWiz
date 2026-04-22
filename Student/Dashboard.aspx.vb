@@ -1,70 +1,58 @@
 Partial Class Student_Dashboard
     Inherits System.Web.UI.Page
 
-    Private ReadOnly Property StudentID As Integer
-        Get
-            Return CInt(Session("UserID"))
-        End Get
-    End Property
-
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If Session("Role")?.ToString() <> "Student" Then Response.Redirect("~/Login.aspx") : Return
-        If Not IsPostBack Then LoadDashboard()
-    End Sub
-
-    Private Sub LoadDashboard()
-        Dim sid = StudentID
-
-        ' Stats
-        Dim available As Integer = CInt(DBHelper.ExecuteScalar(
-            "SELECT COUNT(*) FROM Quiz WHERE IsPublished=1", Nothing))
-        Dim attempted As Integer = CInt(DBHelper.ExecuteScalar(
-            "SELECT COUNT(*) FROM Results WHERE StudentID=@sid", DBHelper.Param("@sid", sid)))
-        litAvailable.Text = available.ToString()
-        litAttempted.Text = attempted.ToString()
-
-        If attempted > 0 Then
-            Dim avg = DBHelper.ExecuteScalar(
-                "SELECT AVG(Percentage) FROM Results WHERE StudentID=@sid", DBHelper.Param("@sid", sid))
-            litAvgScore.Text = If(avg Is Nothing OrElse avg Is DBNull.Value, "—", CDbl(avg).ToString("0.#") & "%")
+        AuthHelper.RequireRole(Me, "Student")
+        If Not IsPostBack Then
+            LoadStats()
+            LoadQuizzes()
+            LoadNotifications()
         End If
-
-        ' Notifications
-        Dim notifs = DBHelper.GetDataTable(
-            "SELECT NotifID, Message, IsRead, CreatedAt FROM Notifications WHERE ToUserID=@sid ORDER BY CreatedAt DESC",
-            DBHelper.Param("@sid", sid))
-        Dim unread As Integer = 0
-        For Each row As System.Data.DataRow In notifs.Rows
-            If Not CBool(row("IsRead")) Then unread += 1
-        Next
-        litNotifs.Text    = unread.ToString()
-        pnlNotifs.Visible = (notifs.Rows.Count > 0)
-        rptNotifs.DataSource = notifs
-        rptNotifs.DataBind()
-
-        ' Available quizzes with attempt status
-        Dim quizzes = DBHelper.GetDataTable("
-            SELECT q.QuizID, q.QuizTitle, s.SubjectName, q.TotalQuestions,
-                   q.AllowedTime, q.Remarks,
-                   CAST(CASE WHEN EXISTS(
-                       SELECT 1 FROM Results r WHERE r.QuizID=q.QuizID AND r.StudentID=@sid
-                   ) THEN 1 ELSE 0 END AS BIT) AS AlreadyAttempted
-            FROM Quiz q
-            JOIN Subjects s ON q.SubjectID = s.SubjectID
-            WHERE q.IsPublished = 1
-            ORDER BY q.CreatedAt DESC",
-            DBHelper.Param("@sid", sid))
-
-        pnlNoQuiz.Visible    = (quizzes.Rows.Count = 0)
-        gvQuizzes.DataSource = quizzes
-        gvQuizzes.DataBind()
     End Sub
 
-    Protected Sub btnMarkRead_Click(sender As Object, e As EventArgs)
-        DBHelper.ExecuteNonQuery(
-            "UPDATE Notifications SET IsRead=1 WHERE ToUserID=@sid",
-            DBHelper.Param("@sid", StudentID))
-        LoadDashboard()
+    Private Sub LoadStats()
+        Dim uid = CInt(Session("UserID"))
+        litTotalAttempts.Text = DBHelper.ExecuteScalar(
+            "SELECT COUNT(*) FROM Results WHERE StudentID=@s", DBHelper.Param("@s", uid)).ToString()
+            
+        Dim avg = DBHelper.ExecuteScalar(
+            "SELECT AVG(Percentage) FROM Results WHERE StudentID=@s", DBHelper.Param("@s", uid))
+        litAvgScore.Text = If(avg Is DBNull.Value, "0", Convert.ToDouble(avg).ToString("0.##")) & "%"
+        
+        Dim highest = DBHelper.ExecuteScalar(
+            "SELECT MAX(Percentage) FROM Results WHERE StudentID=@s", DBHelper.Param("@s", uid))
+        litHighestScore.Text = If(highest Is DBNull.Value, "0", Convert.ToDouble(highest).ToString("0.##")) & "%"
+    End Sub
+
+    Private Sub LoadNotifications()
+        Dim dt = DBHelper.GetDataTable( _
+            "SELECT TOP 5 Message, CreatedAt FROM Notifications " & _
+            "WHERE ToUserID=@u ORDER BY CreatedAt DESC",
+            DBHelper.Param("@u", CInt(Session("UserID"))))
+            
+        If dt.Rows.Count = 0 Then
+            pnlNoNotif.Visible = True
+        Else
+            rptNotif.DataSource = dt
+            rptNotif.DataBind()
+        End If
+    End Sub
+
+    Private Sub LoadQuizzes()
+        Dim dt = DBHelper.GetDataTable( _
+            "SELECT q.QuizID, q.QuizTitle, q.AllowedTime, q.TotalQuestions, s.SubjectName " & _
+            "FROM Quiz q " & _
+            "JOIN Subjects s ON q.SubjectID = s.SubjectID " & _
+            "WHERE q.IsPublished=1 AND q.QuizID NOT IN (SELECT QuizID FROM Results WHERE StudentID=@s) " & _
+            "ORDER BY q.CreatedAt DESC",
+            DBHelper.Param("@s", CInt(Session("UserID"))))
+            
+        If dt.Rows.Count = 0 Then
+            pnlNoQuizzes.Visible = True
+        Else
+            rptQuizzes.DataSource = dt
+            rptQuizzes.DataBind()
+        End If
     End Sub
 
 End Class

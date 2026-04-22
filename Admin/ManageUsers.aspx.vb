@@ -1,8 +1,11 @@
-﻿Partial Class Admin_ManageUsers
+Partial Class Admin_ManageUsers
     Inherits System.Web.UI.Page
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If Session("Role")?.ToString() <> "Admin" Then Response.Redirect("~/Login.aspx") : Return
+        Dim roleStr As String = ""
+        If Session("Role") IsNot Nothing Then roleStr = Session("Role").ToString()
+        If roleStr <> "Admin" Then Response.Redirect("~/Login.aspx") : Return
+
         If Not IsPostBack Then
             LoadSubjects()
             LoadUsers()
@@ -20,11 +23,12 @@
 
     Private Sub LoadUsers()
         Dim role = ddlFilter.SelectedValue
-        Dim sql As String = "
-            SELECT u.UserID, u.FullName, u.Username, u.Role,
-                   s.SubjectName, u.IsActive, u.CreatedAt
-            FROM Users u
-            LEFT JOIN Subjects s ON u.SubjectID = s.SubjectID"
+        Dim sql As String = _
+            "SELECT u.UserID, u.FullName, u.Username, u.Role, " & _
+            "       s.SubjectName, u.IsActive, u.CreatedAt " & _
+            "FROM Users u " & _
+            "LEFT JOIN Subjects s ON u.SubjectID = s.SubjectID"
+            
         If role <> "" Then sql &= " WHERE u.Role = @role"
         sql &= " ORDER BY u.Role, u.FullName"
 
@@ -67,14 +71,14 @@
             LoadUsers()
 
         ElseIf e.CommandName = "EditUser" Then
-            Dim dt = DBHelper.GetDataTable(
+            Dim dt = DBHelper.GetDataTable( _
                 "SELECT u.*, s.SubjectID AS SID FROM Users u LEFT JOIN Subjects s ON u.SubjectID=s.SubjectID WHERE u.UserID=@id",
                 DBHelper.Param("@id", uid))
             If dt.Rows.Count = 0 Then Return
             Dim row = dt.Rows(0)
 
             hfEditID.Value    = uid.ToString()
-            litFormTitle.Text = "️ Edit User"
+            litFormTitle.Text = " Edit User"
             txtFullName.Text  = row("FullName").ToString()
             txtUsername.Text  = row("Username").ToString()
             txtPassword.Text  = ""  ' Don't pre-fill password
@@ -123,9 +127,9 @@
                     "SELECT COUNT(*) FROM Users WHERE Username=@u", DBHelper.Param("@u", uname))
                 If dupCheck Then ShowMsg("Username already exists.", "danger") : Return
 
-                DBHelper.ExecuteNonQuery("
-                    INSERT INTO Users (FullName,Username,Password,Role,SubjectID,IsActive)
-                    VALUES (@n,@u,@p,@r,@s,@a)",
+                DBHelper.ExecuteNonQuery( _
+                    "INSERT INTO Users (FullName,Username,Password,Role,SubjectID,IsActive) " & _
+                    "VALUES (@n,@u,@p,@r,@s,@a)",
                     DBHelper.Param("@n", name), DBHelper.Param("@u", uname),
                     DBHelper.Param("@p", pwd),  DBHelper.Param("@r", role),
                     DBHelper.Param("@s", subID), DBHelper.Param("@a", active))
@@ -162,7 +166,7 @@
 
     Private Sub ShowMsg(msg As String, kind As String)
         pnlMsg.Visible    = True
-        pnlMsg.CssClass   = $"alert alert-{kind} mb-4"
+        pnlMsg.CssClass   = String.Format("alert alert-{0} mb-4", kind)
         litMsg.Text       = msg
     End Sub
 
