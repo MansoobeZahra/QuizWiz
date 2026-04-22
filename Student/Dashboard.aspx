@@ -84,7 +84,7 @@
                 <asp:BoundField DataField="TotalQuestions" HeaderText="Questions" />
                 <asp:BoundField DataField="AllowedTime"    HeaderText="Time (min)" />
                 <asp:TemplateField HeaderText="Remarks">
-                    <ItemTemplate><span class="text-muted"><%# If(Eval("Remarks") Is DBNull.Value, "—", Eval("Remarks")) %></span></ItemTemplate>
+                    <ItemTemplate><span class="text-muted"><%# If(Convert.IsDBNull(Eval("Remarks")), "-", Eval("Remarks")) %></span></ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Status">
                     <ItemTemplate>
