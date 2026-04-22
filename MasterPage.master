@@ -1,0 +1,100 @@
+<%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="MasterPage" %>
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuizWiz – Online Quiz System</title>
+    <meta name="description" content="QuizWiz – Role-based online quiz preparation and conduction system." />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Styles/site.css") %>" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body>
+<div class="layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-row">
+                <div class="logo-icon">🎯</div>
+                <h2>QuizWiz</h2>
+            </div>
+        </div>
+
+        <div class="sidebar-user">
+            <div class="user-name"><%=SessionFullName%></div>
+            <span class="user-role <%=RoleCssClass%>"><%=SessionRole%></span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <!-- ADMIN NAV -->
+            <asp:Panel ID="pnlAdminNav" runat="server" Visible="false">
+                <div class="nav-section">Administration</div>
+                <a href="<%=ResolveUrl("~/Admin/Dashboard.aspx")%>" class="nav-link <%=Active("~/Admin/Dashboard.aspx")%>">
+                    <span class="icon">🏠</span> Dashboard
+                </a>
+                <a href="<%=ResolveUrl("~/Admin/ManageUsers.aspx")%>" class="nav-link <%=Active("~/Admin/ManageUsers.aspx")%>">
+                    <span class="icon">👥</span> Manage Users
+                </a>
+            </asp:Panel>
+
+            <!-- TEACHER NAV -->
+            <asp:Panel ID="pnlTeacherNav" runat="server" Visible="false">
+                <div class="nav-section">Teacher</div>
+                <a href="<%=ResolveUrl("~/Teacher/Dashboard.aspx")%>" class="nav-link <%=Active("~/Teacher/Dashboard.aspx")%>">
+                    <span class="icon">🏠</span> Dashboard
+                </a>
+                <a href="<%=ResolveUrl("~/Teacher/AddQuestion.aspx")%>" class="nav-link <%=Active("~/Teacher/AddQuestion.aspx")%>">
+                    <span class="icon">➕</span> Add Question
+                </a>
+                <a href="<%=ResolveUrl("~/Teacher/ManageQuestions.aspx")%>" class="nav-link <%=Active("~/Teacher/ManageQuestions.aspx")%>">
+                    <span class="icon">📋</span> Question Bank
+                </a>
+                <a href="<%=ResolveUrl("~/Teacher/CreateQuiz.aspx")%>" class="nav-link <%=Active("~/Teacher/CreateQuiz.aspx")%>">
+                    <span class="icon">🎲</span> Create Quiz
+                </a>
+                <a href="<%=ResolveUrl("~/Teacher/ViewResults.aspx")%>" class="nav-link <%=Active("~/Teacher/ViewResults.aspx")%>">
+                    <span class="icon">📊</span> View Results
+                </a>
+            </asp:Panel>
+
+            <!-- STUDENT NAV -->
+            <asp:Panel ID="pnlStudentNav" runat="server" Visible="false">
+                <div class="nav-section">Student</div>
+                <a href="<%=ResolveUrl("~/Student/Dashboard.aspx")%>" class="nav-link <%=Active("~/Student/Dashboard.aspx")%>">
+                    <span class="icon">🏠</span> Dashboard
+                </a>
+                <a href="<%=ResolveUrl("~/Student/MyResults.aspx")%>" class="nav-link <%=Active("~/Student/MyResults.aspx")%>">
+                    <span class="icon">🏆</span> My Results
+                </a>
+            </asp:Panel>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="<%=ResolveUrl("~/Logout.aspx")%>">
+                <span>🚪</span> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <div class="top-bar">
+            <span class="page-title">
+                <asp:ContentPlaceHolder ID="PageTitle" runat="server">QuizWiz</asp:ContentPlaceHolder>
+            </span>
+            <div class="top-right">
+                <span style="font-size:13px;color:var(--text-sec);">
+                    Welcome, <strong><%=SessionFullName%></strong>
+                </span>
+            </div>
+        </div>
+
+        <div class="page-body">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
