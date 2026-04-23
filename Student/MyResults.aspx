@@ -111,9 +111,11 @@
                 <asp:TemplateField HeaderText="Score">
                     <ItemTemplate><strong><%# String.Format("{0:0.##}%", Eval("Percentage")) %></strong></ItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="Grade">
                     <ItemTemplate>
                         <%# GetGradeHtml(Eval("Percentage")) %>
                     </ItemTemplate>
+                </asp:TemplateField>
                 <asp:BoundField DataField="AttemptDate" HeaderText="Date" DataFormatString="{0:dd-MMM-yyyy}" />
             </Columns>
         </asp:GridView>
