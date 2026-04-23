@@ -18,10 +18,10 @@
 </asp:Panel>
 
 <!-- Stepper -->
-<div class="wizard-stepper mb-6" style="display:flex; justify-content:space-between; background:#fff; padding:16px; border-radius:8px; border:1px solid #eaeaea;">
-    <div style="font-weight:700; color:<%= If(mvWizard.ActiveViewIndex = 0, "#a471f8", "#999") %>">Step 1: Settings</div>
-    <div style="font-weight:700; color:<%= If(mvWizard.ActiveViewIndex = 1, "#a471f8", "#999") %>">Step 2: Add Questions</div>
-    <div style="font-weight:700; color:<%= If(mvWizard.ActiveViewIndex = 2, "#a471f8", "#999") %>">Step 3: Publish</div>
+<div class="wizard-stepper mb-6" style="display:flex; justify-content:space-between; background:var(--bg2); padding:16px; border-radius:var(--radius-sm);">
+    <div style="font-weight:700; color:<%= If(mvWizard.ActiveViewIndex = 0, "var(--primary)", "var(--text-muted)") %>">Step 1: Settings</div>
+    <div style="font-weight:700; color:<%= If(mvWizard.ActiveViewIndex = 1, "var(--primary)", "var(--text-muted)") %>">Step 2: Add Questions</div>
+    <div style="font-weight:700; color:<%= If(mvWizard.ActiveViewIndex = 2, "var(--primary)", "var(--text-muted)") %>">Step 3: Publish</div>
 </div>
 
 <asp:MultiView ID="mvWizard" runat="server" ActiveViewIndex="0">
