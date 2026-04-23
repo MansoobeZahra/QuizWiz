@@ -127,8 +127,8 @@ Partial Class Teacher_ViewResults
         sb.AppendLine("            datasets: [{")
         sb.AppendLine("                label: 'Student Score (%)',")
         sb.AppendLine("                data: [" & scoresJson & "],")
-        sb.AppendLine("                backgroundColor: 'rgba(164,113,248,0.8)',")
-        sb.AppendLine("                borderColor: 'rgba(164,113,248,1)',")
+        sb.AppendLine("                backgroundColor: 'rgba(37, 150, 190, 0.7)',")
+        sb.AppendLine("                borderColor: '#2596be',")
         sb.AppendLine("                borderWidth: 1,")
         sb.AppendLine("                borderRadius: 4")
         sb.AppendLine("            }]")
@@ -138,8 +138,8 @@ Partial Class Teacher_ViewResults
         sb.AppendLine("            maintainAspectRatio: false,")
         sb.AppendLine("            plugins: { legend: { display: false } },")
         sb.AppendLine("            scales: {")
-        sb.AppendLine("                y: { beginAtZero: true, max: 100, ticks: { color: '#9090b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },")
-        sb.AppendLine("                x: { ticks: { color: '#9090b8' }, grid: { display: false } }")
+        sb.AppendLine("                y: { beginAtZero: true, max: 100, ticks: { color: '#666' }, grid: { color: '#eee' } },")
+        sb.AppendLine("                x: { ticks: { color: '#666' }, grid: { display: false } }")
         sb.AppendLine("            }")
         sb.AppendLine("        }")
         sb.AppendLine("    });")
@@ -151,13 +151,13 @@ Partial Class Teacher_ViewResults
         sb.AppendLine("            labels: ['A+ (90-100)','A (80-89)','B (70-79)','C (60-69)','F (<60)'],")
         sb.AppendLine("            datasets: [{")
         sb.AppendLine("                data: [" & grades(0) & ", " & grades(1) & ", " & grades(2) & ", " & grades(3) & ", " & grades(4) & "],")
-        sb.AppendLine("                backgroundColor: ['#56ab2f','#8dc26f','#ffc107','#fd7e14','#ff416c'],")
-        sb.AppendLine("                borderColor: '#0a0e27', borderWidth: 2")
+        sb.AppendLine("                backgroundColor: ['#4CAF50','#8BC34A','#FFC107','#FF9800','#F44336'],")
+        sb.AppendLine("                borderColor: '#fff', borderWidth: 2")
         sb.AppendLine("            }]")
         sb.AppendLine("        },")
         sb.AppendLine("        options: {")
         sb.AppendLine("            responsive: true, maintainAspectRatio: false,")
-        sb.AppendLine("            plugins: { legend: { position: 'bottom', labels: { color: '#9090b8' } } }")
+        sb.AppendLine("            plugins: { legend: { position: 'bottom', labels: { color: '#666' } } }")
         sb.AppendLine("        }")
         sb.AppendLine("    });")
 
@@ -168,13 +168,13 @@ Partial Class Teacher_ViewResults
         sb.AppendLine("            labels: ['Correct Answers', 'Incorrect / Skipped'],")
         sb.AppendLine("            datasets: [{")
         sb.AppendLine("                data: [" & totalCorrect & ", " & totalWrong & "],")
-        sb.AppendLine("                backgroundColor: ['#56ab2f', '#ff416c'],")
-        sb.AppendLine("                borderColor: '#0a0e27', borderWidth: 2")
+        sb.AppendLine("                backgroundColor: ['#4CAF50', '#F44336'],")
+        sb.AppendLine("                borderColor: '#fff', borderWidth: 2")
         sb.AppendLine("            }]")
         sb.AppendLine("        },")
         sb.AppendLine("        options: {")
         sb.AppendLine("            responsive: true, maintainAspectRatio: false,")
-        sb.AppendLine("            plugins: { legend: { position: 'bottom', labels: { color: '#9090b8' } } }")
+        sb.AppendLine("            plugins: { legend: { position: 'bottom', labels: { color: '#666' } } }")
         sb.AppendLine("        }")
         sb.AppendLine("    });")
         sb.AppendLine("})();")
@@ -182,5 +182,22 @@ Partial Class Teacher_ViewResults
 
         litChartJS.Text = sb.ToString()
     End Sub
+
+    Public Function GetGradeHtml(percentageObj As Object) As String
+        Dim p As Double = Convert.ToDouble(percentageObj)
+        Dim g As String, gc As String
+        If p >= 90 Then
+            g = "A+" : gc = "grade-A"
+        ElseIf p >= 80 Then
+            g = "A" : gc = "grade-A"
+        ElseIf p >= 70 Then
+            g = "B" : gc = "grade-B"
+        ElseIf p >= 60 Then
+            g = "C" : gc = "grade-C"
+        Else
+            g = "F" : gc = "grade-F"
+        End If
+        Return String.Format("<span class=""fw-700 {0}"">{1}</span>", gc, g)
+    End Function
 
 End Class
