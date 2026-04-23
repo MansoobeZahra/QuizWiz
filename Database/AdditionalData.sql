@@ -83,9 +83,9 @@ END
 
 -- 9. Add more Student Results for the new quizzes
 -- Zain (UserID 7) took CS Quiz
-IF NOT EXISTS (SELECT 1 FROM Results WHERE StudentID = 7 AND QuizID = (SELECT QuizID FROM Quiz WHERE QuizTitle = 'CS Basics Midterm'))
+IF NOT EXISTS (SELECT 1 FROM Results WHERE StudentID = 7 AND QuizID IN (SELECT QuizID FROM Quiz WHERE QuizTitle = 'CS Basics Midterm'))
 BEGIN
-    DECLARE @CSQuizID INT = (SELECT QuizID FROM Quiz WHERE QuizTitle = 'CS Basics Midterm');
+    DECLARE @CSQuizID INT = (SELECT TOP 1 QuizID FROM Quiz WHERE QuizTitle = 'CS Basics Midterm' ORDER BY QuizID DESC);
     INSERT INTO Results (StudentID, QuizID, TotalMarks, ObtainedMarks, Percentage, AttemptDate)
     VALUES (7, @CSQuizID, 5, 5, 100.00, GETDATE());
 END
