@@ -84,26 +84,12 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Status">
                     <ItemTemplate>
-                        <% Dim alreadyDone As Boolean = CBool(Eval("AlreadyAttempted")) %>
-                        <% If alreadyDone Then %>
-                            <span class="badge badge-green"> Completed</span>
-                        <% Else %>
-                            <span class="badge badge-purple"> Available</span>
-                        <% End If %>
+                        <%# If(CBool(Eval("AlreadyAttempted")), "<span class=""badge badge-green""> Completed</span>", "<span class=""badge badge-purple""> Available</span>") %>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Action">
                     <ItemTemplate>
-                        <% Dim alreadyDone2 As Boolean = CBool(Eval("AlreadyAttempted")) %>
-                        <% If alreadyDone2 Then %>
-                            <a href='MyResults.aspx' class="btn btn-outline btn-sm">View Result</a>
-                        <% Else %>
-                            <a href='AttemptQuiz.aspx?quizid=<%# Eval("QuizID") %>'
-                               class="btn btn-primary btn-sm"
-                               onclick="return confirm('Start quiz now? The timer will begin immediately.')">
-                                Start Quiz
-                            </a>
-                        <% End If %>
+                        <%# If(CBool(Eval("AlreadyAttempted")), "<a href='MyResults.aspx' class=""btn btn-outline btn-sm"">View Result</a>", "<a href='AttemptQuiz.aspx?quizid=" & Eval("QuizID") & "' class=""btn btn-primary btn-sm"" onclick=""return confirm('Start quiz now? The timer will begin immediately.')"">Attempt Quiz</a>") %>
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
