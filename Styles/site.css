@@ -600,6 +600,23 @@ input[type="radio"]:checked + .option-label {
     border-bottom: 1px solid var(--bg2);
 }
 
+/* ----- Wizard Stepper ----- */
+.wizard-stepper {
+    display: flex;
+    justify-content: space-between;
+    background: var(--bg2);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+}
+.step-label {
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: var(--trans);
+}
+.step-label.active {
+    color: var(--primary);
+}
+
 /* =========================================================
    UTIL
    ========================================================= */
@@ -653,5 +670,5 @@ input[type="radio"]:checked + .option-label {
 @media (max-width: 500px) {
     .stats-grid { grid-template-columns: 1fr; }
     .login-card { padding: 32px 20px; }
-}x; }
 }
+
