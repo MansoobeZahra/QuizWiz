@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ManageQuestions.aspx.vb" Inherits="Teacher_ManageQuestions" MasterPageFile="~/MasterPage.master" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ManageQuestions.aspx.vb" Inherits="Teacher_ManageQuestions" MasterPageFile="~/MasterPage.master" %>
 
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Question Bank</asp:Content>
 
@@ -87,19 +87,19 @@
                 <asp:TemplateField HeaderText="Actions">
                     <ItemTemplate>
                         <asp:LinkButton CommandName="Edit" runat="server"
-                            CssClass="btn btn-outline btn-sm">️ Edit</asp:LinkButton>
+                            CssClass="btn btn-outline btn-sm">Edit</asp:LinkButton>
                         &nbsp;
                         <asp:LinkButton CommandName="DeleteQ" runat="server"
                             CommandArgument='<%# Eval("QuestionID") %>'
                             CssClass="btn btn-danger btn-sm"
-                            OnClientClick="return confirm('Delete this question?')">️</asp:LinkButton>
+                            OnClientClick="return confirm('Delete this question?')">Delete</asp:LinkButton>
                     </ItemTemplate>
                     <EditItemTemplate>
                         <asp:LinkButton CommandName="Update" runat="server"
                             CssClass="btn btn-success btn-sm"> Save</asp:LinkButton>
                         &nbsp;
                         <asp:LinkButton CommandName="Cancel" runat="server"
-                            CssClass="btn btn-outline btn-sm"></asp:LinkButton>
+                            CssClass="btn btn-outline btn-sm">Cancel</asp:LinkButton>
                     </EditItemTemplate>
                 </asp:TemplateField>
             </Columns>

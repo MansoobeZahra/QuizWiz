@@ -12,7 +12,7 @@ Partial Class Teacher_ManageQuestions
     Private Sub LoadSubjects()
         Dim dt = DBHelper.GetDataTable("SELECT SubjectID, SubjectName FROM Subjects ORDER BY SubjectName")
         ddlFilter.Items.Clear()
-        ddlFilter.Items.Add(New System.Web.UI.WebControls.ListItem("- All Subjects -", ""))
+        ddlFilter.Items.Add(New System.Web.UI.WebControls.ListItem("All Subjects", ""))
         For Each row As System.Data.DataRow In dt.Rows
             Dim txt As String = row("SubjectName").ToString()
             Dim val As String = row("SubjectID").ToString()
