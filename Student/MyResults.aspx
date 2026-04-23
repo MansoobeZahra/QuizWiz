@@ -72,15 +72,7 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Your Answer">
                     <ItemTemplate>
-                        <% Dim sa As String = If(Eval("StudentAns") Is DBNull.Value, "-", Eval("StudentAns").ToString()) %>
-                        <% Dim ca As String = Eval("CorrectAns").ToString() %>
-                        <% If sa = "-" Then %>
-                            <span class="badge badge-grey">- Skipped</span>
-                        <% ElseIf sa = ca Then %>
-                            <span class="badge badge-green"> <%=sa%></span>
-                        <% Else %>
-                            <span class="badge badge-red"> <%=sa%></span>
-                        <% End If %>
+                        <%# GetAnswerHtml(Eval("StudentAns"), Eval("CorrectAns")) %>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Correct Answer">
