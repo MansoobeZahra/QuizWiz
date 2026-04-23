@@ -113,14 +113,14 @@ Partial Class Student_MyResults
         sb.AppendLine("      labels:['Correct','Wrong','Skipped'],")
         sb.AppendLine("      datasets:[{")
         sb.AppendLine("        data:[" & correct & "," & wrong & "," & skipped & "],")
-        sb.AppendLine("        backgroundColor:['#56ab2f','#ff416c','#f7971e'],")
-        sb.AppendLine("        borderColor:'#0a0e27', borderWidth:2")
+        sb.AppendLine("        backgroundColor:['#4CAF50','#F44336','#FF9800'],")
+        sb.AppendLine("        borderColor:'#fff', borderWidth:2")
         sb.AppendLine("      }]")
         sb.AppendLine("    },")
         sb.AppendLine("    options:{")
         sb.AppendLine("      responsive:true, maintainAspectRatio:false,")
         sb.AppendLine("      plugins:{")
-        sb.AppendLine("        legend:{position:'bottom',labels:{color:'#9090b8',padding:12,font:{size:11}}},")
+        sb.AppendLine("        legend:{position:'bottom',labels:{color:'#666',padding:12,font:{size:11}}},")
         sb.AppendLine("        tooltip:{callbacks:{label:function(c){return c.label+': '+c.parsed+' question(s)'}}}")
         sb.AppendLine("      }")
         sb.AppendLine("    }")
@@ -132,16 +132,16 @@ Partial Class Student_MyResults
         sb.AppendLine("    data:{")
         sb.AppendLine("      labels:['Easy','Medium','Hard','Expert'],")
         sb.AppendLine("      datasets:[")
-        sb.AppendLine("        {label:'Correct',data:[" & easyC & "," & medC & "," & hardC & "," & expC & "],backgroundColor:'rgba(86,171,47,0.7)',borderRadius:4},")
-        sb.AppendLine("        {label:'Wrong',  data:[" & easyW & "," & medW & "," & hardW & "," & expW & "],backgroundColor:'rgba(255,65,108,0.7)',borderRadius:4}")
+        sb.AppendLine("        {label:'Correct',data:[" & easyC & "," & medC & "," & hardC & "," & expC & "],backgroundColor:'rgba(37, 150, 190, 0.7)',borderRadius:4},")
+        sb.AppendLine("        {label:'Wrong',  data:[" & easyW & "," & medW & "," & hardW & "," & expW & "],backgroundColor:'rgba(244, 67, 54, 0.7)',borderRadius:4}")
         sb.AppendLine("      ]")
         sb.AppendLine("    },")
         sb.AppendLine("    options:{")
         sb.AppendLine("      responsive:true, maintainAspectRatio:false,")
-        sb.AppendLine("      plugins:{ legend:{labels:{color:'#9090b8'}} },")
+        sb.AppendLine("      plugins:{ legend:{labels:{color:'#666'}} },")
         sb.AppendLine("      scales:{")
-        sb.AppendLine("        x:{ticks:{color:'#9090b8'},grid:{display:false},stacked:false},")
-        sb.AppendLine("        y:{ticks:{color:'#9090b8',stepSize:1},grid:{color:'rgba(255,255,255,0.06)'},min:0}")
+        sb.AppendLine("        x:{ticks:{color:'#666'},grid:{display:false},stacked:false},")
+        sb.AppendLine("        y:{ticks:{color:'#666',stepSize:1},grid:{color:'#eee'},min:0}")
         sb.AppendLine("      }")
         sb.AppendLine("    }")
         sb.AppendLine("  });")
@@ -149,6 +149,19 @@ Partial Class Student_MyResults
         sb.AppendLine("</script>")
         litChartScript.Text = sb.ToString()
     End Sub
+
+    Public Function GetAnswerHtml(studentAnsObj As Object, correctAnsObj As Object) As String
+        Dim sa As String = If(studentAnsObj Is DBNull.Value OrElse studentAnsObj.ToString() = "", "-", studentAnsObj.ToString())
+        Dim ca As String = If(correctAnsObj Is DBNull.Value, "", correctAnsObj.ToString())
+        
+        If sa = "-" Then
+            Return "<span class=""badge badge-grey"">- Skipped</span>"
+        ElseIf String.Compare(sa.Trim(), ca.Trim(), StringComparison.OrdinalIgnoreCase) = 0 Then
+            Return String.Format("<span class=""badge badge-green"">{0}</span>", sa)
+        Else
+            Return String.Format("<span class=""badge badge-red"">{0}</span>", sa)
+        End If
+    End Function
 
     Private Sub LoadAllResults(sid As Integer)
         Dim dt = DBHelper.GetDataTable( _
