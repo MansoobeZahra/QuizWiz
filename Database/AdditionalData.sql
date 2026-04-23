@@ -2,44 +2,55 @@ USE QuizWizDB;
 GO
 
 -- 1. Add more Students
-INSERT INTO Users (FullName, Username, Password, Role, SubjectID) VALUES
-('Fatima Zahra', 's_fatima', 'Student@4', 'Student', NULL),
-('Zain Ahmed',   's_zain',   'Student@5', 'Student', NULL),
-('Hamza Ali',    's_hamza',  'Student@6', 'Student', NULL);
+IF NOT EXISTS (SELECT 1 FROM Users WHERE Username = 's_fatima')
+BEGIN
+    INSERT INTO Users (FullName, Username, Password, Role, SubjectID) VALUES
+    ('Fatima Zahra', 's_fatima', 'Student@4', 'Student', NULL),
+    ('Zain Ahmed',   's_zain',   'Student@5', 'Student', NULL),
+    ('Hamza Ali',    's_hamza',  'Student@6', 'Student', NULL);
+END
 
 -- 2. Add more Questions (CS - UserID 2)
-INSERT INTO QuestionsTable (SubjectID, QuestionStatement, OptionA, OptionB, OptionC, OptionD, CorrectOption, DifficultyLevel, CreatedBy) VALUES
-(1, 'What does SQL stand for?', 'Structured Query Language', 'Simple Query Language', 'Sequential Query Logic', 'Standard Query List', 'A', 'Easy', 2),
-(1, 'Which language is primarily used for Android app development?', 'Swift', 'Kotlin', 'Objective-C', 'C#', 'B', 'Medium', 2),
-(1, 'What is the purpose of a firewall?', 'To speed up the internet', 'To block unauthorized access', 'To store cookies', 'To clean the monitor', 'B', 'Easy', 2),
-(1, 'Which of these is a NoSQL database?', 'MySQL', 'PostgreSQL', 'MongoDB', 'Oracle', 'C', 'Medium', 2),
-(1, 'In Python, which keyword is used to define a function?', 'func', 'define', 'def', 'function', 'C', 'Easy', 2);
+IF NOT EXISTS (SELECT 1 FROM QuestionsTable WHERE QuestionStatement LIKE '%SQL stand for%')
+BEGIN
+    INSERT INTO QuestionsTable (SubjectID, QuestionStatement, OptionA, OptionB, OptionC, OptionD, CorrectOption, DifficultyLevel, CreatedBy) VALUES
+    (1, 'What does SQL stand for?', 'Structured Query Language', 'Simple Query Language', 'Sequential Query Logic', 'Standard Query List', 'A', 'Easy', 2),
+    (1, 'Which language is primarily used for Android app development?', 'Swift', 'Kotlin', 'Objective-C', 'C#', 'B', 'Medium', 2),
+    (1, 'What is the purpose of a firewall?', 'To speed up the internet', 'To block unauthorized access', 'To store cookies', 'To clean the monitor', 'B', 'Easy', 2),
+    (1, 'Which of these is a NoSQL database?', 'MySQL', 'PostgreSQL', 'MongoDB', 'Oracle', 'C', 'Medium', 2),
+    (1, 'In Python, which keyword is used to define a function?', 'func', 'define', 'def', 'function', 'C', 'Easy', 2);
+END
 
 -- 3. Add more Questions (Math - UserID 3)
-INSERT INTO QuestionsTable (SubjectID, QuestionStatement, OptionA, OptionB, OptionC, OptionD, CorrectOption, DifficultyLevel, CreatedBy) VALUES
-(2, 'What is the square root of 225?', '13', '14', '15', '16', 'C', 'Easy', 3),
-(2, 'What is the value of Sin(90°)?', '0', '1', '0.5', '-1', 'B', 'Easy', 3),
-(2, 'If 5x = 40, what is x?', '6', '7', '8', '9', 'C', 'Easy', 3),
-(2, 'What is a prime number?', 'A number divisible by 2', 'A number with exactly two factors', 'A number ending in 1', 'Any odd number', 'B', 'Medium', 3),
-(2, 'What is 7 multiplied by 8?', '54', '56', '58', '62', 'B', 'Easy', 3);
+IF NOT EXISTS (SELECT 1 FROM QuestionsTable WHERE QuestionStatement LIKE '%square root of 225%')
+BEGIN
+    INSERT INTO QuestionsTable (SubjectID, QuestionStatement, OptionA, OptionB, OptionC, OptionD, CorrectOption, DifficultyLevel, CreatedBy) VALUES
+    (2, 'What is the square root of 225?', '13', '14', '15', '16', 'C', 'Easy', 3),
+    (2, 'What is the value of Sin(90°)?', '0', '1', '0.5', '-1', 'B', 'Easy', 3),
+    (2, 'If 5x = 40, what is x?', '6', '7', '8', '9', 'C', 'Easy', 3),
+    (2, 'What is a prime number?', 'A number divisible by 2', 'A number with exactly two factors', 'A number ending in 1', 'Any odd number', 'B', 'Medium', 3),
+    (2, 'What is 7 multiplied by 8?', '54', '56', '58', '62', 'B', 'Easy', 3);
+END
 
 -- 4. Create a Quiz (CS Midterm)
-INSERT INTO Quiz (QuizTitle, SubjectID, StartTime, AllowedTime, TotalQuestions, RandomizeQ, ShuffleOptions, Remarks, ReviewAnswer, IsPublished, CreatedBy)
-VALUES ('CS Basics Midterm', 1, GETDATE(), 15, 5, 1, 1, 'Covers DS, Networks and SQL', 1, 1, 2);
+IF NOT EXISTS (SELECT 1 FROM Quiz WHERE QuizTitle = 'CS Basics Midterm')
+BEGIN
+    INSERT INTO Quiz (QuizTitle, SubjectID, StartTime, AllowedTime, TotalQuestions, RandomizeQ, ShuffleOptions, Remarks, ReviewAnswer, IsPublished, CreatedBy)
+    VALUES ('CS Basics Midterm', 1, GETDATE(), 15, 5, 1, 1, 'Covers DS, Networks and SQL', 1, 1, 2);
 
--- Link questions to the quiz (IDs will be 26-30 for the new CS questions)
-DECLARE @QuizID INT = (SELECT TOP 1 QuizID FROM Quiz WHERE QuizTitle = 'CS Basics Midterm' ORDER BY QuizID DESC);
-INSERT INTO QuizQuestions (QuizID, QuestionID, DisplayOrder)
-SELECT @QuizID, QuestionID, ROW_NUMBER() OVER(ORDER BY QuestionID)
-FROM QuestionsTable WHERE QuestionStatement LIKE '%SQL%' OR QuestionStatement LIKE '%Android%' OR QuestionStatement LIKE '%firewall%' OR QuestionStatement LIKE '%NoSQL%' OR QuestionStatement LIKE '%Python%';
+    -- Link questions to the quiz
+    DECLARE @QuizID INT = (SELECT TOP 1 QuizID FROM Quiz WHERE QuizTitle = 'CS Basics Midterm' ORDER BY QuizID DESC);
+    INSERT INTO QuizQuestions (QuizID, QuestionID, DisplayOrder)
+    SELECT @QuizID, QuestionID, ROW_NUMBER() OVER(ORDER BY QuestionID)
+    FROM QuestionsTable WHERE QuestionStatement LIKE '%SQL%' OR QuestionStatement LIKE '%Android%' OR QuestionStatement LIKE '%firewall%' OR QuestionStatement LIKE '%NoSQL%' OR QuestionStatement LIKE '%Python%';
 
--- 5. Add some mock Results for existing students
--- Usman (UserID 4) took a quiz
-INSERT INTO Results (StudentID, QuizID, TotalMarks, ObtainedMarks, Percentage, AttemptDate)
-VALUES (4, @QuizID, 5, 4, 80.00, DATEADD(day, -1, GETDATE()));
+    -- 5. Add some mock Results for existing students
+    INSERT INTO Results (StudentID, QuizID, TotalMarks, ObtainedMarks, Percentage, AttemptDate)
+    VALUES (4, @QuizID, 5, 4, 80.00, DATEADD(day, -1, GETDATE()));
 
--- Ayesha (UserID 5) took a quiz
-INSERT INTO Results (StudentID, QuizID, TotalMarks, ObtainedMarks, Percentage, AttemptDate)
-VALUES (5, @QuizID, 5, 3, 60.00, DATEADD(day, -1, GETDATE()));
+    INSERT INTO Results (StudentID, QuizID, TotalMarks, ObtainedMarks, Percentage, AttemptDate)
+    VALUES (5, @QuizID, 5, 3, 60.00, DATEADD(day, -1, GETDATE()));
+END
 
-PRINT 'Additional data populated successfully!';
+PRINT 'Additional data check completed successfully!';
+
