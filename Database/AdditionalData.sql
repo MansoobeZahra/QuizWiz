@@ -54,3 +54,42 @@ END
 
 PRINT 'Additional data check completed successfully!';
 
+-- 6. Add more Subjects
+IF NOT EXISTS (SELECT 1 FROM Subjects WHERE SubjectName = 'Chemistry')
+    INSERT INTO Subjects (SubjectName) VALUES ('Chemistry'), ('General Knowledge'), ('English');
+
+-- 7. Add Physics Questions (SubjectID 3, UserID 2)
+IF NOT EXISTS (SELECT 1 FROM QuestionsTable WHERE QuestionStatement LIKE '%Newton%')
+BEGIN
+    INSERT INTO QuestionsTable (SubjectID, QuestionStatement, OptionA, OptionB, OptionC, OptionD, CorrectOption, DifficultyLevel, CreatedBy) VALUES
+    (3, 'Which planet is known as the Red Planet?', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'B', 'Easy', 2),
+    (3, 'What is the standard unit of temperature?', 'Celsius', 'Fahrenheit', 'Kelvin', 'Rankine', 'C', 'Medium', 2),
+    (3, 'What is the acceleration due to gravity on Earth?', '8.9 m/s²', '9.8 m/s²', '10.5 m/s²', '7.2 m/s²', 'B', 'Easy', 2),
+    (3, 'Which of these is a noble gas?', 'Oxygen', 'Nitrogen', 'Helium', 'Chlorine', 'C', 'Easy', 2),
+    (3, 'What is the boiling point of water at sea level?', '90°C', '100°C', '110°C', '120°C', 'B', 'Easy', 2);
+END
+
+-- 8. Create a Math Quiz (SubjectID 2, UserID 3)
+IF NOT EXISTS (SELECT 1 FROM Quiz WHERE QuizTitle = 'Basic Arithmetic Quiz')
+BEGIN
+    INSERT INTO Quiz (QuizTitle, SubjectID, StartTime, AllowedTime, TotalQuestions, RandomizeQ, ShuffleOptions, Remarks, ReviewAnswer, IsPublished, CreatedBy)
+    VALUES ('Basic Arithmetic Quiz', 2, GETDATE(), 10, 5, 1, 1, 'Simple addition, multiplication and roots', 1, 1, 3);
+
+    DECLARE @MathQuizID INT = (SELECT TOP 1 QuizID FROM Quiz WHERE QuizTitle = 'Basic Arithmetic Quiz' ORDER BY QuizID DESC);
+    INSERT INTO QuizQuestions (QuizID, QuestionID, DisplayOrder)
+    SELECT @MathQuizID, QuestionID, ROW_NUMBER() OVER(ORDER BY QuestionID)
+    FROM QuestionsTable WHERE SubjectID = 2 AND (QuestionStatement LIKE '%multiplied%' OR QuestionStatement LIKE '%square root%' OR QuestionStatement LIKE '%3x + 5%');
+END
+
+-- 9. Add more Student Results for the new quizzes
+-- Zain (UserID 7) took CS Quiz
+IF NOT EXISTS (SELECT 1 FROM Results WHERE StudentID = 7 AND QuizID = (SELECT QuizID FROM Quiz WHERE QuizTitle = 'CS Basics Midterm'))
+BEGIN
+    DECLARE @CSQuizID INT = (SELECT QuizID FROM Quiz WHERE QuizTitle = 'CS Basics Midterm');
+    INSERT INTO Results (StudentID, QuizID, TotalMarks, ObtainedMarks, Percentage, AttemptDate)
+    VALUES (7, @CSQuizID, 5, 5, 100.00, GETDATE());
+END
+
+PRINT 'Extended data expansion completed successfully!';
+
+
