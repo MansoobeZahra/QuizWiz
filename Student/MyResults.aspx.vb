@@ -150,6 +150,23 @@ Partial Class Student_MyResults
         litChartScript.Text = sb.ToString()
     End Sub
 
+    Public Function GetGradeHtml(percentageObj As Object) As String
+        Dim p As Double = Convert.ToDouble(percentageObj)
+        Dim g As String, gc As String
+        If p >= 90 Then
+            g = "A+" : gc = "grade-A"
+        ElseIf p >= 80 Then
+            g = "A" : gc = "grade-A"
+        ElseIf p >= 70 Then
+            g = "B" : gc = "grade-B"
+        ElseIf p >= 60 Then
+            g = "C" : gc = "grade-C"
+        Else
+            g = "F" : gc = "grade-F"
+        End If
+        Return String.Format("<span class=""fw-700 {0}"">{1}</span>", gc, g)
+    End Function
+
     Public Function GetAnswerHtml(studentAnsObj As Object, correctAnsObj As Object) As String
         Dim sa As String = If(studentAnsObj Is DBNull.Value OrElse studentAnsObj.ToString() = "", "-", studentAnsObj.ToString())
         Dim ca As String = If(correctAnsObj Is DBNull.Value, "", correctAnsObj.ToString())
