@@ -106,22 +106,7 @@
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Grade">
                         <ItemTemplate>
-                            <%
-                                Dim p As Double = Convert.ToDouble(Eval("Percentage"))
-                                Dim g As String, gc As String
-                                If p >= 90  Then
-                                    g = "A+" : gc = "grade-A"
-                                ElseIf p >= 80 Then
-                                    g = "A"  : gc = "grade-A"
-                                ElseIf p >= 70 Then
-                                    g = "B"  : gc = "grade-B"
-                                ElseIf p >= 60 Then
-                                    g = "C"  : gc = "grade-C"
-                                Else
-                                    g = "F" : gc = "grade-F"
-                                End If
-                            %>
-                            <span class="fw-700 <%=gc%>"><%=g%></span>
+                            <%# GetGradeHtml(Eval("Percentage")) %>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:BoundField DataField="AttemptDate" HeaderText="Date Attempted" DataFormatString="{0:dd-MMM-yyyy hh:mm tt}" />
