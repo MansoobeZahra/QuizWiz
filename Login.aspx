@@ -12,7 +12,9 @@
 </head>
 <body style="background-color:#eee;">
     <div style="width:350px; margin: 100px auto; border: 1px solid #0078d4; padding: 20px; background-color: white;">
-        <h1 style="text-align:center; color:#0078d4; margin-top:0;">QuizWiz</h1>
+        <div style="text-align:center; margin-bottom:20px;">
+            <img src='<%= ResolveUrl("~/Assets/discar.png") %>' alt="QuizWiz" style="max-width:200px;" />
+        </div>
         <form id="form1" runat="server">
             <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-err">
                 <asp:Literal ID="litError" runat="server" />
