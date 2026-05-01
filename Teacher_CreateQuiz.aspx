@@ -24,10 +24,6 @@
             Questions Goal: <asp:TextBox ID="txtTotalQ" runat="server" Text="10" Width="50px" /><br />
             Time (min): <asp:TextBox ID="txtTime" runat="server" Text="30" Width="50px" /><br />
             <asp:CheckBox ID="chkRandomize" runat="server" Text=" Randomize" Checked="true" /><br />
-            <asp:CheckBox ID="chkNegMarking" runat="server" Text=" Negative Marking" AutoPostBack="true" OnCheckedChanged="chkNegMarking_Changed" /><br />
-            <asp:Panel ID="divNegMarks" runat="server" Visible="false">
-                Value: <asp:TextBox ID="txtNegMarks" runat="server" Text="0.25" Width="50px" />
-            </asp:Panel>
             <br />
             <asp:Button ID="btnStep1Next" runat="server" Text="Next Step" CssClass="btn btn-blue" OnClick="btnStep1Next_Click" />
         </div>
@@ -43,13 +39,16 @@
                 <hr />
                 <asp:Panel ID="pnlWriteNew" runat="server">
                     Text: <asp:TextBox ID="txtQStmt" runat="server" TextMode="MultiLine" Rows="2" Width="100%" /><br />
-                    Type: <asp:DropDownList ID="ddlQType" runat="server">
+                    Type: <asp:DropDownList ID="ddlQType" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlQType_Changed">
                         <asp:ListItem Value="Radio">Single</asp:ListItem>
                         <asp:ListItem Value="Checkbox">Multiple</asp:ListItem>
                     </asp:DropDownList><br />
-                    A: <asp:CheckBox ID="cbAnsA" runat="server" /><asp:TextBox ID="txtOptA" runat="server" /><br />
-                    B: <asp:CheckBox ID="cbAnsB" runat="server" /><asp:TextBox ID="txtOptB" runat="server" /><br />
-                    <asp:Button ID="btnSaveQ" runat="server" Text="Add" OnClick="btnSaveQ_Click" CssClass="btn btn-green" />
+                    Image: <asp:FileUpload ID="fuQImage" runat="server" /><br />
+                    A: <asp:RadioButton ID="rbAnsA" runat="server" GroupName="NewQ" Checked="true" /><asp:CheckBox ID="cbAnsA" runat="server" Visible="false" /><asp:TextBox ID="txtOptA" runat="server" /><br />
+                    B: <asp:RadioButton ID="rbAnsB" runat="server" GroupName="NewQ" /><asp:CheckBox ID="cbAnsB" runat="server" Visible="false" /><asp:TextBox ID="txtOptB" runat="server" /><br />
+                    C: <asp:RadioButton ID="rbAnsC" runat="server" GroupName="NewQ" /><asp:CheckBox ID="cbAnsC" runat="server" Visible="false" /><asp:TextBox ID="txtOptC" runat="server" /><br />
+                    D: <asp:RadioButton ID="rbAnsD" runat="server" GroupName="NewQ" /><asp:CheckBox ID="cbAnsD" runat="server" Visible="false" /><asp:TextBox ID="txtOptD" runat="server" /><br />
+                    <asp:Button ID="btnSaveQ" runat="server" Text="Save & Add" OnClick="btnSaveQ_Click" CssClass="btn btn-green" />
                 </asp:Panel>
                 <asp:Panel ID="pnlSelectBank" runat="server" Visible="false">
                     <asp:GridView ID="gvBank" runat="server" AutoGenerateColumns="false" DataKeyNames="QuestionID">

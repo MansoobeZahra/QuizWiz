@@ -31,8 +31,10 @@
         <asp:ListItem>Hard</asp:ListItem>
     </asp:DropDownList>
     <br /><br />
-    Question:<br />
-    <asp:TextBox ID="txtStatement" runat="server" TextMode="MultiLine" Rows="3" Width="100%" />
+    Question Text:<br />
+    <asp:TextBox ID="txtStatement" runat="server" TextMode="MultiLine" Rows="3" Width="100%" /><br /><br />
+    Upload Image (Optional):<br />
+    <asp:FileUpload ID="fuImage" runat="server" />
 </div>
 
 <div id="secOptions" style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
@@ -44,7 +46,7 @@
 </div>
 
 <div id="secCorrectRadio" style="border:1px solid #28a745; padding:10px; background:#f0fff4; margin-bottom:10px;">
-    <b>Correct Answer:</b><br />
+    <b>Correct Option (Single):</b><br />
     <asp:RadioButton ID="rbA" runat="server" GroupName="Correct" Text="A" />
     <asp:RadioButton ID="rbB" runat="server" GroupName="Correct" Text="B" />
     <asp:RadioButton ID="rbC" runat="server" GroupName="Correct" Text="C" />
@@ -52,7 +54,7 @@
 </div>
 
 <div id="secCorrectCheckbox" style="border:1px solid #28a745; padding:10px; background:#f0fff4; margin-bottom:10px; display:none;">
-    <b>Correct Answers:</b><br />
+    <b>Correct Options (Multiple):</b><br />
     <asp:CheckBox ID="cbCA" runat="server" Text="A" />
     <asp:CheckBox ID="cbCB" runat="server" Text="B" />
     <asp:CheckBox ID="cbCC" runat="server" Text="C" />
@@ -60,11 +62,11 @@
 </div>
 
 <div id="secCorrectParagraph" style="border:1px solid #28a745; padding:10px; background:#f0fff4; margin-bottom:10px; display:none;">
-    <b>Model Answer:</b><br />
+    <b>Model Answer (Text):</b><br />
     <asp:TextBox ID="txtModelAnswer" runat="server" Width="100%" />
 </div>
 
-<asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" CssClass="btn btn-blue" />
+<asp:Button ID="btnSave" runat="server" Text="Save Question" OnClick="btnSave_Click" CssClass="btn btn-blue" />
 <a href="Teacher_Bank.aspx" style="margin-left:10px; color:red;">Cancel</a>
 
 <script>

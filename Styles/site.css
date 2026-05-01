@@ -11,7 +11,7 @@ form {
 }
 
 .top-nav {
-    background-color: #0078d4;
+    background-color: #1b9cff;
     color: white;
     padding: 10px;
     border-bottom: 1px solid #005a9e;
@@ -50,7 +50,10 @@ label {
     margin-bottom: 5px;
 }
 
-input[type=text], input[type=password], select, textarea {
+input[type=text],
+input[type=password],
+select,
+textarea {
     border: 1px solid #999;
     padding: 5px;
     width: 100%;
@@ -118,4 +121,33 @@ td {
     background-color: #f8d7da;
     color: #721c24;
     border-color: #f5c6cb;
+}
+
+.layout-container {
+    display: flex;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #f8f9fa;
+    border-right: 1px solid #ccc;
+    min-height: 90vh;
+    padding: 10px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar a:hover {
+    background-color: #e9ecef;
+}
+
+.content-area {
+    flex: 1;
+    padding: 20px;
 }

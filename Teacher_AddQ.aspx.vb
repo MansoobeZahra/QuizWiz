@@ -39,9 +39,23 @@ Partial Class Teacher_AddQuestion
             correctOptions = txtModelAnswer.Text.Trim()
         End If
 
+        Dim imgPath = ""
+        If fuImage.HasFile Then
+            Try
+                Dim folder = Server.MapPath("~/Images/Questions/")
+                If Not System.IO.Directory.Exists(folder) Then System.IO.Directory.CreateDirectory(folder)
+                Dim ext = System.IO.Path.GetExtension(fuImage.FileName).ToLower()
+                Dim fName = Guid.NewGuid().ToString() & ext
+                fuImage.SaveAs(folder & fName)
+                imgPath = "Images/Questions/" & fName
+            Catch ex As Exception
+                litError.Text = "Image upload failed: " & ex.Message : pnlError.Visible = True : Return
+            End Try
+        End If
+
         DBHelper.ExecuteNonQuery( _
-            "INSERT INTO QuestionsTable (SubjectID,QuestionStatement,OptionA,OptionB,OptionC,OptionD,CorrectOption,DifficultyLevel,CreatedBy,QuestionType,CorrectOptions) " & _
-            "VALUES (@sid,@stmt,@a,@b,@c,@d,@co,@diff,@by,@qt,@cops)", _
+            "INSERT INTO QuestionsTable (SubjectID,QuestionStatement,OptionA,OptionB,OptionC,OptionD,CorrectOption,DifficultyLevel,CreatedBy,QuestionType,CorrectOptions,ImagePath) " & _
+            "VALUES (@sid,@stmt,@a,@b,@c,@d,@co,@diff,@by,@qt,@cops,@img)", _
             DBHelper.Param("@sid", CInt(ddlSubject.SelectedValue)), _
             DBHelper.Param("@stmt", txtStatement.Text.Trim()), _
             DBHelper.Param("@a", txtA.Text.Trim()), _
@@ -52,9 +66,10 @@ Partial Class Teacher_AddQuestion
             DBHelper.Param("@diff", ddlDifficulty.SelectedValue), _
             DBHelper.Param("@by", CInt(Session("UserID"))), _
             DBHelper.Param("@qt", qType), _
-            DBHelper.Param("@cops", correctOptions))
+            DBHelper.Param("@cops", correctOptions), _
+            DBHelper.Param("@img", If(imgPath="", DBNull.Value, imgPath)))
 
         pnlSuccess.Visible = True
-        txtStatement.Text = ""
+        txtStatement.Text = "" : txtA.Text = "" : txtB.Text = "" : txtC.Text = "" : txtD.Text = ""
     End Sub
 End Class

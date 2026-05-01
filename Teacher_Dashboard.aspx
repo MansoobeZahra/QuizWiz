@@ -33,11 +33,11 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Actions">
             <ItemTemplate>
-                <asp:LinkButton runat="server" CommandName="PublishToggle" CommandArgument='<%# Eval("QuizID") %>' 
+                <asp:LinkButton ID="btnToggle" runat="server" CommandName="PublishToggle" CommandArgument='<%# Eval("QuizID") %>' 
                     Text='<%# If(CBool(Eval("IsPublished")), "Unpublish", "Publish") %>' 
-                    style='color:<%# If(CBool(Eval("IsPublished")), "orange", "blue") %>;' />
-                &nbsp;|&nbsp;
-                <a href='Teacher_Results.aspx?quizid=<%# Eval("QuizID") %>' style="color:blue;">View Results</a>
+                    ForeColor='<%# If(CBool(Eval("IsPublished")), System.Drawing.Color.Orange, System.Drawing.Color.Blue) %>' />
+                |
+                <a href='Teacher_Results.aspx?quizid=<%# Eval("QuizID") %>' style="color:blue;">Results</a>
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
