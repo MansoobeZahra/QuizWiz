@@ -15,16 +15,14 @@
 
 <!-- Result Hero (shown for single quiz result) -->
 <asp:Panel ID="pnlHero" runat="server" Visible="false">
-<div class="result-hero mb-6">
-    <div class="result-score-circle">
-        <div class="score-pct"><asp:Literal ID="litPct" runat="server" /></div>
-        <div class="score-label">Score</div>
+<div class="card mb-6" style="padding:30px;">
+    <h2 style="margin-bottom:10px;">Quiz Result</h2>
+    <div style="font-size:24px; font-weight:600; color:var(--primary); margin-bottom:10px;">
+        Score: <asp:Literal ID="litPct" runat="server" />
     </div>
-    <div class="result-marks">
-        <asp:Literal ID="litObtained" runat="server" /> / <asp:Literal ID="litTotal" runat="server" /> marks
-    </div>
-    <div class="result-grade <asp:Literal ID="litGradeCls" runat="server" />">
-        Grade: <strong><asp:Literal ID="litGrade" runat="server" /></strong>
+    <div style="font-size:14px; color:#444;">
+        Marks: <asp:Literal ID="litObtained" runat="server" /> / <asp:Literal ID="litTotal" runat="server" />
+        &nbsp;|&nbsp; Grade: <strong><asp:Literal ID="litGrade" runat="server" /></strong>
         &nbsp;|&nbsp; <asp:Literal ID="litQuizName" runat="server" />
     </div>
 </div>
@@ -65,7 +63,7 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Difficulty">
                     <ItemTemplate>
-                        <span class='badge diff-<%# Eval("DifficultyLevel").ToString().ToLower() %>'>
+                        <span class="badge">
                             <%# Eval("DifficultyLevel") %>
                         </span>
                     </ItemTemplate>
