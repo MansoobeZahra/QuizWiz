@@ -1,6 +1,6 @@
 /* =========================================================
    QuizWiz – Basic "Drag & Drop" Style with Colors
-   No custom fonts, basic primary colors.
+   No corner rounding, no hover effects.
    ========================================================= */
 
 body {
@@ -48,10 +48,6 @@ form {
     text-decoration: none;
 }
 
-.nav-link:hover {
-    background-color: #005a9e;
-}
-
 .main-content {
     background-color: white;
     padding: 20px;
@@ -75,9 +71,10 @@ input[type="text"], input[type="password"], input[type="number"], select, textar
     padding: 4px;
     border: 1px solid #777;
     width: 300px;
+    border-radius: 0; /* Remove rounding */
 }
 
-/* Buttons - Basic Colors */
+/* Buttons - Basic Colors, No Rounding, No Hover */
 .btn {
     padding: 6px 20px;
     background-color: #e1e1e1;
@@ -87,6 +84,7 @@ input[type="text"], input[type="password"], input[type="number"], select, textar
     text-decoration: none;
     font-size: 13px;
     display: inline-block;
+    border-radius: 0; /* Remove rounding */
 }
 
 .btn-primary {
@@ -107,8 +105,9 @@ input[type="text"], input[type="password"], input[type="number"], select, textar
     border-color: #bd2130;
 }
 
+/* Hover effect removed as requested */
 .btn:hover {
-    opacity: 0.9;
+    opacity: 1; 
 }
 
 /* Tables */
@@ -124,6 +123,7 @@ th {
     border: 1px solid #005a9e;
     padding: 8px;
     text-align: left;
+    border-radius: 0;
 }
 
 td {
@@ -141,6 +141,7 @@ tr:nth-child(even) {
     padding: 15px;
     background-color: #fdfdfd;
     margin-bottom: 20px;
+    border-radius: 0; /* Remove rounding */
 }
 
 h1, h2, h3 {
@@ -153,6 +154,7 @@ h1, h2, h3 {
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid transparent;
+    border-radius: 0; /* Remove rounding */
 }
 
 .alert-success {

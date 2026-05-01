@@ -100,86 +100,8 @@ Partial Class Teacher_ViewResults
         litHighest.Text       = highest.ToString("0.##") & "%"
         litLowest.Text        = lowest.ToString("0.##") & "%"
 
-        ' Overall Correct vs Incorrect
-        Dim ansDt = DBHelper.GetDataTable( _
-            "SELECT " & _
-            "    SUM(CASE WHEN Marks > 0 THEN 1 ELSE 0 END) AS CorrectCount, " & _
-            "    SUM(CASE WHEN Marks <= 0 THEN 1 ELSE 0 END) AS WrongCount " & _
-            "FROM Answers " & _
-            "WHERE QuizID = @qid", DBHelper.Param("@qid", quizID))
-
-        Dim totalCorrect = 0
-        Dim totalWrong = 0
-        If ansDt.Rows.Count > 0 Then
-            totalCorrect = CInt(If(ansDt.Rows(0)("CorrectCount") Is DBNull.Value, 0, ansDt.Rows(0)("CorrectCount")))
-            totalWrong = CInt(If(ansDt.Rows(0)("WrongCount") Is DBNull.Value, 0, ansDt.Rows(0)("WrongCount")))
-        End If
-
-        ' Build JS Charts manually (No String Interpolation or Multiline strings)
-        Dim sb As New System.Text.StringBuilder()
-        sb.AppendLine("<script>")
-        sb.AppendLine("(function() {")
-        sb.AppendLine("    const ctxBar = document.getElementById('scoreBarChart').getContext('2d');")
-        sb.AppendLine("    new Chart(ctxBar, {")
-        sb.AppendLine("        type: 'bar',")
-        sb.AppendLine("        data: {")
-        sb.AppendLine("            labels: [" & labelsJson & "],")
-        sb.AppendLine("            datasets: [{")
-        sb.AppendLine("                label: 'Student Score (%)',")
-        sb.AppendLine("                data: [" & scoresJson & "],")
-        sb.AppendLine("                backgroundColor: '#0078d4',")
-        sb.AppendLine("                borderColor: '#005a9e',")
-        sb.AppendLine("                borderWidth: 1")
-        sb.AppendLine("            }]")
-        sb.AppendLine("        },")
-        sb.AppendLine("        options: {")
-        sb.AppendLine("            responsive: true,")
-        sb.AppendLine("            maintainAspectRatio: false,")
-        sb.AppendLine("            plugins: { legend: { display: false } },")
-        sb.AppendLine("            scales: {")
-        sb.AppendLine("                y: { beginAtZero: true, max: 100, ticks: { color: '#666' }, grid: { color: '#eee' } },")
-        sb.AppendLine("                x: { ticks: { color: '#666' }, grid: { display: false } }")
-        sb.AppendLine("            }")
-        sb.AppendLine("        }")
-        sb.AppendLine("    });")
-
-        sb.AppendLine("    const ctxGrade = document.getElementById('gradePieChart').getContext('2d');")
-        sb.AppendLine("    new Chart(ctxGrade, {")
-        sb.AppendLine("        type: 'pie',")
-        sb.AppendLine("        data: {")
-        sb.AppendLine("            labels: ['A+ (90-100)','A (80-89)','B (70-79)','C (60-69)','F (<60)'],")
-        sb.AppendLine("            datasets: [{")
-        sb.AppendLine("                data: [" & grades(0) & ", " & grades(1) & ", " & grades(2) & ", " & grades(3) & ", " & grades(4) & "],")
-        sb.AppendLine("                backgroundColor: ['#4CAF50','#8BC34A','#FFC107','#FF9800','#F44336'],")
-        sb.AppendLine("                borderColor: '#fff', borderWidth: 2")
-        sb.AppendLine("            }]")
-        sb.AppendLine("        },")
-        sb.AppendLine("        options: {")
-        sb.AppendLine("            responsive: true, maintainAspectRatio: false,")
-        sb.AppendLine("            plugins: { legend: { position: 'bottom', labels: { color: '#666' } } }")
-        sb.AppendLine("        }")
-        sb.AppendLine("    });")
-
-        sb.AppendLine("    const ctxCorrect = document.getElementById('correctPieChart').getContext('2d');")
-        sb.AppendLine("    new Chart(ctxCorrect, {")
-        sb.AppendLine("        type: 'pie',")
-        sb.AppendLine("        data: {")
-        sb.AppendLine("            labels: ['Correct Answers', 'Incorrect / Skipped'],")
-        sb.AppendLine("            datasets: [{")
-        sb.AppendLine("                data: [" & totalCorrect & ", " & totalWrong & "],")
-        sb.AppendLine("                backgroundColor: ['#4CAF50', '#F44336'],")
-        sb.AppendLine("                borderColor: '#fff', borderWidth: 2")
-        sb.AppendLine("            }]")
-        sb.AppendLine("        },")
-        sb.AppendLine("        options: {")
-        sb.AppendLine("            responsive: true, maintainAspectRatio: false,")
-        sb.AppendLine("            plugins: { legend: { position: 'bottom', labels: { color: '#666' } } }")
-        sb.AppendLine("        }")
-        sb.AppendLine("    });")
-        sb.AppendLine("})();")
-        sb.AppendLine("</script>")
-
-        litChartJS.Text = sb.ToString()
+        ' Chart generation removed for simplicity
+        litChartJS.Text = ""
     End Sub
 
     Public Function GetGradeHtml(percentageObj As Object) As String

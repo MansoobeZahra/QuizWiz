@@ -6,6 +6,10 @@
 
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
+<asp:Panel ID="pnlJustDone" runat="server" Visible="false" CssClass="alert alert-success">
+    Quiz submitted! Your result is shown below.
+</asp:Panel>
+
 <asp:Panel ID="pnlHero" runat="server" Visible="false" style="border:2px solid #0078d4; padding:20px; margin-bottom:20px; background:#f0f7ff;">
     <h2 style="color:#0078d4; margin-top:0;">Quiz Result: <asp:Literal ID="litQuizName" runat="server" /></h2>
     <p>Score: <strong style="font-size:20px; color:#0078d4;"><asp:Literal ID="litPct" runat="server" /></strong></p>
