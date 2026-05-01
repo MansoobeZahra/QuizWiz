@@ -1,176 +1,105 @@
-/* =========================================================
-   QuizWiz – Basic "Drag & Drop" Style with Colors
-   No corner rounding, no hover effects.
-   ========================================================= */
-
 body {
     font-family: sans-serif;
-    background-color: #f0f0f0;
+    background-color: #eee;
     margin: 0;
     padding: 0;
 }
 
 form {
-    padding: 20px;
-}
-
-/* Basic Layout */
-.layout {
-    display: block;
-}
-
-.sidebar {
-    width: 100%;
-    background-color: #0078d4; /* Corporate Blue */
-    color: white;
-    border-bottom: 2px solid #005a9e;
-    position: static;
-    height: auto;
     padding: 10px;
 }
 
-.sidebar a {
+.top-nav {
+    background-color: #0078d4;
     color: white;
-    text-decoration: underline;
-    margin-right: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #005a9e;
 }
 
-.sidebar-logo, .sidebar-user {
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 20px;
+.top-nav strong {
+    font-size: 20px;
 }
 
-.nav-link {
-    display: inline-block;
-    padding: 5px 10px;
+.top-nav a {
     color: white;
     text-decoration: none;
+    margin-right: 10px;
+    font-size: 14px;
 }
 
-.main-content {
+.top-nav a:hover {
+    text-decoration: underline;
+}
+
+.main-area {
     background-color: white;
     padding: 20px;
+    margin: 10px;
     border: 1px solid #ccc;
-    margin: 20px;
 }
 
-/* Form Elements */
-.form-group {
+.form-item {
     margin-bottom: 10px;
 }
 
 label {
-    display: block;
     font-weight: bold;
-    margin-bottom: 2px;
-    color: #333;
 }
 
-input[type="text"], input[type="password"], input[type="number"], select, textarea {
-    padding: 4px;
-    border: 1px solid #777;
-    width: 300px;
-    border-radius: 0; /* Remove rounding */
+input, select, textarea {
+    border: 1px solid #999;
+    padding: 3px;
 }
 
-/* Buttons - Basic Colors, No Rounding, No Hover */
 .btn {
-    padding: 6px 20px;
-    background-color: #e1e1e1;
+    padding: 5px 15px;
+    background-color: #ccc;
     border: 1px solid #777;
-    color: black;
     cursor: pointer;
-    text-decoration: none;
-    font-size: 13px;
-    display: inline-block;
-    border-radius: 0; /* Remove rounding */
 }
 
-.btn-primary {
+.btn-blue {
     background-color: #0078d4;
     color: white;
-    border-color: #005a9e;
 }
 
-.btn-success {
+.btn-green {
     background-color: #28a745;
     color: white;
-    border-color: #1e7e34;
 }
 
-.btn-danger {
+.btn-red {
     background-color: #dc3545;
     color: white;
-    border-color: #bd2130;
 }
 
-/* Hover effect removed as requested */
-.btn:hover {
-    opacity: 1; 
-}
-
-/* Tables */
 table {
-    border-collapse: collapse;
     width: 100%;
-    border: 1px solid #aaa;
+    border-collapse: collapse;
 }
 
 th {
     background-color: #0078d4;
     color: white;
-    border: 1px solid #005a9e;
-    padding: 8px;
+    padding: 5px;
     text-align: left;
-    border-radius: 0;
 }
 
 td {
-    border: 1px solid #aaa;
-    padding: 8px;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* Panels / Boxes */
-.card, .form-panel, .stat-card {
     border: 1px solid #ccc;
-    padding: 15px;
-    background-color: #fdfdfd;
-    margin-bottom: 20px;
-    border-radius: 0; /* Remove rounding */
+    padding: 5px;
 }
 
-h1, h2, h3 {
-    color: #0078d4;
-    margin-top: 0;
-}
-
-/* Alerts */
 .alert {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid transparent;
-    border-radius: 0; /* Remove rounding */
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid black;
 }
 
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border-color: #c3e6cb;
+.alert-ok {
+    background-color: #dff0d8;
 }
 
-.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-    border-color: #f5c6cb;
-}
-
-.alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border-color: #bee5eb;
+.alert-err {
+    background-color: #f2dede;
 }

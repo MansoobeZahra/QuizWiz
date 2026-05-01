@@ -1,40 +1,38 @@
 <%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="MasterPage" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head runat="server">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QuizWiz</title>
-    <link rel="stylesheet" href="<%= ResolveUrl("~/Styles/site.css") %>" />
+    <link rel="stylesheet" href="Styles/site.css" />
     <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
 </head>
 <body>
 <form id="form1" runat="server">
-    <div class="sidebar">
-        <strong style="font-size:24px;">QuizWiz</strong>
-        <span style="margin-left:20px;">User: <%=SessionFullName%> (<%=SessionRole%>)</span>
-        <a href="<%=ResolveUrl("~/Logout.aspx")%>" style="float:right;">Logout</a>
-        <br /><br />
-        <nav>
+    <div class="top-nav">
+        <strong>QuizWiz</strong>
+        <span style="margin-left:15px;">User: <%=SessionFullName%> (<%=SessionRole%>)</span>
+        <a href="Logout.aspx" style="float:right;">Logout</a>
+        <br />
+        <nav style="margin-top:10px;">
             <asp:Panel ID="pnlAdminNav" runat="server" Visible="false">
-                <a href="<%=ResolveUrl("~/Admin/Dashboard.aspx")%>" class="nav-link">Dashboard</a>
-                <a href="<%=ResolveUrl("~/Admin/ManageUsers.aspx")%>" class="nav-link">Users</a>
+                <a href="Admin_Dashboard.aspx">Dashboard</a>
+                <a href="Admin_Users.aspx">Users</a>
             </asp:Panel>
             <asp:Panel ID="pnlTeacherNav" runat="server" Visible="false">
-                <a href="<%=ResolveUrl("~/Teacher/Dashboard.aspx")%>" class="nav-link">Dashboard</a>
-                <a href="<%=ResolveUrl("~/Teacher/AddQuestion.aspx")%>" class="nav-link">Add Q</a>
-                <a href="<%=ResolveUrl("~/Teacher/ManageQuestions.aspx")%>" class="nav-link">Bank</a>
-                <a href="<%=ResolveUrl("~/Teacher/CreateQuiz.aspx")%>" class="nav-link">Create Quiz</a>
-                <a href="<%=ResolveUrl("~/Teacher/ViewResults.aspx")%>" class="nav-link">Results</a>
+                <a href="Teacher_Dashboard.aspx">Dashboard</a>
+                <a href="Teacher_AddQ.aspx">Add Q</a>
+                <a href="Teacher_Bank.aspx">Bank</a>
+                <a href="Teacher_CreateQuiz.aspx">Create Quiz</a>
+                <a href="Teacher_Results.aspx">Results</a>
             </asp:Panel>
             <asp:Panel ID="pnlStudentNav" runat="server" Visible="false">
-                <a href="<%=ResolveUrl("~/Student/Dashboard.aspx")%>" class="nav-link">Dashboard</a>
-                <a href="<%=ResolveUrl("~/Student/MyResults.aspx")%>" class="nav-link">Results</a>
+                <a href="Student_Dashboard.aspx">Dashboard</a>
+                <a href="Student_Results.aspx">Results</a>
             </asp:Panel>
         </nav>
     </div>
 
-    <div class="main-content">
+    <div class="main-area">
         <asp:ContentPlaceHolder ID="PageTitle" runat="server" />
         <hr />
         <asp:ContentPlaceHolder ID="MainContent" runat="server" />
