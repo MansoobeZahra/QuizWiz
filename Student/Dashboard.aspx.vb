@@ -64,13 +64,13 @@ Partial Class Student_Dashboard
     Private Sub LoadQuizzes()
         ' Get Student's SubjectID
         Dim studentSub = DBHelper.ExecuteScalar("SELECT SubjectID FROM Users WHERE UserID=@u", DBHelper.Param("@u", CInt(Session("UserID"))))
-        Dim sql = "SELECT q.QuizID, q.QuizTitle, q.AllowedTime, q.TotalQuestions, s.SubjectName, q.Remarks, " & _
-                  "       CASE WHEN EXISTS(SELECT 1 FROM Results r WHERE r.StudentID=@s AND r.QuizID=q.QuizID) " & _
-                  "       THEN 1 ELSE 0 END AS AlreadyAttempted " & _
-                  "FROM Quiz q " & _
-                  "JOIN Subjects s ON q.SubjectID = s.SubjectID " & _
+        Dim sql = "SELECT q.QuizID, q.QuizTitle, q.AllowedTime, q.TotalQuestions, s.SubjectName, q.Remarks, " &
+                  "       CASE WHEN EXISTS(SELECT 1 FROM Results r WHERE r.StudentID=@s AND r.QuizID=q.QuizID) " &
+                  "       THEN 1 ELSE 0 END AS AlreadyAttempted " &
+                  "FROM Quiz q " &
+                  "JOIN Subjects s ON q.SubjectID = s.SubjectID " &
                   "WHERE q.IsPublished=1 "
-        
+
         If studentSub IsNot Nothing AndAlso studentSub IsNot DBNull.Value Then
             sql &= " AND q.SubjectID = " & studentSub.ToString()
         End If
