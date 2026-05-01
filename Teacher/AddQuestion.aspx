@@ -4,159 +4,97 @@
 
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
-<div class="page-header">
-    <h1>Add New Question</h1>
-    <p>Select the question type first, then fill in the details.</p>
-</div>
+<h1>Add New Question</h1>
 
-<asp:Panel ID="pnlSuccess" runat="server" Visible="false" CssClass="alert alert-success mb-4">
-    Question saved. <a href="AddQuestion.aspx" style="color:inherit;font-weight:700;">Add another</a>
-    &nbsp;|&nbsp; <a href="ManageQuestions.aspx" style="color:inherit;font-weight:700;">View all questions</a>
+<asp:Panel ID="pnlSuccess" runat="server" Visible="false" style="color:green; border:1px solid green; padding:10px; margin-bottom:10px;">
+    Done! <a href="AddQuestion.aspx">Add another</a> | <a href="ManageQuestions.aspx">Back to list</a>
 </asp:Panel>
-<asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-danger mb-4">
+
+<asp:Panel ID="pnlError" runat="server" Visible="false" style="color:red; border:1px solid red; padding:10px; margin-bottom:10px;">
     <asp:Literal ID="litError" runat="server" />
 </asp:Panel>
 
-<!-- Question Type -->
-<div class="form-panel mb-4">
-    <h3>Question Type</h3>
-    <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
-        <label>
-            <asp:RadioButton ID="rbSingle" runat="server" GroupName="qType" Checked="true" />&nbsp;
-            <strong>Single Choice</strong> - <span class="text-muted">One correct answer</span>
-        </label>
-        <label>
-            <asp:RadioButton ID="rbMultiple" runat="server" GroupName="qType" />&nbsp;
-            <strong>Multiple Choice</strong> - <span class="text-muted">One or more correct answers</span>
-        </label>
-        <label>
-            <asp:RadioButton ID="rbParagraph" runat="server" GroupName="qType" />&nbsp;
-            <strong>Short Answer</strong> - <span class="text-muted">Student types a text answer</span>
-        </label>
-    </div>
+<div style="border:1px solid black; padding:15px; background:#eee;">
+    <b>Select Type:</b><br />
+    <asp:RadioButton ID="rbSingle" runat="server" GroupName="qType" Checked="true" Text="Single Choice" /><br />
+    <asp:RadioButton ID="rbMultiple" runat="server" GroupName="qType" Text="Multiple Choice" /><br />
+    <asp:RadioButton ID="rbParagraph" runat="server" GroupName="qType" Text="Short Answer" />
     <asp:HiddenField ID="hfQType" runat="server" Value="Radio" />
 </div>
 
-<!-- Question Details -->
-<div class="form-panel">
-    <h3>Question Details</h3>
-    <div class="form-row mb-4">
-        <div class="form-group">
-            <label>Subject</label>
-            <asp:DropDownList ID="ddlSubject" runat="server" CssClass="form-control" />
-        </div>
-        <div class="form-group">
-            <label>Difficulty Level</label>
-            <asp:DropDownList ID="ddlDifficulty" runat="server" CssClass="form-control">
-                <asp:ListItem Value="Easy">Easy</asp:ListItem>
-                <asp:ListItem Value="Medium" Selected="True">Medium</asp:ListItem>
-                <asp:ListItem Value="Hard">Hard</asp:ListItem>
-                <asp:ListItem Value="Expert">Expert</asp:ListItem>
-            </asp:DropDownList>
-        </div>
-    </div>
-    <div class="form-group mb-4">
-        <label>Question Statement</label>
-        <asp:TextBox ID="txtStatement" runat="server" TextMode="MultiLine" Rows="3"
-            CssClass="form-control" placeholder="Type the question here..." />
-    </div>
-    <div class="form-group mb-4">
-        <label>Question Image (optional | JPG/PNG, max 2 MB)</label>
-        <asp:FileUpload ID="fuImage" runat="server" CssClass="form-control" />
-    </div>
+<br />
+
+<div style="border:1px solid black; padding:15px;">
+    <b>Details:</b><br /><br />
+    Subject: <asp:DropDownList ID="ddlSubject" runat="server" /><br /><br />
+    Difficulty: 
+    <asp:DropDownList ID="ddlDifficulty" runat="server">
+        <asp:ListItem>Easy</asp:ListItem>
+        <asp:ListItem Selected="True">Medium</asp:ListItem>
+        <asp:ListItem>Hard</asp:ListItem>
+        <asp:ListItem>Expert</asp:ListItem>
+    </asp:DropDownList>
+    <br /><br />
+    Question Text:<br />
+    <asp:TextBox ID="txtStatement" runat="server" TextMode="MultiLine" Rows="3" Width="400px" />
+    <br /><br />
+    Image (optional): <asp:FileUpload ID="fuImage" runat="server" />
 </div>
 
-<!-- Options A-D (hidden for Short Answer) -->
-<div class="form-panel" id="secOptions">
-    <h3>Answer Options</h3>
-    <div class="form-group mb-4">
-        <label>Option A</label>
-        <asp:TextBox ID="txtA" runat="server" CssClass="form-control" placeholder="Option A..." />
-    </div>
-    <div class="form-group mb-4">
-        <label>Option B</label>
-        <asp:TextBox ID="txtB" runat="server" CssClass="form-control" placeholder="Option B..." />
-    </div>
-    <div class="form-group mb-4">
-        <label>Option C</label>
-        <asp:TextBox ID="txtC" runat="server" CssClass="form-control" placeholder="Option C..." />
-    </div>
-    <div class="form-group">
-        <label>Option D</label>
-        <asp:TextBox ID="txtD" runat="server" CssClass="form-control" placeholder="Option D..." />
-    </div>
+<br />
+
+<div id="secOptions" style="border:1px solid black; padding:15px;">
+    <b>Options:</b><br />
+    A: <asp:TextBox ID="txtA" runat="server" Width="300px" /><br />
+    B: <asp:TextBox ID="txtB" runat="server" Width="300px" /><br />
+    C: <asp:TextBox ID="txtC" runat="server" Width="300px" /><br />
+    D: <asp:TextBox ID="txtD" runat="server" Width="300px" /><br />
 </div>
 
-<!-- Correct Answer | Single Choice (radio) -->
-<div class="form-panel" id="secCorrectRadio">
-    <h3>Correct Answer | Single Choice</h3>
-    <p class="text-muted mb-4">Select the ONE correct option.</p>
-    <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; gap:8px 15px;">
-        <label><asp:RadioButton ID="rbA" runat="server" GroupName="Correct" /> <span class="badge">A</span></label>
-        <span style="font-size:12px; color:#444;">Option A</span>
-        <label><asp:RadioButton ID="rbB" runat="server" GroupName="Correct" /> <span class="badge">B</span></label>
-        <span style="font-size:12px; color:#444;">Option B</span>
-        <label><asp:RadioButton ID="rbC" runat="server" GroupName="Correct" /> <span class="badge">C</span></label>
-        <span style="font-size:12px; color:#444;">Option C</span>
-        <label><asp:RadioButton ID="rbD" runat="server" GroupName="Correct" /> <span class="badge">D</span></label>
-        <span style="font-size:12px; color:#444;">Option D</span>
-    </div>
+<br />
+
+<div id="secCorrectRadio" style="border:1px solid black; padding:15px;">
+    <b>Correct Answer:</b><br />
+    <asp:RadioButton ID="rbA" runat="server" GroupName="Correct" Text="A" />
+    <asp:RadioButton ID="rbB" runat="server" GroupName="Correct" Text="B" />
+    <asp:RadioButton ID="rbC" runat="server" GroupName="Correct" Text="C" />
+    <asp:RadioButton ID="rbD" runat="server" GroupName="Correct" Text="D" />
 </div>
 
-<!-- Correct Answer | Multiple Choice (checkboxes) -->
-<div class="form-panel" id="secCorrectCheckbox" style="display:none;">
-    <h3>Correct Answers | Multiple Choice</h3>
-    <p class="text-muted mb-4">Tick ALL options that are correct. Students must select exactly these to get full marks.</p>
-    <div style="display:flex; gap:15px;">
-        <label><asp:CheckBox ID="cbCA" runat="server" /> <span class="badge">A</span></label>
-        <label><asp:CheckBox ID="cbCB" runat="server" /> <span class="badge">B</span></label>
-        <label><asp:CheckBox ID="cbCC" runat="server" /> <span class="badge">C</span></label>
-        <label><asp:CheckBox ID="cbCD" runat="server" /> <span class="badge">D</span></label>
-    </div>
+<div id="secCorrectCheckbox" style="border:1px solid black; padding:15px; display:none;">
+    <b>Correct Answers:</b><br />
+    <asp:CheckBox ID="cbCA" runat="server" Text="A" />
+    <asp:CheckBox ID="cbCB" runat="server" Text="B" />
+    <asp:CheckBox ID="cbCC" runat="server" Text="C" />
+    <asp:CheckBox ID="cbCD" runat="server" Text="D" />
 </div>
 
-<!-- Correct Answer | Short Answer (paragraph) -->
-<div class="form-panel" id="secCorrectParagraph" style="display:none;">
-    <h3>Model Answer | Short Answer</h3>
-    <p class="text-muted mb-4">Enter the expected answer. Student responses will be matched (case-insensitive).</p>
-    <asp:TextBox ID="txtModelAnswer" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"
-        placeholder="Expected answer text..." />
+<div id="secCorrectParagraph" style="border:1px solid black; padding:15px; display:none;">
+    <b>Model Answer:</b><br />
+    <asp:TextBox ID="txtModelAnswer" runat="server" TextMode="MultiLine" Rows="2" Width="400px" />
 </div>
 
-<div class="flex gap-2">
-    <asp:Button ID="btnSave" runat="server" Text="Save Question"
-        CssClass="btn btn-primary btn-lg" OnClick="btnSave_Click" />
-    <a href="ManageQuestions.aspx" class="btn btn-outline btn-lg">Cancel</a>
-</div>
+<br />
+<asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" Width="100px" />
+<a href="ManageQuestions.aspx">Cancel</a>
 
 <script>
-(function () {
-    var hfQType = document.getElementById('<%= hfQType.ClientID %>');
-    var rbSingle   = document.getElementById('<%= rbSingle.ClientID %>');
-    var rbMultiple = document.getElementById('<%= rbMultiple.ClientID %>');
-    var rbParagraph= document.getElementById('<%= rbParagraph.ClientID %>');
+    function updateVisibility() {
+        var type = "";
+        if (document.getElementById('<%= rbSingle.ClientID %>').checked) type = "Radio";
+        else if (document.getElementById('<%= rbMultiple.ClientID %>').checked) type = "Checkbox";
+        else type = "Paragraph";
 
-    var secOptions         = document.getElementById('secOptions');
-    var secCorrectRadio    = document.getElementById('secCorrectRadio');
-    var secCorrectCheckbox = document.getElementById('secCorrectCheckbox');
-    var secCorrectParagraph= document.getElementById('secCorrectParagraph');
-
-    function applyType(type) {
-        hfQType.value = type;
-        secOptions.style.display          = (type === 'Paragraph') ? 'none' : '';
-        secCorrectRadio.style.display     = (type === 'Radio')     ? ''     : 'none';
-        secCorrectCheckbox.style.display  = (type === 'Checkbox')  ? ''     : 'none';
-        secCorrectParagraph.style.display = (type === 'Paragraph') ? ''     : 'none';
+        document.getElementById('<%= hfQType.ClientID %>').value = type;
+        document.getElementById('secOptions').style.display = (type === 'Paragraph') ? 'none' : 'block';
+        document.getElementById('secCorrectRadio').style.display = (type === 'Radio') ? 'block' : 'none';
+        document.getElementById('secCorrectCheckbox').style.display = (type === 'Checkbox') ? 'block' : 'none';
+        document.getElementById('secCorrectParagraph').style.display = (type === 'Paragraph') ? 'block' : 'none';
     }
-
-    rbSingle.addEventListener('change',    function () { applyType('Radio'); });
-    rbMultiple.addEventListener('change',  function () { applyType('Checkbox'); });
-    rbParagraph.addEventListener('change', function () { applyType('Paragraph'); });
-
-    // Re-apply on page load (in case of postback keeping state)
-    var saved = hfQType.value || 'Radio';
-    applyType(saved);
-})();
+    document.getElementById('<%= rbSingle.ClientID %>').onclick = updateVisibility;
+    document.getElementById('<%= rbMultiple.ClientID %>').onclick = updateVisibility;
+    document.getElementById('<%= rbParagraph.ClientID %>').onclick = updateVisibility;
+    updateVisibility();
 </script>
 
 </asp:Content>

@@ -3,123 +3,50 @@
 <asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">My Results</asp:Content>
 
 <asp:Content ID="ctHead" ContentPlaceHolderID="HeadContent" runat="server">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Charts removed for simplicity -->
 </asp:Content>
 
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
-<!-- Just-finished banner -->
-<asp:Panel ID="pnlJustDone" runat="server" Visible="false" CssClass="alert alert-success mb-4" style="font-size:16px;">
-     Quiz submitted! Here is your result below.
+<asp:Panel ID="pnlHero" runat="server" Visible="false" style="border:1px solid black; padding:15px; margin-bottom:20px;">
+    <h2>Quiz Result: <asp:Literal ID="litQuizName" runat="server" /></h2>
+    <p>Score: <asp:Literal ID="litPct" runat="server" /></p>
+    <p>Marks: <asp:Literal ID="litObtained" runat="server" /> / <asp:Literal ID="litTotal" runat="server" /></p>
+    <p>Grade: <asp:Literal ID="litGrade" runat="server" /></p>
+    <hr />
+    <h3>Question Review</h3>
+    <asp:GridView ID="gvDetail" runat="server" AutoGenerateColumns="false" Width="100%" BorderStyle="Solid" BorderWidth="1px">
+        <Columns>
+            <asp:BoundField DataField="QNo" HeaderText="#" />
+            <asp:BoundField DataField="QuestionStatement" HeaderText="Question" />
+            <asp:TemplateField HeaderText="Your Ans">
+                <ItemTemplate><%# GetAnswerHtml(Eval("StudentAns"), Eval("CorrectAns")) %></ItemTemplate>
+            </asp:TemplateField>
+            <asp:BoundField DataField="CorrectAns" HeaderText="Correct" />
+            <asp:BoundField DataField="Marks" HeaderText="Mark" />
+        </Columns>
+    </asp:GridView>
 </asp:Panel>
 
-<!-- Result Hero (shown for single quiz result) -->
-<asp:Panel ID="pnlHero" runat="server" Visible="false">
-<div class="card mb-6" style="padding:30px;">
-    <h2 style="margin-bottom:10px;">Quiz Result</h2>
-    <div style="font-size:24px; font-weight:600; color:var(--primary); margin-bottom:10px;">
-        Score: <asp:Literal ID="litPct" runat="server" />
-    </div>
-    <div style="font-size:14px; color:#444;">
-        Marks: <asp:Literal ID="litObtained" runat="server" /> / <asp:Literal ID="litTotal" runat="server" />
-        &nbsp;|&nbsp; Grade: <strong><asp:Literal ID="litGrade" runat="server" /></strong>
-        &nbsp;|&nbsp; <asp:Literal ID="litQuizName" runat="server" />
-    </div>
+<div style="border:1px solid black; padding:15px;">
+    <h3>All My Results</h3>
+    <asp:GridView ID="gvAllResults" runat="server" AutoGenerateColumns="false" Width="100%" BorderStyle="Solid" BorderWidth="1px">
+        <Columns>
+            <asp:BoundField DataField="QuizTitle" HeaderText="Quiz" />
+            <asp:BoundField DataField="SubjectName" HeaderText="Subject" />
+            <asp:BoundField DataField="ObtainedMarks" HeaderText="Marks" />
+            <asp:BoundField DataField="TotalMarks" HeaderText="Total" />
+            <asp:TemplateField HeaderText="Score">
+                <ItemTemplate><%# Eval("Percentage") %>%</ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Grade">
+                <ItemTemplate><%# GetGradeHtml(Eval("Percentage")) %></ItemTemplate>
+            </asp:TemplateField>
+            <asp:BoundField DataField="AttemptDate" HeaderText="Date" DataFormatString="{0:dd-MMM-yyyy}" />
+        </Columns>
+    </asp:GridView>
 </div>
 
-<!-- Charts -->
-<div class="charts-grid mb-6">
-    <div class="chart-card">
-        <h3> Your Score Breakdown</h3>
-        <div class="chart-canvas-wrap">
-            <canvas id="myPieChart"></canvas>
-        </div>
-    </div>
-    <div class="chart-card">
-        <h3> Difficulty Breakdown</h3>
-        <div class="chart-canvas-wrap">
-            <canvas id="diffChart"></canvas>
-        </div>
-    </div>
-</div>
-
-<!-- Per-question detail -->
-<div class="card mb-6">
-    <div class="card-header">
-        <h3> Question-by-Question Review</h3>
-        <span class="text-muted" style="font-size:12px;">Answer locked on Next click | no changes allowed</span>
-    </div>
-    <div class="table-wrapper">
-        <asp:GridView ID="gvDetail" runat="server"
-            AutoGenerateColumns="false"
-            CssClass="w-100"
-            GridLines="None">
-            <Columns>
-                <asp:BoundField DataField="QNo" HeaderText="#" />
-                <asp:TemplateField HeaderText="Question">
-                    <ItemTemplate>
-                        <div style="max-width:320px;font-size:13px;"><%# Eval("QuestionStatement") %></div>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Difficulty">
-                    <ItemTemplate>
-                        <span class="badge">
-                            <%# Eval("DifficultyLevel") %>
-                        </span>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Your Answer">
-                    <ItemTemplate>
-                        <%# GetAnswerHtml(Eval("StudentAns"), Eval("CorrectAns")) %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Correct Answer">
-                    <ItemTemplate>
-                        <span class="badge badge-green"><%# Eval("CorrectAns") %></span>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Marks">
-                    <ItemTemplate>
-                        <strong><%# Eval("Marks") %></strong> / 1
-                    </ItemTemplate>
-                </asp:TemplateField>
-            </Columns>
-        </asp:GridView>
-    </div>
-</div>
-</asp:Panel>
-
-<!-- All Results History -->
-<div class="card">
-    <div class="card-header">
-        <h3> All My Results</h3>
-        <a href="Dashboard.aspx" class="btn btn-outline btn-sm">← Dashboard</a>
-    </div>
-    <div class="table-wrapper">
-        <asp:GridView ID="gvAllResults" runat="server"
-            AutoGenerateColumns="false"
-            CssClass="w-100"
-            GridLines="None"
-            EmptyDataText="You have not attempted any quizzes yet.">
-            <Columns>
-                <asp:BoundField DataField="QuizTitle"     HeaderText="Quiz" />
-                <asp:BoundField DataField="SubjectName"   HeaderText="Subject" />
-                <asp:BoundField DataField="ObtainedMarks" HeaderText="Obtained" DataFormatString="{0:0.#}" />
-                <asp:BoundField DataField="TotalMarks"    HeaderText="Total" />
-                <asp:TemplateField HeaderText="Score">
-                    <ItemTemplate><strong><%# String.Format("{0:0.##}%", Eval("Percentage")) %></strong></ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Grade">
-                    <ItemTemplate>
-                        <%# GetGradeHtml(Eval("Percentage")) %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:BoundField DataField="AttemptDate" HeaderText="Date" DataFormatString="{0:dd-MMM-yyyy}" />
-            </Columns>
-        </asp:GridView>
-    </div>
-</div>
-
-<asp:Literal ID="litChartScript" runat="server" />
+<asp:Literal ID="litChartScript" runat="server" Visible="false" />
 
 </asp:Content>

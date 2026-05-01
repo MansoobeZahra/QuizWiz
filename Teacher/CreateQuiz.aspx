@@ -1,234 +1,120 @@
 <%@ Page Language="VB" AutoEventWireup="false" CodeFile="CreateQuiz.aspx.vb" Inherits="Teacher_CreateQuiz" MasterPageFile="~/MasterPage.master" %>
 
-<asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Create Quiz Wizard</asp:Content>
+<asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Create Quiz</asp:Content>
 
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
-<div class="page-header">
-    <h1>New Quiz Setup</h1>
-    <p>Complete the fields below to create and publish a quiz.</p>
-</div>
+<h1>Create Quiz</h1>
 
-<asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-danger mb-4">
+<asp:Panel ID="pnlError" runat="server" Visible="false" style="color:red; border:1px solid red; padding:5px;">
     <asp:Literal ID="litError" runat="server" />
 </asp:Panel>
 
-<asp:Panel ID="pnlSuccess" runat="server" Visible="false" CssClass="alert alert-success mb-4">
+<asp:Panel ID="pnlSuccess" runat="server" Visible="false" style="color:green; border:1px solid green; padding:5px;">
     <asp:Literal ID="litSuccess" runat="server" />
 </asp:Panel>
 
-<!-- Stepper -->
-<div class="wizard-stepper mb-6">
-    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 0, "active", "") %>">1. Settings</div>
-    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 1, "active", "") %>">2. Questions</div>
-    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 2, "active", "") %>">3. Publish</div>
-</div>
-
+<br />
 
 <asp:MultiView ID="mvWizard" runat="server" ActiveViewIndex="0">
 
-    <!-- ==================== STEP 1 ==================== -->
+    <!-- STEP 1 -->
     <asp:View ID="vStep1" runat="server">
-        <div class="form-panel">
-            <h3 class="mb-4">Quiz Settings</h3>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Quiz Title <span class="text-danger">*</span></label>
-                    <asp:TextBox ID="txtTitle" runat="server" CssClass="form-control" />
-                </div>
-                <div class="form-group">
-                    <label>Subject</label>
-                    <asp:DropDownList ID="ddlSubject" runat="server" CssClass="form-control" />
-                </div>
-            </div>
-            
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Total Questions to Display <span class="text-danger">*</span></label>
-                    <asp:TextBox ID="txtTotalQ" runat="server" CssClass="form-control" TextMode="Number" Text="10" />
-                </div>
-                <div class="form-group">
-                    <label>Allowed Time (Minutes) <span class="text-danger">*</span></label>
-                    <asp:TextBox ID="txtTime" runat="server" CssClass="form-control" TextMode="Number" Text="30" />
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Negative Marking?</label>
-                    <asp:CheckBox ID="chkNegMarking" runat="server" Text=" Enable Negative Marking" AutoPostBack="true" OnCheckedChanged="chkNegMarking_Changed" />
-                </div>
-                <div class="form-group" id="divNegMarks" runat="server" visible="false">
-                    <label>Negative Marks per Wrong Answer</label>
-                    <asp:TextBox ID="txtNegMarks" runat="server" CssClass="form-control" Text="0.25" />
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Behavior</label>
-                    <div><asp:CheckBox ID="chkRandomize" runat="server" Text=" Randomize Questions" Checked="true" /></div>
-                    <div><asp:CheckBox ID="chkShuffle" runat="server" Text=" Shuffle Options" Checked="true" /></div>
-                    <div><asp:CheckBox ID="chkReview" runat="server" Text=" Allow Students to Review Answers Later" /></div>
-                </div>
-                <div class="form-group">
-                    <label>Remarks / Instructions (Optional)</label>
-                    <asp:TextBox ID="txtRemarks" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" />
-                </div>
-            </div>
-
-            <div style="text-align:right;">
-                <asp:Button ID="btnStep1Next" runat="server" Text="Save Settings and Next" CssClass="btn btn-primary" OnClick="btnStep1Next_Click" />
-            </div>
+        <div style="border:1px solid black; padding:15px;">
+            <h3>Step 1: Settings</h3>
+            Title: <asp:TextBox ID="txtTitle" runat="server" /><br /><br />
+            Subject: <asp:DropDownList ID="ddlSubject" runat="server" /><br /><br />
+            Total Questions: <asp:TextBox ID="txtTotalQ" runat="server" Text="10" /><br /><br />
+            Time (min): <asp:TextBox ID="txtTime" runat="server" Text="30" /><br /><br />
+            <asp:CheckBox ID="chkRandomize" runat="server" Text="Randomize Questions" Checked="true" /><br />
+            <asp:CheckBox ID="chkShuffle" runat="server" Text="Shuffle Options" Checked="true" /><br />
+            <asp:CheckBox ID="chkReview" runat="server" Text="Allow Review" /><br /><br />
+            <asp:CheckBox ID="chkNegMarking" runat="server" Text="Negative Marking" AutoPostBack="true" OnCheckedChanged="chkNegMarking_Changed" /><br />
+            <asp:Panel ID="divNegMarks" runat="server" Visible="false">
+                Neg Marks: <asp:TextBox ID="txtNegMarks" runat="server" Text="0.25" />
+            </asp:Panel>
+            <br />
+            Remarks:<br />
+            <asp:TextBox ID="txtRemarks" runat="server" TextMode="MultiLine" Rows="2" Width="300px" />
+            <br /><br />
+            <asp:Button ID="btnStep1Next" runat="server" Text="Next" OnClick="btnStep1Next_Click" />
         </div>
     </asp:View>
 
-    <!-- ==================== STEP 2 ==================== -->
+    <!-- STEP 2 -->
     <asp:View ID="vStep2" runat="server">
         <asp:HiddenField ID="hfQuizID" runat="server" />
-        
-        <div class="grid-2" style="grid-template-columns: 2fr 1fr; gap:24px;">
-            <!-- Left Side: Add / Select Questions -->
-            <div>
-                <div class="card mb-4">
-                    <div class="card-header" style="background:#f4f7fa;">
-                        <h3>Add Questions to Quiz</h3>
-                        <div>
-                            <asp:Button ID="btnTabNew" runat="server" Text="Write New" CssClass="btn btn-sm btn-primary" OnClick="btnTabNew_Click" />
-                            <asp:Button ID="btnTabBank" runat="server" Text="From Bank" CssClass="btn btn-sm btn-outline" OnClick="btnTabBank_Click" />
-                        </div>
-                    </div>
-
-                    <!-- TAB: WRITE NEW QUESTION -->
-                    <asp:Panel ID="pnlWriteNew" runat="server" style="padding:20px;">
-                        <div class="form-group">
-                            <label>Question Type</label>
-                            <asp:DropDownList ID="ddlQType" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlQType_Changed">
-                                <asp:ListItem Value="Radio">Single Choice (Radio)</asp:ListItem>
-                                <asp:ListItem Value="Checkbox">Multiple Choice (Checkboxes)</asp:ListItem>
-                                <asp:ListItem Value="Paragraph">Short Answer (Paragraph)</asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Question Statement <span class="text-danger">*</span></label>
-                            <asp:TextBox ID="txtQStmt" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" />
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Difficulty</label>
-                            <asp:DropDownList ID="ddlQDiff" runat="server" CssClass="form-control">
-                                <asp:ListItem Value="Easy">Easy</asp:ListItem>
-                                <asp:ListItem Value="Medium">Medium</asp:ListItem>
-                                <asp:ListItem Value="Hard">Hard</asp:ListItem>
-                                <asp:ListItem Value="Expert">Expert</asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-
-                        <!-- Options for Radio/Checkbox -->
-                        <asp:Panel ID="pnlOptions" runat="server">
-                            <label>Options & Correct Answer <span class="text-danger">*</span></label>
-                            <p class="text-muted" style="font-size:13px;">Check the box(es) next to the correct option(s).</p>
-                            
-                            <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
-                                <asp:CheckBox ID="cbAnsA" runat="server" />
-                                <span style="font-weight:700;">A)</span>
-                                <asp:TextBox ID="txtOptA" runat="server" CssClass="form-control" />
-                            </div>
-                            <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
-                                <asp:CheckBox ID="cbAnsB" runat="server" />
-                                <span style="font-weight:700;">B)</span>
-                                <asp:TextBox ID="txtOptB" runat="server" CssClass="form-control" />
-                            </div>
-                            <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
-                                <asp:CheckBox ID="cbAnsC" runat="server" />
-                                <span style="font-weight:700;">C)</span>
-                                <asp:TextBox ID="txtOptC" runat="server" CssClass="form-control" />
-                            </div>
-                            <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
-                                <asp:CheckBox ID="cbAnsD" runat="server" />
-                                <span style="font-weight:700;">D)</span>
-                                <asp:TextBox ID="txtOptD" runat="server" CssClass="form-control" />
-                            </div>
-                        </asp:Panel>
-
-                        <!-- Paragraph Model Answer -->
-                        <asp:Panel ID="pnlParagraph" runat="server" Visible="false">
-                            <label>Model Answer (Keywords) <span class="text-danger">*</span></label>
-                            <asp:TextBox ID="txtModelAns" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2" />
-                        </asp:Panel>
-
-                        <div style="margin-top:16px;">
-                            <asp:Button ID="btnSaveQ" runat="server" Text="+ Save & Add to Quiz" CssClass="btn btn-success" OnClick="btnSaveQ_Click" />
-                        </div>
+        <div style="display:flex; gap:20px;">
+            <div style="flex:1; border:1px solid black; padding:15px;">
+                <h3>Step 2: Add Questions</h3>
+                <asp:Button ID="btnTabNew" runat="server" Text="New" OnClick="btnTabNew_Click" />
+                <asp:Button ID="btnTabBank" runat="server" Text="Bank" OnClick="btnTabBank_Click" />
+                <hr />
+                <asp:Panel ID="pnlWriteNew" runat="server">
+                    Type: <asp:DropDownList ID="ddlQType" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlQType_Changed">
+                        <asp:ListItem Value="Radio">Single</asp:ListItem>
+                        <asp:ListItem Value="Checkbox">Multiple</asp:ListItem>
+                        <asp:ListItem Value="Paragraph">Short</asp:ListItem>
+                    </asp:DropDownList><br /><br />
+                    Text: <asp:TextBox ID="txtQStmt" runat="server" TextMode="MultiLine" Rows="2" Width="100%" /><br /><br />
+                    Difficulty: 
+                    <asp:DropDownList ID="ddlQDiff" runat="server">
+                        <asp:ListItem>Easy</asp:ListItem>
+                        <asp:ListItem Selected="True">Medium</asp:ListItem>
+                        <asp:ListItem>Hard</asp:ListItem>
+                        <asp:ListItem>Expert</asp:ListItem>
+                    </asp:DropDownList><br /><br />
+                    <asp:Panel ID="pnlOptions" runat="server">
+                        A: <asp:CheckBox ID="cbAnsA" runat="server" /><asp:TextBox ID="txtOptA" runat="server" /><br />
+                        B: <asp:CheckBox ID="cbAnsB" runat="server" /><asp:TextBox ID="txtOptB" runat="server" /><br />
+                        C: <asp:CheckBox ID="cbAnsC" runat="server" /><asp:TextBox ID="txtOptC" runat="server" /><br />
+                        D: <asp:CheckBox ID="cbAnsD" runat="server" /><asp:TextBox ID="txtOptD" runat="server" /><br />
                     </asp:Panel>
-
-                    <!-- TAB: SELECT FROM BANK -->
-                    <asp:Panel ID="pnlSelectBank" runat="server" Visible="false" style="padding:20px;">
-                        <p class="text-muted">Select previously saved questions to add to this quiz.</p>
-                        <div style="max-height:400px; overflow-y:auto; border:1px solid #eaeaea; border-radius:4px;">
-                            <asp:GridView ID="gvBank" runat="server" AutoGenerateColumns="false" CssClass="w-100" GridLines="None" EmptyDataText="No questions found in your bank." DataKeyNames="QuestionID">
-                                <Columns>
-                                    <asp:TemplateField>
-                                        <ItemTemplate><asp:CheckBox ID="chkSelect" runat="server" /></ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:BoundField DataField="QuestionStatement" HeaderText="Question" />
-                                    <asp:BoundField DataField="DifficultyLevel" HeaderText="Diff" />
-                                </Columns>
-                            </asp:GridView>
-                        </div>
-                        <div style="margin-top:16px;">
-                            <asp:Button ID="btnAddSelected" runat="server" Text="+ Add Selected to Quiz" CssClass="btn btn-success" OnClick="btnAddSelected_Click" />
-                        </div>
+                    <asp:Panel ID="pnlParagraph" runat="server" Visible="false">
+                        Ans: <asp:TextBox ID="txtModelAns" runat="server" />
                     </asp:Panel>
-                </div>
+                    <br />
+                    <asp:Button ID="btnSaveQ" runat="server" Text="Add" OnClick="btnSaveQ_Click" />
+                </asp:Panel>
+                <asp:Panel ID="pnlSelectBank" runat="server" Visible="false">
+                    <asp:GridView ID="gvBank" runat="server" AutoGenerateColumns="false" DataKeyNames="QuestionID">
+                        <Columns>
+                            <asp:TemplateField><ItemTemplate><asp:CheckBox ID="chkSelect" runat="server" /></ItemTemplate></asp:TemplateField>
+                            <asp:BoundField DataField="QuestionStatement" HeaderText="Q" />
+                        </Columns>
+                    </asp:GridView>
+                    <br />
+                    <asp:Button ID="btnAddSelected" runat="server" Text="Add Selected" OnClick="btnAddSelected_Click" />
+                </asp:Panel>
             </div>
-
-            <!-- Right Side: Current Quiz Questions -->
-            <div>
-                <div class="card" style="position:sticky; top:20px;">
-                    <div class="card-header">
-                        <h3>Current Quiz (<asp:Literal ID="litCurQCount" runat="server">0</asp:Literal>)</h3>
-                    </div>
-                    <div style="padding:16px; max-height:400px; overflow-y:auto;">
-                        <asp:Repeater ID="rptCurrentQ" runat="server" OnItemCommand="rptCurrentQ_Command">
-                            <ItemTemplate>
-                                <div style="padding:12px; border-bottom:1px solid #eaeaea; position:relative;">
-                                    <div style="font-size:13px; font-weight:600; margin-bottom:4px;"><%# Eval("QuestionStatement") %></div>
-                                    <div style="font-size:11px; color:#999;"><%# Eval("QuestionType") %> | <%# Eval("DifficultyLevel") %></div>
-                                    <asp:LinkButton runat="server" CommandName="Remove" CommandArgument='<%# Eval("QuizQuestionID") %>' style="position:absolute; right:10px; top:10px; color:#ff416c; text-decoration:none;">Remove</asp:LinkButton>
-                                </div>
-                            </ItemTemplate>
-                        </asp:Repeater>
-                        <asp:Panel ID="pnlNoCurQ" runat="server" Visible="false" style="padding:20px; text-align:center; color:#999;">
-                            No questions added yet.
-                        </asp:Panel>
-                    </div>
-                    <div style="padding:16px; border-top:1px solid #eaeaea; display:flex; justify-content:space-between;">
-                        <asp:Button ID="btnStep2Prev" runat="server" Text="Back" CssClass="btn btn-outline" OnClick="btnStep2Prev_Click" />
-                        <asp:Button ID="btnStep2Next" runat="server" Text="Next" CssClass="btn btn-primary" OnClick="btnStep2Next_Click" />
-                    </div>
-                </div>
+            <div style="flex:1; border:1px solid black; padding:15px;">
+                <h3>Current Quiz (<asp:Literal ID="litCurQCount" runat="server">0</asp:Literal>)</h3>
+                <asp:Repeater ID="rptCurrentQ" runat="server" OnItemCommand="rptCurrentQ_Command">
+                    <ItemTemplate>
+                        <div style="border-bottom:1px solid #ccc; padding:5px;">
+                            <%# Eval("QuestionStatement") %> 
+                            <asp:LinkButton runat="server" CommandName="Remove" CommandArgument='<%# Eval("QuizQuestionID") %>' Text="[X]" ForeColor="Red" />
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+                <asp:Panel ID="pnlNoCurQ" runat="server" Visible="false" style="padding:10px; color:#999;">
+                    No questions added yet.
+                </asp:Panel>
+                <br />
+                <asp:Button ID="btnStep2Prev" runat="server" Text="Back" OnClick="btnStep2Prev_Click" />
+                <asp:Button ID="btnStep2Next" runat="server" Text="Next" OnClick="btnStep2Next_Click" />
             </div>
         </div>
     </asp:View>
 
-    <!-- ==================== STEP 3 ==================== -->
+    <!-- STEP 3 -->
     <asp:View ID="vStep3" runat="server">
-        <div class="form-panel" style="padding:30px;">
-            <h2 style="margin-bottom:15px; color:#000;">Quiz Setup Complete</h2>
-            <p style="font-size:13px; color:#444; margin-bottom:20px;">
-                You have successfully configured <strong><asp:Literal ID="litFinalTitle" runat="server" /></strong> 
-                and added <strong><asp:Literal ID="litFinalCount" runat="server" /></strong> questions.
-            </p>
-
-            <div style="display:flex; gap:10px;">
-                <asp:Button ID="btnStep3Prev" runat="server" Text="Back to Questions" CssClass="btn" OnClick="btnStep3Prev_Click" />
-                <asp:Button ID="btnTestQuiz" runat="server" Text="Test Quiz" CssClass="btn" OnClick="btnTestQuiz_Click" />
-                <asp:Button ID="btnPublish" runat="server" Text="Publish to Students" CssClass="btn btn-primary" OnClick="btnPublish_Click" />
-            </div>
-            
-            <p style="margin-top:20px; font-size:13px; color:#999;">If you leave this page, the quiz will remain safely saved as a Draft.</p>
+        <div style="border:1px solid black; padding:15px;">
+            <h3>Step 3: Done</h3>
+            <p>Quiz <b><asp:Literal ID="litFinalTitle" runat="server" /></b> ready with <asp:Literal ID="litFinalCount" runat="server" /> questions.</p>
+            <asp:Button ID="btnStep3Prev" runat="server" Text="Back" OnClick="btnStep3Prev_Click" />
+            <asp:Button ID="btnTestQuiz" runat="server" Text="Test" OnClick="btnTestQuiz_Click" />
+            <asp:Button ID="btnPublish" runat="server" Text="Publish" OnClick="btnPublish_Click" />
         </div>
     </asp:View>
 

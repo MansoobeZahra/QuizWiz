@@ -4,94 +4,40 @@
 
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
-<div class="page-header">
-    <h1>Teacher Dashboard</h1>
-    <p>Welcome back, <strong><%= Session("FullName") %></strong> | manage your questions and quizzes below.</p>
-</div>
+<h2>Welcome Teacher!</h2>
+<p>Here are your stats:</p>
+<ul style="list-style:none; padding:0;">
+    <li>Total Questions: <asp:Literal ID="litTotalQ" runat="server">0</asp:Literal></li>
+    <li>Total Quizzes: <asp:Literal ID="litTotalQuiz" runat="server">0</asp:Literal></li>
+    <li>Published Quizzes: <asp:Literal ID="litPublished" runat="server">0</asp:Literal></li>
+    <li>Total Attempts: <asp:Literal ID="litAttempts" runat="server">0</asp:Literal></li>
+</ul>
 
-<!-- Stats Row -->
-<div class="stats-grid">
-    <div class="stat-card purple">
-        <div>
-            <div class="stat-value"><asp:Literal ID="litTotalQ" runat="server">0</asp:Literal></div>
-            <div class="stat-label">My Questions</div>
-        </div>
-    </div>
-    <div class="stat-card cyan">
-        <div>
-            <div class="stat-value"><asp:Literal ID="litTotalQuiz" runat="server">0</asp:Literal></div>
-            <div class="stat-label">My Quizzes</div>
-        </div>
-    </div>
-    <div class="stat-card green">
-        <div>
-            <div class="stat-value"><asp:Literal ID="litPublished" runat="server">0</asp:Literal></div>
-            <div class="stat-label">Published</div>
-        </div>
-    </div>
-    <div class="stat-card orange">
-        <div>
-            <div class="stat-value"><asp:Literal ID="litAttempts" runat="server">0</asp:Literal></div>
-            <div class="stat-label">Total Attempts</div>
-        </div>
-    </div>
-</div>
+<hr />
+<h3>Quick Actions</h3>
+<a href="AddQuestion.aspx" class="btn">Add New Question</a>
+<a href="CreateQuiz.aspx" class="btn">Create New Quiz</a>
 
-<!-- Quick Actions -->
-<div class="grid-2 mb-6">
-    <a href="AddQuestion.aspx" class="card" style="text-decoration:none; color:inherit;">
-        <div class="fw-700" style="font-size:14px; margin-bottom:4px;">Add New Question</div>
-        <div class="text-muted" style="font-size:12px;">Add a question to your subject question bank</div>
-    </a>
-    <a href="CreateQuiz.aspx" class="card" style="text-decoration:none; color:inherit;">
-        <div class="fw-700" style="font-size:14px; margin-bottom:4px;">Create a Quiz</div>
-        <div class="text-muted" style="font-size:12px;">Design and publish a new quiz for students</div>
-    </a>
-</div>
-
-<!-- Recent Quizzes -->
-<div class="card">
-    <div class="card-header">
-        <h3> My Recent Quizzes</h3>
-        <a href="/Teacher/CreateQuiz.aspx" class="btn btn-primary btn-sm">+ New Quiz</a>
-    </div>
-    <div class="table-wrapper">
-        <asp:GridView ID="gvQuizzes" runat="server"
-            AutoGenerateColumns="false"
-            CssClass="w-100"
-            GridLines="None"
-            EmptyDataText="No quizzes created yet."
-            OnRowCommand="gvQuizzes_RowCommand">
-            <Columns>
-                <asp:BoundField DataField="QuizTitle" HeaderText="Quiz Title" />
-                <asp:BoundField DataField="SubjectName" HeaderText="Subject" />
-                <asp:BoundField DataField="AllowedTime" HeaderText="Time (min)" />
-                <asp:BoundField DataField="TotalQuestions" HeaderText="Questions" />
-                <asp:TemplateField HeaderText="Status">
-                    <ItemTemplate>
-                        <span class='badge <%# If(CBool(Eval("IsPublished")), "badge-green", "badge-grey") %>'>
-                            <%# If(CBool(Eval("IsPublished")), "Published", "Draft") %>
-                        </span>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Attempts">
-                    <ItemTemplate><%# Eval("AttemptCount") %></ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Actions">
-                    <ItemTemplate>
-                        <asp:LinkButton runat="server" CommandName="PublishToggle"
-                            CommandArgument='<%# Eval("QuizID") %>'
-                            CssClass='btn btn-sm <%# If(CBool(Eval("IsPublished")), "btn-warning", "btn-success") %>'
-                            OnClientClick="return confirm('Toggle publish status?')">
-                            <%# If(CBool(Eval("IsPublished")), "Unpublish", "Publish") %>
-                        </asp:LinkButton>
-                        &nbsp;
-                        <a href='ViewResults.aspx?quizid=<%# Eval("QuizID") %>' class="btn btn-outline btn-sm">Results</a>
-                    </ItemTemplate>
-                </asp:TemplateField>
-            </Columns>
-        </asp:GridView>
-    </div>
-</div>
+<hr />
+<h3>My Quizzes</h3>
+<asp:GridView ID="gvQuizzes" runat="server" AutoGenerateColumns="false" Width="100%" OnRowCommand="gvQuizzes_RowCommand">
+    <Columns>
+        <asp:BoundField DataField="QuizTitle" HeaderText="Title" />
+        <asp:BoundField DataField="SubjectName" HeaderText="Subject" />
+        <asp:BoundField DataField="AllowedTime" HeaderText="Time" />
+        <asp:TemplateField HeaderText="Status">
+            <ItemTemplate>
+                <%# If(CBool(Eval("IsPublished")), "Published", "Draft") %>
+            </ItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField HeaderText="Actions">
+            <ItemTemplate>
+                <asp:LinkButton runat="server" CommandName="PublishToggle" CommandArgument='<%# Eval("QuizID") %>' Text='<%# If(CBool(Eval("IsPublished")), "Unpublish", "Publish") %>' />
+                &nbsp;|&nbsp;
+                <a href='ViewResults.aspx?quizid=<%# Eval("QuizID") %>'>View Results</a>
+            </ItemTemplate>
+        </asp:TemplateField>
+    </Columns>
+</asp:GridView>
 
 </asp:Content>

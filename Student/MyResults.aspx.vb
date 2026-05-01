@@ -131,7 +131,7 @@ Partial Class Student_MyResults
         sb.AppendLine("    data:{")
         sb.AppendLine("      labels:['Easy','Medium','Hard','Expert'],")
         sb.AppendLine("      datasets:[")
-        sb.AppendLine("        sb.AppendLine("        {label:'Correct',data:[" & easyC & "," & medC & "," & hardC & "," & expC & "],backgroundColor:'#0078d4'},")
+        sb.AppendLine("        {label:'Correct',data:[" & easyC & "," & medC & "," & hardC & "," & expC & "],backgroundColor:'#0078d4'},")
         sb.AppendLine("        {label:'Wrong',  data:[" & easyW & "," & medW & "," & hardW & "," & expW & "],backgroundColor:'#d83b01'}")
         sb.AppendLine("      ]")
         sb.AppendLine("    },")

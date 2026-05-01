@@ -1,97 +1,53 @@
 <%@ Page Language="VB" AutoEventWireup="false" CodeFile="Dashboard.aspx.vb" Inherits="Student_Dashboard" MasterPageFile="~/MasterPage.master" %>
 
-<asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Student Dashboard</asp:Content>
+<asp:Content ID="ctTitle" ContentPlaceHolderID="PageTitle" runat="server">Dashboard</asp:Content>
 
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
-<div class="page-header">
-    <h1> Student Dashboard</h1>
-    <p>Welcome, <strong><%= Session("FullName") %></strong>! Choose a quiz below to get started.</p>
-</div>
+<h2>Welcome Student!</h2>
+<p>Current Stats:</p>
+<ul>
+    <li>Available Quizzes: <asp:Literal ID="litAvailable" runat="server">0</asp:Literal></li>
+    <li>Completed: <asp:Literal ID="litAttempted" runat="server">0</asp:Literal></li>
+    <li>My Avg Score: <asp:Literal ID="litAvgScore" runat="server">-</asp:Literal></li>
+    <li>New Notifications: <asp:Literal ID="litNotifs" runat="server">0</asp:Literal></li>
+</ul>
 
-<!-- Stats -->
-<div class="stats-grid mb-6">
-    <div class="stat-card purple">
-        <div>
-            <div class="stat-value"><asp:Literal ID="litAvailable" runat="server">0</asp:Literal></div>
-            <div class="stat-label">Available Quizzes</div>
-        </div>
-    </div>
-    <div class="stat-card green">
-        <div>
-            <div class="stat-value"><asp:Literal ID="litAttempted" runat="server">0</asp:Literal></div>
-            <div class="stat-label">Completed</div>
-        </div>
-    </div>
-    <div class="stat-card cyan">
-        <div>
-            <div class="stat-value"><asp:Literal ID="litAvgScore" runat="server">-</asp:Literal></div>
-            <div class="stat-label">My Avg Score</div>
-        </div>
-    </div>
-    <div class="stat-card orange">
-        <div>
-            <div class="stat-value"><asp:Literal ID="litNotifs" runat="server">0</asp:Literal></div>
-            <div class="stat-label">Notifications</div>
-        </div>
-    </div>
-</div>
-
-<!-- Notifications -->
-<asp:Panel ID="pnlNotifs" runat="server" Visible="false" CssClass="card mb-6">
-    <div class="card-header">
-        <h3> New Notifications</h3>
-        <asp:LinkButton ID="btnMarkRead" runat="server" CssClass="btn btn-outline btn-sm"
-            OnClick="btnMarkRead_Click">Mark all read</asp:LinkButton>
-    </div>
-    <div class="notif-list">
-        <asp:Repeater ID="rptNotifs" runat="server">
-            <ItemTemplate>
-                <div style='padding:8px; border-bottom:1px solid #eee; <%# If(Not CBool(Eval("IsRead")), "background:#fff8e1;", "") %>'>
-                    <div style="font-size:13px;"><%# Eval("Message") %></div>
-                    <div style="font-size:11px; color:#999;"><%# CDate(Eval("CreatedAt")).ToString("dd MMM yyyy hh:mm tt") %></div>
-                </div>
-            </ItemTemplate>
-        </asp:Repeater>
-    </div>
+<hr />
+<h3>Notifications</h3>
+<asp:Panel ID="pnlNotifs" runat="server" Visible="false">
+    <asp:LinkButton ID="btnMarkRead" runat="server" Text="Mark All Read" OnClick="btnMarkRead_Click" />
+    <br />
+    <asp:Repeater ID="rptNotifs" runat="server">
+        <ItemTemplate>
+            <div style="border:1px solid #ccc; padding:5px; margin-top:5px;">
+                <%# Eval("Message") %> (<%# Eval("CreatedAt") %>)
+            </div>
+        </ItemTemplate>
+    </asp:Repeater>
 </asp:Panel>
 
-<!-- Available Quizzes -->
-<div class="card mb-6">
-    <div class="card-header">
-        <h3> Available Quizzes</h3>
-        <a href="MyResults.aspx" class="btn btn-outline btn-sm"> My Results</a>
-    </div>
-    <asp:Panel ID="pnlNoQuiz" runat="server" Visible="false" CssClass="alert alert-info">
-        No quizzes are published yet. Check back soon!
-    </asp:Panel>
-    <div class="table-wrapper">
-        <asp:GridView ID="gvQuizzes" runat="server"
-            AutoGenerateColumns="false"
-            CssClass="w-100"
-            GridLines="None"
-            EmptyDataText="No quizzes available.">
-            <Columns>
-                <asp:BoundField DataField="QuizTitle"   HeaderText="Quiz" />
-                <asp:BoundField DataField="SubjectName" HeaderText="Subject" />
-                <asp:BoundField DataField="TotalQuestions" HeaderText="Questions" />
-                <asp:BoundField DataField="AllowedTime"    HeaderText="Time (min)" />
-                <asp:TemplateField HeaderText="Remarks">
-                    <ItemTemplate><span class="text-muted"><%# If(Convert.IsDBNull(Eval("Remarks")), "-", Eval("Remarks")) %></span></ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Status">
-                    <ItemTemplate>
-                        <%# If(CBool(Eval("AlreadyAttempted")), "<span class=""badge badge-green""> Completed</span>", "<span class=""badge badge-purple""> Available</span>") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Action">
-                    <ItemTemplate>
-                        <%# If(CBool(Eval("AlreadyAttempted")), "<a href='MyResults.aspx' class=""btn btn-outline btn-sm"">View Result</a>", "<a href='AttemptQuiz.aspx?quizid=" & Eval("QuizID") & "' class=""btn btn-primary btn-sm"" onclick=""return confirm('Start quiz now? The timer will begin immediately.')"">Attempt Quiz</a>") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-            </Columns>
-        </asp:GridView>
-    </div>
-</div>
+<hr />
+<h3>Available Quizzes</h3>
+<asp:Panel ID="pnlNoQuiz" runat="server" Visible="false" style="color:blue;">
+    No quizzes available.
+</asp:Panel>
+<asp:GridView ID="gvQuizzes" runat="server" AutoGenerateColumns="false" Width="100%" BorderStyle="Solid" BorderWidth="1px">
+    <Columns>
+        <asp:BoundField DataField="QuizTitle" HeaderText="Quiz" />
+        <asp:BoundField DataField="SubjectName" HeaderText="Subject" />
+        <asp:BoundField DataField="AllowedTime" HeaderText="Time" />
+        <asp:TemplateField HeaderText="Status">
+            <ItemTemplate>
+                <%# If(CBool(Eval("AlreadyAttempted")), "Completed", "Available") %>
+            </ItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField HeaderText="Action">
+            <ItemTemplate>
+                <%# If(CBool(Eval("AlreadyAttempted")), "<a href='MyResults.aspx'>Result</a>", "<a href='AttemptQuiz.aspx?quizid=" & Eval("QuizID") & "'>Start</a>") %>
+            </ItemTemplate>
+        </asp:TemplateField>
+    </Columns>
+</asp:GridView>
 
 </asp:Content>
