@@ -5,18 +5,17 @@
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
 <h2>Welcome Teacher!</h2>
-<p>Here are your stats:</p>
-<ul style="list-style:none; padding:0;">
-    <li>Total Questions: <asp:Literal ID="litTotalQ" runat="server">0</asp:Literal></li>
-    <li>Total Quizzes: <asp:Literal ID="litTotalQuiz" runat="server">0</asp:Literal></li>
-    <li>Published Quizzes: <asp:Literal ID="litPublished" runat="server">0</asp:Literal></li>
-    <li>Total Attempts: <asp:Literal ID="litAttempts" runat="server">0</asp:Literal></li>
-</ul>
+<div style="background-color:#f4f4f4; padding:15px; border-left:5px solid #0078d4; margin-bottom:20px;">
+    <strong>Your Stats:</strong><br />
+    Total Questions: <asp:Literal ID="litTotalQ" runat="server">0</asp:Literal> |
+    Total Quizzes: <asp:Literal ID="litTotalQuiz" runat="server">0</asp:Literal> |
+    Published: <asp:Literal ID="litPublished" runat="server">0</asp:Literal> |
+    Attempts: <asp:Literal ID="litAttempts" runat="server">0</asp:Literal>
+</div>
 
-<hr />
 <h3>Quick Actions</h3>
-<a href="AddQuestion.aspx" class="btn">Add New Question</a>
-<a href="CreateQuiz.aspx" class="btn">Create New Quiz</a>
+<a href="AddQuestion.aspx" class="btn btn-primary">Add New Question</a>
+<a href="CreateQuiz.aspx" class="btn btn-success">Create New Quiz</a>
 
 <hr />
 <h3>My Quizzes</h3>
@@ -27,14 +26,18 @@
         <asp:BoundField DataField="AllowedTime" HeaderText="Time" />
         <asp:TemplateField HeaderText="Status">
             <ItemTemplate>
-                <%# If(CBool(Eval("IsPublished")), "Published", "Draft") %>
+                <span style='color:<%# If(CBool(Eval("IsPublished")), "green", "gray") %>; font-weight:bold;'>
+                    <%# If(CBool(Eval("IsPublished")), "Published", "Draft") %>
+                </span>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Actions">
             <ItemTemplate>
-                <asp:LinkButton runat="server" CommandName="PublishToggle" CommandArgument='<%# Eval("QuizID") %>' Text='<%# If(CBool(Eval("IsPublished")), "Unpublish", "Publish") %>' />
+                <asp:LinkButton runat="server" CommandName="PublishToggle" CommandArgument='<%# Eval("QuizID") %>' 
+                    Text='<%# If(CBool(Eval("IsPublished")), "Unpublish", "Publish") %>' 
+                    style='color:<%# If(CBool(Eval("IsPublished")), "orange", "blue") %>;' />
                 &nbsp;|&nbsp;
-                <a href='ViewResults.aspx?quizid=<%# Eval("QuizID") %>'>View Results</a>
+                <a href='ViewResults.aspx?quizid=<%# Eval("QuizID") %>' style="color:blue;">View Results</a>
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
