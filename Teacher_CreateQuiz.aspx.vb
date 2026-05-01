@@ -1,3 +1,6 @@
+Imports System.Data
+Imports System.Web.UI.WebControls
+
 Partial Class Teacher_CreateQuiz
     Inherits System.Web.UI.Page
 
