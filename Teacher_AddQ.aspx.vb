@@ -19,10 +19,15 @@ Partial Class Teacher_AddQuestion
         
         Dim correctOptions = ""
         If qType = "Radio" Then
-            If rbA.Checked Then correctOptions = "A"
-            ElseIf rbB.Checked Then correctOptions = "B"
-            ElseIf rbC.Checked Then correctOptions = "C"
-            ElseIf rbD.Checked Then correctOptions = "D"
+            If rbA.Checked Then
+                correctOptions = "A"
+            ElseIf rbB.Checked Then
+                correctOptions = "B"
+            ElseIf rbC.Checked Then
+                correctOptions = "C"
+            ElseIf rbD.Checked Then
+                correctOptions = "D"
+            End If
         ElseIf qType = "Checkbox" Then
             Dim sel As New List(Of String)
             If cbCA.Checked Then sel.Add("A")

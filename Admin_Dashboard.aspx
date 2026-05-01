@@ -23,6 +23,14 @@
         <span style="font-size:12px; color:#666;">Quizzes</span><br />
         <strong style="font-size:24px; color:#856404;"><asp:Literal ID="litQuizzes" runat="server" /></strong>
     </div>
+    <div style="flex:1; min-width:150px; border:1px solid #ccc; padding:15px; background:white; border-top:5px solid #6c757d; text-align:center;">
+        <span style="font-size:12px; color:#666;">Questions</span><br />
+        <strong style="font-size:24px; color:#343a40;"><asp:Literal ID="litQuestions" runat="server" /></strong>
+    </div>
+    <div style="flex:1; min-width:150px; border:1px solid #ccc; padding:15px; background:white; border-top:5px solid #17a2b8; text-align:center;">
+        <span style="font-size:12px; color:#666;">Attempts</span><br />
+        <strong style="font-size:24px; color:#0c5460;"><asp:Literal ID="litAttempts" runat="server" /></strong>
+    </div>
 </div>
 
 <div style="display:flex; gap:20px;">

@@ -1,3 +1,5 @@
+Imports System.Data
+
 Partial Class Student_AttemptQuiz
     Inherits System.Web.UI.Page
 
