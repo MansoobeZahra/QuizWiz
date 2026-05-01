@@ -5,42 +5,62 @@
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
 <h1>Admin Dashboard</h1>
-<p>System Overview:</p>
-<ul>
-    <li>Total Users: <asp:Literal ID="litUsers" runat="server" /></li>
-    <li>Teachers: <asp:Literal ID="litTeachers" runat="server" /></li>
-    <li>Students: <asp:Literal ID="litStudents" runat="server" /></li>
-    <li>Total Quizzes: <asp:Literal ID="litQuizzes" runat="server" /></li>
-    <li>Total Questions: <asp:Literal ID="litQuestions" runat="server" /></li>
-    <li>Total Attempts: <asp:Literal ID="litAttempts" runat="server" /></li>
-</ul>
 
-<hr />
-<h3>Recent Quizzes</h3>
-<asp:GridView ID="gvQuizzes" runat="server" AutoGenerateColumns="false" Width="100%" BorderStyle="Solid" BorderWidth="1px">
-    <Columns>
-        <asp:BoundField DataField="QuizTitle" HeaderText="Title" />
-        <asp:BoundField DataField="CreatorName" HeaderText="Teacher" />
-        <asp:TemplateField HeaderText="Status">
-            <ItemTemplate>
-                <%# If(CBool(Eval("IsPublished")), "Published", "Draft") %>
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:BoundField DataField="Attempts" HeaderText="Attempts" />
-    </Columns>
-</asp:GridView>
+<div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
+    <div style="flex:1; min-width:150px; border:1px solid #ccc; padding:15px; background:white; border-top:5px solid #0078d4; text-align:center;">
+        <span style="font-size:12px; color:#666;">Users</span><br />
+        <strong style="font-size:24px; color:#0078d4;"><asp:Literal ID="litUsers" runat="server" /></strong>
+    </div>
+    <div style="flex:1; min-width:150px; border:1px solid #ccc; padding:15px; background:white; border-top:5px solid #28a745; text-align:center;">
+        <span style="font-size:12px; color:#666;">Teachers</span><br />
+        <strong style="font-size:24px; color:#28a745;"><asp:Literal ID="litTeachers" runat="server" /></strong>
+    </div>
+    <div style="flex:1; min-width:150px; border:1px solid #ccc; padding:15px; background:white; border-top:5px solid #17a2b8; text-align:center;">
+        <span style="font-size:12px; color:#666;">Students</span><br />
+        <strong style="font-size:24px; color:#17a2b8;"><asp:Literal ID="litStudents" runat="server" /></strong>
+    </div>
+    <div style="flex:1; min-width:150px; border:1px solid #ccc; padding:15px; background:white; border-top:5px solid #ffc107; text-align:center;">
+        <span style="font-size:12px; color:#666;">Quizzes</span><br />
+        <strong style="font-size:24px; color:#856404;"><asp:Literal ID="litQuizzes" runat="server" /></strong>
+    </div>
+</div>
 
-<hr />
-<h3>Recent Results</h3>
-<asp:GridView ID="gvResults" runat="server" AutoGenerateColumns="false" Width="100%" BorderStyle="Solid" BorderWidth="1px">
-    <Columns>
-        <asp:BoundField DataField="StudentName" HeaderText="Student" />
-        <asp:BoundField DataField="QuizTitle" HeaderText="Quiz" />
-        <asp:TemplateField HeaderText="Score">
-            <ItemTemplate><%# Eval("Percentage") %>%</ItemTemplate>
-        </asp:TemplateField>
-        <asp:BoundField DataField="AttemptDate" HeaderText="Date" DataFormatString="{0:dd-MMM}" />
-    </Columns>
-</asp:GridView>
+<div style="display:flex; gap:20px;">
+    <div style="flex:1;">
+        <h3 style="color:#0078d4;">Recent Quizzes</h3>
+        <asp:GridView ID="gvQuizzes" runat="server" AutoGenerateColumns="false" Width="100%" BorderStyle="Solid" BorderWidth="1px">
+            <Columns>
+                <asp:BoundField DataField="QuizTitle" HeaderText="Title" />
+                <asp:BoundField DataField="CreatorName" HeaderText="Teacher" />
+                <asp:TemplateField HeaderText="Status">
+                    <ItemTemplate>
+                        <span style='color:<%# If(CBool(Eval("IsPublished")), "green", "gray") %>'>
+                            <%# If(CBool(Eval("IsPublished")), "Published", "Draft") %>
+                        </span>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="Attempts" HeaderText="Attempts" />
+            </Columns>
+        </asp:GridView>
+    </div>
+
+    <div style="flex:1;">
+        <h3 style="color:#0078d4;">Recent Results</h3>
+        <asp:GridView ID="gvResults" runat="server" AutoGenerateColumns="false" Width="100%" BorderStyle="Solid" BorderWidth="1px">
+            <Columns>
+                <asp:BoundField DataField="StudentName" HeaderText="Student" />
+                <asp:BoundField DataField="QuizTitle" HeaderText="Quiz" />
+                <asp:TemplateField HeaderText="Score">
+                    <ItemTemplate>
+                        <strong style='color:<%# If(Eval("Percentage") >= 50, "green", "red") %>'>
+                            <%# Eval("Percentage") %>%
+                        </strong>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="AttemptDate" HeaderText="Date" DataFormatString="{0:dd-MMM}" />
+            </Columns>
+        </asp:GridView>
+    </div>
+</div>
 
 </asp:Content>
