@@ -1,3 +1,6 @@
+Imports System.Data
+Imports System.Web.UI.WebControls
+
 Partial Class Student_Dashboard
     Inherits System.Web.UI.Page
 

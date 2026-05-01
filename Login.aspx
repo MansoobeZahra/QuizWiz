@@ -1,9 +1,14 @@
 <%@ Page Language="VB" AutoEventWireup="false" CodeFile="Login.aspx.vb" Inherits="Login" %>
 <!DOCTYPE html>
 <html>
-<head>
+<head runat="server">
     <title>QuizWiz Login</title>
-    <link rel="stylesheet" href="Styles/site.css" />
+    <style>
+        body { font-family: sans-serif; background-color: #eee; margin: 0; padding: 0; }
+        .login-box { width:350px; margin: 100px auto; border: 1px solid #0078d4; padding: 20px; background-color: white; }
+        .btn { padding: 7px 20px; background-color: #0078d4; color: white; border: 1px solid #005a9e; cursor: pointer; }
+        input[type=text], input[type=password] { border: 1px solid #999; padding: 5px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+    </style>
 </head>
 <body style="background-color:#eee;">
     <div style="width:350px; margin: 100px auto; border: 1px solid #0078d4; padding: 20px; background-color: white;">
