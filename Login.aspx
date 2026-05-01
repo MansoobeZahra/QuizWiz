@@ -51,15 +51,12 @@
                 OnClick="btnLogin_Click" />
 
             <!-- Demo credentials hint -->
-            <div style="margin-top:24px;padding:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;">
-                <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;">Demo Accounts</p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px;color:var(--text-sec);">
-                    <span> admin / Admin@123</span>
-                    <span> t_ali / Teacher@1</span>
-                    <span> t_sara / Teacher@2</span>
-                    <span> s_usman / Student@1</span>
-                    <span> s_ayesha / Student@2</span>
-                    <span> s_bilal / Student@3</span>
+            <div style="margin-top:20px; padding:10px; border:1px solid var(--border); background:#f9f9f9;">
+                <p style="font-size:11px; color:#666; margin-bottom:5px; font-weight:600;">Demo Accounts</p>
+                <div style="font-size:11px; color:#444; line-height:1.5;">
+                    <div>Admin: admin / Admin@123</div>
+                    <div>Teacher: t_ali / Teacher@1</div>
+                    <div>Student: s_usman / Student@1</div>
                 </div>
             </div>
         </div>

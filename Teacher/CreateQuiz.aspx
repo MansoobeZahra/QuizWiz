@@ -5,8 +5,8 @@
 <asp:Content ID="ctMain" ContentPlaceHolderID="MainContent" runat="server">
 
 <div class="page-header">
-    <h1> Quiz Creation Wizard</h1>
-    <p>Follow the steps to prepare your quiz, add questions, test it, and publish.</p>
+    <h1>New Quiz Setup</h1>
+    <p>Complete the fields below to create and publish a quiz.</p>
 </div>
 
 <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-danger mb-4">
@@ -19,9 +19,9 @@
 
 <!-- Stepper -->
 <div class="wizard-stepper mb-6">
-    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 0, "active", "") %>">Step 1: Settings</div>
-    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 1, "active", "") %>">Step 2: Add Questions</div>
-    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 2, "active", "") %>">Step 3: Publish</div>
+    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 0, "active", "") %>">1. Settings</div>
+    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 1, "active", "") %>">2. Questions</div>
+    <div class="step-label <%= If(mvWizard.ActiveViewIndex = 2, "active", "") %>">3. Publish</div>
 </div>
 
 
@@ -215,20 +215,17 @@
 
     <!-- ==================== STEP 3 ==================== -->
     <asp:View ID="vStep3" runat="server">
-        <div class="form-panel" style="text-align:center; padding:40px 20px;">
-            <div style="font-size:24px; margin-bottom:20px; font-weight:bold; color:var(--primary);">Success</div>
-            <h2>Quiz is ready!</h2>
-            <p style="font-size:16px; color:#666; max-width:500px; margin:0 auto 30px auto;">
+        <div class="form-panel" style="padding:30px;">
+            <h2 style="margin-bottom:15px; color:#000;">Quiz Setup Complete</h2>
+            <p style="font-size:13px; color:#444; margin-bottom:20px;">
                 You have successfully configured <strong><asp:Literal ID="litFinalTitle" runat="server" /></strong> 
                 and added <strong><asp:Literal ID="litFinalCount" runat="server" /></strong> questions.
             </p>
 
-            <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-                <asp:Button ID="btnStep3Prev" runat="server" Text="Back to Questions" CssClass="btn btn-outline" OnClick="btnStep3Prev_Click" />
-                
-                <asp:Button ID="btnTestQuiz" runat="server" Text="Test Quiz (Student POV)" CssClass="btn btn-purple" OnClick="btnTestQuiz_Click" />
-                
-                <asp:Button ID="btnPublish" runat="server" Text="Publish to Students" CssClass="btn btn-success" OnClick="btnPublish_Click" />
+            <div style="display:flex; gap:10px;">
+                <asp:Button ID="btnStep3Prev" runat="server" Text="Back to Questions" CssClass="btn" OnClick="btnStep3Prev_Click" />
+                <asp:Button ID="btnTestQuiz" runat="server" Text="Test Quiz" CssClass="btn" OnClick="btnTestQuiz_Click" />
+                <asp:Button ID="btnPublish" runat="server" Text="Publish to Students" CssClass="btn btn-primary" OnClick="btnPublish_Click" />
             </div>
             
             <p style="margin-top:20px; font-size:13px; color:#999;">If you leave this page, the quiz will remain safely saved as a Draft.</p>

@@ -66,7 +66,7 @@
                 <asp:BoundField DataField="SubjectName" HeaderText="Subject" ReadOnly="true" />
                 <asp:TemplateField HeaderText="Difficulty">
                     <ItemTemplate>
-                        <span class='badge diff-<%# Eval("DifficultyLevel").ToString().ToLower() %>'>
+                        <span class="badge">
                             <%# Eval("DifficultyLevel") %>
                         </span>
                     </ItemTemplate>
@@ -81,7 +81,7 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Correct">
                     <ItemTemplate>
-                        <span class="badge badge-green"><%# Eval("CorrectOption") %></span>
+                        <span class="badge"><%# Eval("CorrectOption") %></span>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Actions">

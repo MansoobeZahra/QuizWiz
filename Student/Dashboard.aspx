@@ -47,12 +47,9 @@
     <div class="notif-list">
         <asp:Repeater ID="rptNotifs" runat="server">
             <ItemTemplate>
-                <div class='notif-item <%# If(Not CBool(Eval("IsRead")), "unread", "") %>'>
-                    <div class="notif-icon"></div>
-                    <div>
-                        <div class="notif-msg"><%# Eval("Message") %></div>
-                        <div class="notif-time"><%# CDate(Eval("CreatedAt")).ToString("dd MMM yyyy  hh:mm tt") %></div>
-                    </div>
+                <div style='padding:8px; border-bottom:1px solid #eee; <%# If(Not CBool(Eval("IsRead")), "background:#fff8e1;", "") %>'>
+                    <div style="font-size:13px;"><%# Eval("Message") %></div>
+                    <div style="font-size:11px; color:#999;"><%# CDate(Eval("CreatedAt")).ToString("dd MMM yyyy hh:mm tt") %></div>
                 </div>
             </ItemTemplate>
         </asp:Repeater>

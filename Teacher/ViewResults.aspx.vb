@@ -185,19 +185,19 @@ Partial Class Teacher_ViewResults
 
     Public Function GetGradeHtml(percentageObj As Object) As String
         Dim p As Double = Convert.ToDouble(percentageObj)
-        Dim g As String, gc As String
+        Dim g As String, bc As String = "badge"
         If p >= 90 Then
-            g = "A+" : gc = "grade-A"
+            g = "A+" : bc = "badge-green"
         ElseIf p >= 80 Then
-            g = "A" : gc = "grade-A"
+            g = "A" : bc = "badge-green"
         ElseIf p >= 70 Then
-            g = "B" : gc = "grade-B"
+            g = "B" : bc = "badge-purple"
         ElseIf p >= 60 Then
-            g = "C" : gc = "grade-C"
+            g = "C" : bc = "badge-purple"
         Else
-            g = "F" : gc = "grade-F"
+            g = "F" : bc = "badge-red"
         End If
-        Return String.Format("<span class=""fw-700 {0}"">{1}</span>", gc, g)
+        Return String.Format("<span class=""{0}"">{1}</span>", bc, g)
     End Function
 
 End Class

@@ -20,21 +20,18 @@
 <!-- Question Type -->
 <div class="form-panel mb-4">
     <h3>Question Type</h3>
-    <div class="qtype-selector">
-        <label class="qtype-item">
+    <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+        <label>
             <asp:RadioButton ID="rbSingle" runat="server" GroupName="qType" Checked="true" />&nbsp;
-            <span class="question-type-badge badge-purple">Single Choice</span>
-            <span class="text-muted" style="font-size:12px;">One correct answer (radio button)</span>
+            <strong>Single Choice</strong> - <span class="text-muted">One correct answer</span>
         </label>
-        <label class="qtype-item">
+        <label>
             <asp:RadioButton ID="rbMultiple" runat="server" GroupName="qType" />&nbsp;
-            <span class="question-type-badge badge-cyan">Multiple Choice</span>
-            <span class="text-muted" style="font-size:12px;">One or more correct answers (checkboxes)</span>
+            <strong>Multiple Choice</strong> - <span class="text-muted">One or more correct answers</span>
         </label>
-        <label class="qtype-item">
+        <label>
             <asp:RadioButton ID="rbParagraph" runat="server" GroupName="qType" />&nbsp;
-            <span class="question-type-badge badge-orange">Short Answer</span>
-            <span class="text-muted" style="font-size:12px;">Student types a text answer</span>
+            <strong>Short Answer</strong> - <span class="text-muted">Student types a text answer</span>
         </label>
     </div>
     <asp:HiddenField ID="hfQType" runat="server" Value="Radio" />
@@ -94,15 +91,15 @@
 <div class="form-panel" id="secCorrectRadio">
     <h3>Correct Answer | Single Choice</h3>
     <p class="text-muted mb-4">Select the ONE correct option.</p>
-    <div style="display:grid;grid-template-columns:auto 1fr;align-items:center;gap:12px 16px;">
-        <label class="check-item"><asp:RadioButton ID="rbA" runat="server" GroupName="Correct" /><span class="badge badge-purple">A</span></label>
-        <span class="text-sec" style="font-size:13px;">Option A (as entered above)</span>
-        <label class="check-item"><asp:RadioButton ID="rbB" runat="server" GroupName="Correct" /><span class="badge badge-cyan">B</span></label>
-        <span class="text-sec" style="font-size:13px;">Option B</span>
-        <label class="check-item"><asp:RadioButton ID="rbC" runat="server" GroupName="Correct" /><span class="badge badge-orange">C</span></label>
-        <span class="text-sec" style="font-size:13px;">Option C</span>
-        <label class="check-item"><asp:RadioButton ID="rbD" runat="server" GroupName="Correct" /><span class="badge badge-red">D</span></label>
-        <span class="text-sec" style="font-size:13px;">Option D</span>
+    <div style="display:grid; grid-template-columns:auto 1fr; align-items:center; gap:8px 15px;">
+        <label><asp:RadioButton ID="rbA" runat="server" GroupName="Correct" /> <span class="badge">A</span></label>
+        <span style="font-size:12px; color:#444;">Option A</span>
+        <label><asp:RadioButton ID="rbB" runat="server" GroupName="Correct" /> <span class="badge">B</span></label>
+        <span style="font-size:12px; color:#444;">Option B</span>
+        <label><asp:RadioButton ID="rbC" runat="server" GroupName="Correct" /> <span class="badge">C</span></label>
+        <span style="font-size:12px; color:#444;">Option C</span>
+        <label><asp:RadioButton ID="rbD" runat="server" GroupName="Correct" /> <span class="badge">D</span></label>
+        <span style="font-size:12px; color:#444;">Option D</span>
     </div>
 </div>
 
@@ -110,11 +107,11 @@
 <div class="form-panel" id="secCorrectCheckbox" style="display:none;">
     <h3>Correct Answers | Multiple Choice</h3>
     <p class="text-muted mb-4">Tick ALL options that are correct. Students must select exactly these to get full marks.</p>
-    <div class="check-group">
-        <label class="check-item"><asp:CheckBox ID="cbCA" runat="server" />&nbsp;<span class="badge badge-purple">A</span></label>
-        <label class="check-item"><asp:CheckBox ID="cbCB" runat="server" />&nbsp;<span class="badge badge-cyan">B</span></label>
-        <label class="check-item"><asp:CheckBox ID="cbCC" runat="server" />&nbsp;<span class="badge badge-orange">C</span></label>
-        <label class="check-item"><asp:CheckBox ID="cbCD" runat="server" />&nbsp;<span class="badge badge-red">D</span></label>
+    <div style="display:flex; gap:15px;">
+        <label><asp:CheckBox ID="cbCA" runat="server" /> <span class="badge">A</span></label>
+        <label><asp:CheckBox ID="cbCB" runat="server" /> <span class="badge">B</span></label>
+        <label><asp:CheckBox ID="cbCC" runat="server" /> <span class="badge">C</span></label>
+        <label><asp:CheckBox ID="cbCD" runat="server" /> <span class="badge">D</span></label>
     </div>
 </div>
 

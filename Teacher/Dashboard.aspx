@@ -39,15 +39,13 @@
 
 <!-- Quick Actions -->
 <div class="grid-2 mb-6">
-    <a href="/Teacher/AddQuestion.aspx" class="card" style="text-decoration:none;cursor:pointer;display:block;">
-        <div style="font-size:36px;margin-bottom:12px;"></div>
-        <div class="fw-700" style="font-size:16px;margin-bottom:6px;">Add New Question</div>
-        <div class="text-muted">Add a question to your subject question bank</div>
+    <a href="AddQuestion.aspx" class="card" style="text-decoration:none; color:inherit;">
+        <div class="fw-700" style="font-size:14px; margin-bottom:4px;">Add New Question</div>
+        <div class="text-muted" style="font-size:12px;">Add a question to your subject question bank</div>
     </a>
-    <a href="/Teacher/CreateQuiz.aspx" class="card" style="text-decoration:none;cursor:pointer;display:block;">
-        <div style="font-size:36px;margin-bottom:12px;"></div>
-        <div class="fw-700" style="font-size:16px;margin-bottom:6px;">Create a Quiz</div>
-        <div class="text-muted">Design and publish a new quiz for students</div>
+    <a href="CreateQuiz.aspx" class="card" style="text-decoration:none; color:inherit;">
+        <div class="fw-700" style="font-size:14px; margin-bottom:4px;">Create a Quiz</div>
+        <div class="text-muted" style="font-size:12px;">Design and publish a new quiz for students</div>
     </a>
 </div>
 

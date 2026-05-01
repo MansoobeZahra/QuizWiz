@@ -37,24 +37,23 @@ Partial Class Student_MyResults
         Dim obtained = Convert.ToDecimal(row("ObtainedMarks"))
         Dim total    = CInt(row("TotalMarks"))
 
-        Dim grade As String, gradeCls As String
+        Dim grade As String
         If pct >= 90  Then
-            grade = "A+" : gradeCls = "grade-A"
+            grade = "A+"
         ElseIf pct >= 80 Then
-            grade = "A"  : gradeCls = "grade-A"
+            grade = "A"
         ElseIf pct >= 70 Then
-            grade = "B"  : gradeCls = "grade-B"
+            grade = "B"
         ElseIf pct >= 60 Then
-            grade = "C"  : gradeCls = "grade-C"
+            grade = "C"
         Else
-            grade = "F" : gradeCls = "grade-F"
+            grade = "F"
         End If
 
         litPct.Text      = pct.ToString("0.#") & "%"
         litObtained.Text = obtained.ToString("0.#")
         litTotal.Text    = total.ToString()
         litGrade.Text    = grade
-        litGradeCls.Text = gradeCls
         litQuizName.Text = row("QuizTitle").ToString()
         pnlHero.Visible  = True
 
@@ -152,19 +151,19 @@ Partial Class Student_MyResults
 
     Public Function GetGradeHtml(percentageObj As Object) As String
         Dim p As Double = Convert.ToDouble(percentageObj)
-        Dim g As String, gc As String
+        Dim g As String, bc As String = "badge"
         If p >= 90 Then
-            g = "A+" : gc = "grade-A"
+            g = "A+" : bc = "badge-green"
         ElseIf p >= 80 Then
-            g = "A" : gc = "grade-A"
+            g = "A" : bc = "badge-green"
         ElseIf p >= 70 Then
-            g = "B" : gc = "grade-B"
+            g = "B" : bc = "badge-purple"
         ElseIf p >= 60 Then
-            g = "C" : gc = "grade-C"
+            g = "C" : bc = "badge-purple"
         Else
-            g = "F" : gc = "grade-F"
+            g = "F" : bc = "badge-red"
         End If
-        Return String.Format("<span class=""fw-700 {0}"">{1}</span>", gc, g)
+        Return String.Format("<span class=""{0}"">{1}</span>", bc, g)
     End Function
 
     Public Function GetAnswerHtml(studentAnsObj As Object, correctAnsObj As Object) As String
