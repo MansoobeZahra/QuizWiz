@@ -21,7 +21,7 @@ Partial Class Student_AttemptQuiz
         Session("TimeLeft") = CInt(dt.Rows(0)("AllowedTime")) * 60
         Session("QIndex") = 0
         
-        Dim qDt = DBHelper.GetDataTable("SELECT TOP " & dt.Rows(0)("TotalQuestions").ToString() & " q.QuestionID, q.QuestionStatement, q.OptionA, q.OptionB, q.CorrectOptions, q.QuestionType FROM QuizQuestions qq JOIN QuestionsTable q ON qq.QuestionID = q.QuestionID WHERE qq.QuizID=@q", DBHelper.Param("@q", qid))
+        Dim qDt = DBHelper.GetDataTable("SELECT TOP " & dt.Rows(0)("TotalQuestions").ToString() & " q.QuestionID, q.QuestionStatement, q.OptionA, q.OptionB, q.OptionC, q.OptionD, q.CorrectOptions, q.QuestionType FROM QuizQuestions qq JOIN QuestionsTable q ON qq.QuestionID = q.QuestionID WHERE qq.QuizID=@q", DBHelper.Param("@q", qid))
         Session("Questions") = qDt
         Session("QTotal") = qDt.Rows.Count
         
@@ -35,15 +35,32 @@ Partial Class Student_AttemptQuiz
         If idx >= dt.Rows.Count Then Finish() : Return
 
         Dim row = dt.Rows(idx)
+        Dim qType = row("QuestionType").ToString()
         litQuizTitle.Text = Session("QuizTitle").ToString()
         litQNum.Text = (idx + 1).ToString()
         litQTotal.Text = Session("QTotal").ToString()
         litQuestion.Text = row("QuestionStatement").ToString()
         hfTimeLeft.Value = Session("TimeLeft").ToString()
 
-        rblOptions.Items.Clear()
-        rblOptions.Items.Add(New ListItem(row("OptionA").ToString(), "A"))
-        rblOptions.Items.Add(New ListItem(row("OptionB").ToString(), "B"))
+        pnlRadio.Visible = (qType = "Radio")
+        pnlCheckbox.Visible = (qType = "Checkbox")
+        pnlParagraph.Visible = (qType = "Paragraph")
+
+        If qType = "Radio" Then
+            rblOptions.Items.Clear()
+            If row("OptionA").ToString() <> "" Then rblOptions.Items.Add(New ListItem(row("OptionA").ToString(), "A"))
+            If row("OptionB").ToString() <> "" Then rblOptions.Items.Add(New ListItem(row("OptionB").ToString(), "B"))
+            If row("OptionC").ToString() <> "" Then rblOptions.Items.Add(New ListItem(row("OptionC").ToString(), "C"))
+            If row("OptionD").ToString() <> "" Then rblOptions.Items.Add(New ListItem(row("OptionD").ToString(), "D"))
+        ElseIf qType = "Checkbox" Then
+            cblOptions.Items.Clear()
+            If row("OptionA").ToString() <> "" Then cblOptions.Items.Add(New ListItem(row("OptionA").ToString(), "A"))
+            If row("OptionB").ToString() <> "" Then cblOptions.Items.Add(New ListItem(row("OptionB").ToString(), "B"))
+            If row("OptionC").ToString() <> "" Then cblOptions.Items.Add(New ListItem(row("OptionC").ToString(), "C"))
+            If row("OptionD").ToString() <> "" Then cblOptions.Items.Add(New ListItem(row("OptionD").ToString(), "D"))
+        Else
+            txtParaAns.Text = ""
+        End If
         
         btnNext.Visible = (idx < dt.Rows.Count - 1)
         btnSubmit.Visible = (idx = dt.Rows.Count - 1)
@@ -64,12 +81,30 @@ Partial Class Student_AttemptQuiz
         Dim idx = CInt(Session("QIndex"))
         Dim dt = CType(Session("Questions"), DataTable)
         Dim row = dt.Rows(idx)
-        Dim ans = rblOptions.SelectedValue
-        Dim marks = If(ans = row("CorrectOptions").ToString(), 1, 0)
+        Dim qType = row("QuestionType").ToString()
+        
+        Dim ans = ""
+        Dim marks As Decimal = 0
+        Dim correct = row("CorrectOptions").ToString()
+
+        If qType = "Radio" Then
+            ans = rblOptions.SelectedValue
+            If ans = correct Then marks = 1
+        ElseIf qType = "Checkbox" Then
+            Dim sel As New List(Of String)
+            For Each item As ListItem In cblOptions.Items
+                If item.Selected Then sel.Add(item.Value)
+            Next
+            ans = String.Join(",", sel)
+            If ans = correct Then marks = 1
+        Else
+            ans = txtParaAns.Text.Trim()
+            If ans.ToLower() = correct.ToLower() Then marks = 1
+        End If
         
         DBHelper.ExecuteNonQuery("INSERT INTO Answers (StudentID,QuizID,QuestionID,QNo,CorrectAns,StudentAns,Marks) VALUES (@s,@qz,@qn,@no,@ca,@sa,@m)", _
             DBHelper.Param("@s", Session("UserID")), DBHelper.Param("@qz", Session("QuizID")), DBHelper.Param("@qn", row("QuestionID")), _
-            DBHelper.Param("@no", idx + 1), DBHelper.Param("@ca", row("CorrectOptions")), DBHelper.Param("@sa", ans), DBHelper.Param("@m", marks))
+            DBHelper.Param("@no", idx + 1), DBHelper.Param("@ca", correct), DBHelper.Param("@sa", ans), DBHelper.Param("@m", marks))
     End Sub
 
     Private Sub Finish()

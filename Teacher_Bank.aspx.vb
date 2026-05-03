@@ -22,7 +22,7 @@ Partial Class Teacher_ManageQuestions
     End Sub
 
     Private Sub LoadQuestions()
-        Dim sql = "SELECT q.QuestionID, q.QuestionStatement, q.DifficultyLevel, q.CorrectOption, s.SubjectName FROM QuestionsTable q JOIN Subjects s ON q.SubjectID = s.SubjectID WHERE q.CreatedBy = @t"
+        Dim sql = "SELECT q.QuestionID, q.QuestionStatement, q.DifficultyLevel, q.CorrectOptions, s.SubjectName FROM QuestionsTable q JOIN Subjects s ON q.SubjectID = s.SubjectID WHERE q.CreatedBy = @t"
         Dim pList As New System.Collections.Generic.List(Of System.Data.SqlClient.SqlParameter)
         pList.Add(DBHelper.Param("@t", CInt(Session("UserID"))))
         If ddlFilter.SelectedValue <> "" Then

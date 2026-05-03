@@ -47,7 +47,7 @@
                 </asp:DropDownList>
             </EditItemTemplate>
         </asp:TemplateField>
-        <asp:BoundField DataField="CorrectOption" HeaderText="Ans" />
+        <asp:BoundField DataField="CorrectOptions" HeaderText="Ans" />
         <asp:TemplateField HeaderText="Actions">
             <ItemTemplate>
                 <asp:LinkButton CommandName="Edit" runat="server" Text="Edit" style="color:blue;" /> |
