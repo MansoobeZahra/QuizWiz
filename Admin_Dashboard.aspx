@@ -42,7 +42,7 @@
                 <asp:BoundField DataField="CreatorName" HeaderText="Teacher" />
                 <asp:TemplateField HeaderText="Status">
                     <ItemTemplate>
-                        <span style='color:<%# If(CBool(Eval("IsPublished")), "green", "gray") %>'>
+                        <span class='<%# If(CBool(Eval("IsPublished")), "text-green", "text-gray") %>'>
                             <%# If(CBool(Eval("IsPublished")), "Published", "Draft") %>
                         </span>
                     </ItemTemplate>
@@ -60,7 +60,7 @@
                 <asp:BoundField DataField="QuizTitle" HeaderText="Quiz" />
                 <asp:TemplateField HeaderText="Score">
                     <ItemTemplate>
-                        <strong style='color:<%# If(Eval("Percentage") >= 50, "green", "red") %>'>
+                        <strong class='<%# If(Eval("Percentage") >= 50, "text-green", "text-red") %>'>
                             <%# Eval("Percentage") %>%
                         </strong>
                     </ItemTemplate>

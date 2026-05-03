@@ -151,3 +151,8 @@ td {
     flex: 1;
     padding: 20px;
 }
+
+.text-green { color: green !important; }
+.text-gray { color: gray !important; }
+.text-red { color: red !important; }
+.text-bold { font-weight: bold; }
