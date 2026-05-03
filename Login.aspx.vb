@@ -12,7 +12,7 @@ Partial Class Login
         End If
 
         Try
-            Dim dt = DBHelper.GetDataTable("SELECT UserID, FullName, Role, IsActive FROM Users WHERE Username=@u AND Password=@p",
+            Dim dt = DBHelper.GetDataTable("SELECT UserID, FullName, Role, IsActive FROM Users2 WHERE Username=@u AND Password=@p",
                 DBHelper.Param("@u", username), DBHelper.Param("@p", password))
 
             If dt.Rows.Count = 0 Then

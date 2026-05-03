@@ -25,7 +25,7 @@ Partial Class Teacher_ViewResults
         If ddlQuiz.SelectedValue = "" Then Return
         Dim dt = DBHelper.GetDataTable( _
             "SELECT r.ObtainedMarks, r.TotalMarks, r.Percentage, r.AttemptDate, u.FullName AS StudentName " & _
-            "FROM Results r JOIN Users u ON r.StudentID = u.UserID WHERE r.QuizID = @q ORDER BY r.Percentage DESC", _
+            "FROM Results r JOIN Users2 u ON r.StudentID = u.UserID WHERE r.QuizID = @q ORDER BY r.Percentage DESC", _
             DBHelper.Param("@q", ddlQuiz.SelectedValue))
         
         If dt.Rows.Count = 0 Then

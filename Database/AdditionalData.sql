@@ -2,9 +2,9 @@ USE QuizWizDB;
 GO
 
 -- 1. Add more Students
-IF NOT EXISTS (SELECT 1 FROM Users WHERE Username = 's_fatima')
+IF NOT EXISTS (SELECT 1 FROM Users2 WHERE Username = 's_fatima')
 BEGIN
-    INSERT INTO Users (FullName, Username, Password, Role, SubjectID) VALUES
+    INSERT INTO Users2 (FullName, Username, Password, Role, SubjectID) VALUES
     ('Fatima Zahra', 's_fatima', 'Student@4', 'Student', NULL),
     ('Zain Ahmed',   's_zain',   'Student@5', 'Student', NULL),
     ('Hamza Ali',    's_hamza',  'Student@6', 'Student', NULL);

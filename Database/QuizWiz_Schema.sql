@@ -24,9 +24,9 @@ CREATE TABLE Subjects (
 );
 
 -- ============================================
--- TABLE: Users
+-- TABLE: Users2
 -- ============================================
-CREATE TABLE Users (
+CREATE TABLE Users2 (
     UserID    INT IDENTITY(1,1) PRIMARY KEY,
     FullName  NVARCHAR(100) NOT NULL,
     Username  NVARCHAR(50)  NOT NULL UNIQUE,
@@ -52,7 +52,7 @@ CREATE TABLE QuestionsTable (
     DifficultyLevel   NVARCHAR(20)  NOT NULL DEFAULT 'Medium'
                         CHECK (DifficultyLevel IN ('Easy','Medium','Hard','Expert')),
     ImagePath         NVARCHAR(500) NULL,
-    CreatedBy         INT           NOT NULL REFERENCES Users(UserID),
+    CreatedBy         INT           NOT NULL REFERENCES Users2(UserID),
     CreatedAt         DATETIME      NOT NULL DEFAULT GETDATE()
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE Quiz (
     Remarks        NVARCHAR(500) NULL,
     ReviewAnswer   BIT           NOT NULL DEFAULT 0,
     IsPublished    BIT           NOT NULL DEFAULT 0,
-    CreatedBy      INT           NOT NULL REFERENCES Users(UserID),
+    CreatedBy      INT           NOT NULL REFERENCES Users2(UserID),
     CreatedAt      DATETIME      NOT NULL DEFAULT GETDATE()
 );
 
@@ -92,7 +92,7 @@ CREATE TABLE QuizQuestions (
 -- ============================================
 CREATE TABLE Answers (
     AnswerID    INT IDENTITY(1,1) PRIMARY KEY,
-    StudentID   INT           NOT NULL REFERENCES Users(UserID),
+    StudentID   INT           NOT NULL REFERENCES Users2(UserID),
     QuizID      INT           NOT NULL REFERENCES Quiz(QuizID),
     QuestionID  INT           NOT NULL REFERENCES QuestionsTable(QuestionID),
     QNo         INT           NOT NULL,   -- display order (1,2,3…)
@@ -107,7 +107,7 @@ CREATE TABLE Answers (
 -- ============================================
 CREATE TABLE Results (
     ResultID       INT IDENTITY(1,1) PRIMARY KEY,
-    StudentID      INT           NOT NULL REFERENCES Users(UserID),
+    StudentID      INT           NOT NULL REFERENCES Users2(UserID),
     QuizID         INT           NOT NULL REFERENCES Quiz(QuizID),
     TotalMarks     INT           NOT NULL,
     ObtainedMarks  DECIMAL(10,1) NOT NULL,
@@ -120,8 +120,8 @@ CREATE TABLE Results (
 -- ============================================
 CREATE TABLE Notifications (
     NotifID    INT IDENTITY(1,1) PRIMARY KEY,
-    ToUserID   INT           NOT NULL REFERENCES Users(UserID),
-    FromUserID INT           NOT NULL REFERENCES Users(UserID),
+    ToUserID   INT           NOT NULL REFERENCES Users2(UserID),
+    FromUserID INT           NOT NULL REFERENCES Users2(UserID),
     Message    NVARCHAR(500) NOT NULL,
     IsRead     BIT           NOT NULL DEFAULT 0,
     CreatedAt  DATETIME      NOT NULL DEFAULT GETDATE()
@@ -140,7 +140,7 @@ INSERT INTO Subjects (SubjectName) VALUES
 -- Users
 --  UserID 1 = Admin, 2 = t_ali (CS Teacher), 3 = t_sara (Math Teacher)
 --  UserID 4 = s_usman, 5 = s_ayesha, 6 = s_bilal  (Students)
-INSERT INTO Users (FullName, Username, Password, Role, SubjectID) VALUES
+INSERT INTO Users2 (FullName, Username, Password, Role, SubjectID) VALUES
 ('Super Admin',           'admin',     'Admin@123',  'Admin',   NULL),
 ('Ali Hassan',            't_ali',     'Teacher@1',  'Teacher', 1),
 ('Sara Khan',             't_sara',    'Teacher@2',  'Teacher', 2),
@@ -254,7 +254,7 @@ VALUES
    'mgh','½mv²','mv','Fd','B','Medium',2);
 
 PRINT 'QuizWizDB created successfully!';
-PRINT 'Tables: Subjects, Users, QuestionsTable, Quiz, QuizQuestions, Answers, Results, Notifications';
+PRINT 'Tables: Subjects, Users2, QuestionsTable, Quiz, QuizQuestions, Answers, Results, Notifications';
 PRINT 'Login credentials:';
 PRINT '  admin      / Admin@123';
 PRINT '  t_ali      / Teacher@1   (CS Teacher)';
