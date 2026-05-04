@@ -65,26 +65,15 @@ Partial Class Teacher_CreateQuiz
             cops = String.Join(",", sel)
         End If
 
-        Dim imgPath = ""
-        If fuQImage.HasFile Then
-            Try
-                Dim folder = Server.MapPath("~/Images/Questions/")
-                If Not System.IO.Directory.Exists(folder) Then System.IO.Directory.CreateDirectory(folder)
-                Dim fName = Guid.NewGuid().ToString() & System.IO.Path.GetExtension(fuQImage.FileName)
-                fuQImage.SaveAs(folder & fName)
-                imgPath = "Images/Questions/" & fName
-            Catch : End Try
-        End If
 
         Dim qid = CInt(DBHelper.ExecuteScalar( _
-            "INSERT INTO QuestionsTable (SubjectID,QuestionStatement,OptionA,OptionB,OptionC,OptionD,CorrectOption,DifficultyLevel,CreatedBy,QuestionType,CorrectOptions,ImagePath) " & _
-            "VALUES (@sid,@stmt,@a,@b,@c,@d,@co,'Medium',@by,@qt,@cops,@img); SELECT SCOPE_IDENTITY();", _
+            "INSERT INTO QuestionsTable (SubjectID,QuestionStatement,OptionA,OptionB,OptionC,OptionD,CorrectOption,DifficultyLevel,CreatedBy,QuestionType,CorrectOptions) " & _
+            "VALUES (@sid,@stmt,@a,@b,@c,@d,@co,'Medium',@by,@qt,@cops); SELECT SCOPE_IDENTITY();", _
             DBHelper.Param("@sid", ddlSubject.SelectedValue), DBHelper.Param("@stmt", txtQStmt.Text), _
             DBHelper.Param("@a", txtOptA.Text), DBHelper.Param("@b", txtOptB.Text), _
             DBHelper.Param("@c", txtOptC.Text), DBHelper.Param("@d", txtOptD.Text), _
             DBHelper.Param("@co", If(qType="Radio", cops, "A")), DBHelper.Param("@by", Session("UserID")), _
-            DBHelper.Param("@qt", qType), DBHelper.Param("@cops", cops), _
-            DBHelper.Param("@img", If(imgPath="", DBNull.Value, imgPath))))
+            DBHelper.Param("@qt", qType), DBHelper.Param("@cops", cops)))
         
         DBHelper.ExecuteNonQuery("INSERT INTO QuizQuestions (QuizID,QuestionID) VALUES (@qz,@q)", DBHelper.Param("@qz", hfQuizID.Value), DBHelper.Param("@q", qid))
         LoadCurrentQuestions()

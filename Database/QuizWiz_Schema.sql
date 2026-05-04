@@ -51,7 +51,7 @@ CREATE TABLE QuestionsTable (
     CorrectOption     CHAR(1)       NOT NULL CHECK (CorrectOption IN ('A','B','C','D')),
     DifficultyLevel   NVARCHAR(20)  NOT NULL DEFAULT 'Medium'
                         CHECK (DifficultyLevel IN ('Easy','Medium','Hard','Expert')),
-    ImagePath         NVARCHAR(500) NULL,
+
     CreatedBy         INT           NOT NULL REFERENCES Users2(UserID),
     CreatedAt         DATETIME      NOT NULL DEFAULT GETDATE()
 );
