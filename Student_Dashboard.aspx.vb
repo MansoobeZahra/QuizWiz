@@ -9,7 +9,7 @@ Partial Class Student_Dashboard
     Dim connStr As String = ConfigurationManager.ConnectionStrings("QuizWizDB").ConnectionString
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If Session("UserID") Is Nothing OrElse Session("Role") IsNot "Student" Then
+        If Session("UserID") Is Nothing OrElse Session("Role").ToString() <> "Student" Then
             Response.Redirect("Login.aspx")
             Return
         End If
