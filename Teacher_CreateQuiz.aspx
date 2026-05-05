@@ -43,7 +43,7 @@
                         <asp:ListItem Value="Radio">Single</asp:ListItem>
                         <asp:ListItem Value="Checkbox">Multiple</asp:ListItem>
                     </asp:DropDownList><br />
-                    Image: <asp:FileUpload ID="fuQImage" runat="server" /><br />
+
                     A: <asp:RadioButton ID="rbAnsA" runat="server" GroupName="NewQ" Checked="true" /><asp:CheckBox ID="cbAnsA" runat="server" Visible="false" /><asp:TextBox ID="txtOptA" runat="server" /><br />
                     B: <asp:RadioButton ID="rbAnsB" runat="server" GroupName="NewQ" /><asp:CheckBox ID="cbAnsB" runat="server" Visible="false" /><asp:TextBox ID="txtOptB" runat="server" /><br />
                     C: <asp:RadioButton ID="rbAnsC" runat="server" GroupName="NewQ" /><asp:CheckBox ID="cbAnsC" runat="server" Visible="false" /><asp:TextBox ID="txtOptC" runat="server" /><br />
