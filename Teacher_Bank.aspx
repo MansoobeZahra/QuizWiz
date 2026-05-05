@@ -1,13 +1,15 @@
 <%@ Page Language="VB" AutoEventWireup="false" CodeFile="Teacher_Bank.aspx.vb" Inherits="Teacher_ManageQuestions" %>
 <%@ Register Src="~/Navbar.ascx" TagPrefix="uc" TagName="Navbar" %>
+<%@ Register Src="~/Header.ascx" TagPrefix="uc" TagName="Header" %>
 <!DOCTYPE html>
 <html>
 <head runat="server">
     <title>QuizWiz - Question Bank</title>
     <link href="Styles/site.css" rel="stylesheet" />
 </head>
-<body>
+<body style="margin:0; padding:0;">
 <form id="form1" runat="server">
+    <uc:Header runat="server" ID="Header" />
     <div class="layout-container">
         <uc:Navbar runat="server" ID="Navbar" />
         <div class="main-area">
