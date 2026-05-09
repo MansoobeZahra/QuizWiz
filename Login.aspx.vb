@@ -1,11 +1,5 @@
-Imports System.Data
-Imports System.Data.SqlClient
-Imports System.Configuration
-
 Partial Class Login
     Inherits System.Web.UI.Page
-
-    Dim connStr As String = ConfigurationManager.ConnectionStrings("QuizWizDB").ConnectionString
 
     Protected Sub btnLogin_Click(sender As Object, e As EventArgs)
         Dim username = txtUsername.Text.Trim()
@@ -18,15 +12,8 @@ Partial Class Login
         End If
 
         Try
-            Dim dt As New DataTable()
-            Using conn As New SqlConnection(connStr)
-                Dim sql As String = "SELECT UserID, FullName, Role, IsActive FROM Users2 WHERE Username=@u AND Password=@p"
-                Dim cmd As New SqlCommand(sql, conn)
-                cmd.Parameters.AddWithValue("@u", username)
-                cmd.Parameters.AddWithValue("@p", password)
-                Dim da As New SqlDataAdapter(cmd)
-                da.Fill(dt)
-            End Using
+            Dim dt = DBHelper.GetDataTable("SELECT UserID, FullName, Role, IsActive FROM Users2 WHERE Username=@u AND Password=@p",
+                DBHelper.Param("@u", username), DBHelper.Param("@p", password))
 
             If dt.Rows.Count = 0 Then
                 pnlError.Visible = True
